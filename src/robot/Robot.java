@@ -3,8 +3,8 @@ package robot;
 
 import robot.commands.ExampleCommand;
 import robot.subsystems.ActuatorSubsystem;
-import robot.subsystems.ExampleSubsystem;
 import robot.subsystems.SensorSubsystem;
+import robot.subsystems.VisionSubsystem;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -19,9 +19,9 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  */
 public class Robot extends IterativeRobot {
 
-	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static final ActuatorSubsystem actuatorSubsystem = new ActuatorSubsystem();
-	public static final SensorSubsystem sensorSubsystem = new SensorSubsystem();
+	public static final SensorSubsystem   sensorSubsystem   = new SensorSubsystem();
+	public static final VisionSubsystem   visionSubsystem   = new VisionSubsystem();
 	public static OI oi;
 
     Command autonomousCommand;

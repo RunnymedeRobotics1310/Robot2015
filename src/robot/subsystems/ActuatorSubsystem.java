@@ -1,6 +1,7 @@
 package robot.subsystems;
 
 import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
@@ -14,10 +15,12 @@ public class ActuatorSubsystem extends Subsystem {
 
 	
 	Relay spike =  new Relay(0);
+	Servo servo =  new Servo(3);
 	
     public ActuatorSubsystem() {
     	
-    	LiveWindow.addSensor("Actuator", "Spike", spike);
+    	LiveWindow.addSensor  ("Actuator", "Spike", spike);
+    	LiveWindow.addActuator("Actuator", "Servo", servo);
     	
     }
     

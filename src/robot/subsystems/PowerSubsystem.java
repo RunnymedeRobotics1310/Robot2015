@@ -1,6 +1,7 @@
 package robot.subsystems;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -16,8 +17,16 @@ public class PowerSubsystem extends RunnymedeSubsystem {
         //setDefaultCommand(new MySpecialCommand());
     }
     
-	@Override
-	public void initSubsystem() {}
+	// @Override
+    public void initSubsystem() {
+    	
+    	// Add all sensors and motors to the LiveWindow
+    	LiveWindow.addSensor  ("PowerDistributionPanel", "Current", powerDistributionPanel);
+    	
+    	// Start Live Window for all sensors, PIDS and motors that implement LiveWindowSendable
+    	SmartDashboard.putData("PowerDistributionPanel", powerDistributionPanel);
+        
+    }
     
     /**
      * Get the current on any channel on the Power Distribution Panel.  
@@ -33,13 +42,11 @@ public class PowerSubsystem extends RunnymedeSubsystem {
     	System.out.println("Invalid channel number (" + channel + ") requested for PowerSubsystem.getCurrent()");
     	return 0;
     }
-    
+
+    // @Override
     public void updateDashboard() {
-    	
-    	// Update the dashboard with the current on all channels of the Power Distribution Panel.
-    	for (int i=0; i < PowerDistributionPanel.kPDPChannels; i++) {
-        	SmartDashboard.putNumber("PDP output current [" + i + "]", powerDistributionPanel.getCurrent(i));
-    	}
+
+    	powerDistributionPanel.updateTable();
     	
     }
 

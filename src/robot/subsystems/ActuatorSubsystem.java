@@ -3,6 +3,7 @@ package robot.subsystems;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -21,17 +22,16 @@ public class ActuatorSubsystem extends RunnymedeSubsystem {
     	LiveWindow.addActuator("Actuator", "Servo", servo);
     	
     	// Start Live Window for all sensors, PIDS and motors that implement LiveWindowSendable
-    	
-    	servo.startLiveWindowMode();
-    	spike.startLiveWindowMode();
-    	
+    	SmartDashboard.putData("Servo", servo);
+    	SmartDashboard.putData("Relay", spike);
+        
     }
     
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());
     }
-    
+
     // @Override
     public void updateDashboard() {
     	

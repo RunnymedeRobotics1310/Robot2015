@@ -1,36 +1,111 @@
 package robot;
 
+import robot.Joystick_F310.F310Button;
+import robot.Joystick_F310.F310Stick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
+ * <p>
+ * This class does not generate any commands.  The operator input is used in 
+ * the default command of subsystems in order to run the subsystems.
+ * 
  */
 public class OI {
-    //// CREATING BUTTONS
-    // One type of button is a joystick button which is any button on a joystick.
-    // You create one by telling it which joystick it's on and which button
-    // number it is.
-    // Joystick stick = new Joystick(port);
-    // Button button = new JoystickButton(stick, buttonNumber);
-    
-    // There are a few additional built in buttons you can use. Additionally,
-    // by subclassing Button you can create custom triggers and bind those to
-    // commands the same as any other Button.
-    
-    //// TRIGGERING COMMANDS WITH BUTTONS
-    // Once you have a button, it's trivial to bind it to a button in one of
-    // three ways:
-    
-    // Start the command when the button is pressed and let it run the command
-    // until it is finished as determined by it's isFinished method.
-    // button.whenPressed(new ExampleCommand());
-    
-    // Run the command while the button is being held down and interrupt it once
-    // the button is released.
-    // button.whileHeld(new ExampleCommand());
-    
-    // Start the command when the button is released  and let it run the command
-    // until it is finished as determined by it's isFinished method.
-    // button.whenReleased(new ExampleCommand());
+	
+	private enum StickMap {
+		
+		// Driver Joystick stick mapping
+		DRIVE_STICK    (F310Stick.LEFT),
+		ROTATION_STICK (F310Stick.RIGHT);
+		
+		F310Stick stick;
+		
+		StickMap(F310Stick stick) {
+			this.stick = stick;
+		}
+		
+		F310Stick getStick() { return this.stick; }
+	}
+	
+	private enum ButtonMap {
+		
+		// Driver Joystick button mapping
+		SOUTH  (F310Button.A),
+		NORTH  (F310Button.Y),
+		EAST   (F310Button.B),
+		WEST   (F310Button.X),
+		
+		ELEVATOR        (F310Button.RB),
+		SINGLE_SOLENOID (F310Button.LB),
+		DOUBLE_SOLENOID (F310Button.START);
+		
+		F310Button button;
+		
+		ButtonMap(F310Button button) {
+			this.button = button;
+		}
+		
+		F310Button getButton() { return this.button; }
+	}
+	
+	private Joystick_F310 driverJoystick = new Joystick_F310(0);
+	
+	public void updateDashboard() {
+		SmartDashboard.putString("Driver Joystick Buttons", 
+				driverJoystick.getPolarCoordinate    (StickMap.DRIVE_STICK.getStick())   .square().toString() + " " +
+				driverJoystick.getCartesianCoordinate(StickMap.ROTATION_STICK.getStick()).square().toString() + " " +
+				driverJoystick.getButtonsPressedString()
+				+ ((getDirection() > -1) ? " D(" + getDirection() + ")" : "") );
+	}
+	
+	public PolarCoordinate getDriverPolarCoordinate() { 
+		// Square the coordinates to reduce joystick sensitivity.
+		return driverJoystick.getPolarCoordinate(StickMap.DRIVE_STICK.getStick()).square(); 
+	}
+
+	public double getDriverRotation() { 
+		// Square the coordinates to reduce joystick sensitivity.
+		return driverJoystick.getCartesianCoordinate(StickMap.ROTATION_STICK.getStick()).square().getX(); 
+	}
+
+	public int getDriverPov() { 
+		return driverJoystick.getPOV(); }
+
+	public boolean getElevatorButton() { 
+		return driverJoystick.getButton(ButtonMap.ELEVATOR.getButton()); }
+
+	// FIXME: What button is #12?
+	public boolean getTogglePIDButton() { 
+		return driverJoystick.getRawJoystick().getRawButton(12); }
+	
+	public boolean getDoubleSolenoidButton() { 
+		return driverJoystick.getButton(ButtonMap.DOUBLE_SOLENOID.getButton()); }
+
+ 	public boolean getSingleSolenoidButton() { 
+ 		return driverJoystick.getButton(ButtonMap.SINGLE_SOLENOID.getButton()); }
+
+ 	public int getDirection() { 
+ 		
+ 		if (   driverJoystick.getButton(ButtonMap.NORTH.getButton()) 
+ 			&& driverJoystick.getButton(ButtonMap.EAST .getButton())) { return 45; }
+ 		
+ 		if (   driverJoystick.getButton(ButtonMap.NORTH.getButton()) 
+ 			&& driverJoystick.getButton(ButtonMap.WEST .getButton())) { return 315; }
+
+ 		if (   driverJoystick.getButton(ButtonMap.SOUTH.getButton()) 
+ 	 		&& driverJoystick.getButton(ButtonMap.EAST .getButton())) { return 135; }
+
+ 		if (   driverJoystick.getButton(ButtonMap.SOUTH.getButton()) 
+ 	 		&& driverJoystick.getButton(ButtonMap.WEST .getButton())) { return 225; }
+
+ 		if (driverJoystick.getButton(ButtonMap.NORTH.getButton())) { return   0; }
+ 		if (driverJoystick.getButton(ButtonMap.EAST .getButton())) { return  90; }
+ 		if (driverJoystick.getButton(ButtonMap.SOUTH.getButton())) { return 180; }
+ 		if (driverJoystick.getButton(ButtonMap.WEST .getButton())) { return 270; }
+ 		
+ 		return -1;
+ 	}
 }
 

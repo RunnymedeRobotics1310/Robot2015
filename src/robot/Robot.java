@@ -1,8 +1,14 @@
 
 package robot;
 
+
+import java.util.ArrayList;
+import java.util.List;
+
 import robot.commands.ExampleCommand;
 import robot.subsystems.ActuatorSubsystem;
+import robot.subsystems.PowerSubsystem;
+import robot.subsystems.RunnymedeSubsystem;
 import robot.subsystems.SensorSubsystem;
 import robot.subsystems.VisionSubsystem;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -19,9 +25,13 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  */
 public class Robot extends IterativeRobot {
 
+	private List<RunnymedeSubsystem> subsystemLs = new ArrayList<RunnymedeSubsystem>();
+	
 	public static final ActuatorSubsystem actuatorSubsystem = new ActuatorSubsystem();
 	public static final SensorSubsystem   sensorSubsystem   = new SensorSubsystem();
 	public static final VisionSubsystem   visionSubsystem   = new VisionSubsystem();
+	public static final PowerSubsystem    powerSubsystem    = new PowerSubsystem();
+	
 	public static OI oi;
 
     Command autonomousCommand;
@@ -36,18 +46,18 @@ public class Robot extends IterativeRobot {
      */
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
+        updateDashboard();
     }
 
     /**
      * This function is called when the disabled button is hit.
      * You can use it to reset subsystems before shutting down.
      */
-    public void disabledInit(){
-
-    }
+    public void disabledInit() {}
 
     public void disabledPeriodic() {
 		Scheduler.getInstance().run();
+		updateDashboard();
 	}
 
     /**
@@ -56,7 +66,18 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
 		oi = new OI();
-        // instantiate the command used for the autonomous period
+		
+        subsystemLs.add(actuatorSubsystem);
+    	subsystemLs.add(sensorSubsystem);
+    	subsystemLs.add(visionSubsystem);
+    	subsystemLs.add(powerSubsystem);
+    	
+    	// Initialize all subsystems.
+    	for (RunnymedeSubsystem subsystem: subsystemLs) {
+    		subsystem.initSubsystem();
+    	}
+
+    	// instantiate the command used for the autonomous period
         autonomousCommand = new ExampleCommand();
     }
 
@@ -73,6 +94,7 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        updateDashboard();
     }
     
     /**
@@ -80,5 +102,11 @@ public class Robot extends IterativeRobot {
      */
     public void testPeriodic() {
         LiveWindow.run();
+    }
+    
+    private void updateDashboard() {
+    	for (RunnymedeSubsystem subsystem: subsystemLs) {
+    		subsystem.updateDashboard();
+    	}
     }
 }

@@ -9,9 +9,15 @@ public class VisionSubsystem extends RunnymedeSubsystem {
     
 	CameraServer server;
 
+    @Override
+	public void disableSubsystem() { }
+
+    @Override
+	public void enableSubsystem() { }
+    
     public void initDefaultCommand() {}
 
-    // @Override
+	@Override
     public void initSubsystem() {
     	
 	    server = CameraServer.getInstance();
@@ -19,10 +25,8 @@ public class VisionSubsystem extends RunnymedeSubsystem {
 	    server.startAutomaticCapture("cam0");
 
     }
-    
-    // @Override
-    public void updateDashboard() {
-    	
-    }
+
+	@Override
+    public void updateDashboard() { }
 }
 

@@ -9,6 +9,20 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public abstract class RunnymedeSubsystem extends Subsystem {
     
 	/**
+	 * Disable the subsystem. 
+	 * <p>
+	 * This method is called to disable the robot subsystem.  It is called when the robot is disabled.
+	 */
+	public abstract void disableSubsystem();
+	
+	/**
+	 * Enable the subsystem. 
+	 * <p>
+	 * This method is called to enable the subsystems in Auto and Teleop modes.
+	 */
+	public abstract void enableSubsystem();
+	
+	/**
 	 * Initialize the subsystem. 
 	 * <p>
 	 * This method is called from the Robot init after the subsystem instances are created.  Each of the 

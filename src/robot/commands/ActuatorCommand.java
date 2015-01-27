@@ -25,6 +25,7 @@ public class ActuatorCommand extends Command {
 
 	}
 
+	
 	private void setRelay() {
 
 		// The relay will only be on if the user is holding a button on the user interface.

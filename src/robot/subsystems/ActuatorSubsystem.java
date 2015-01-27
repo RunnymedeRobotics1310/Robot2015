@@ -16,7 +16,17 @@ public class ActuatorSubsystem extends RunnymedeSubsystem {
 	Relay spike =  new Relay(0);
 	Servo servo =  new Servo(3);
 
-	// @Override
+	@Override
+	public void disableSubsystem() {}
+    
+	@Override
+	public void enableSubsystem() {}
+	
+	public void initDefaultCommand() {
+    	setDefaultCommand(new ActuatorCommand());
+    }
+	
+    @Override
     public void initSubsystem() {
     	
     	// Initialize sensors and motors
@@ -35,10 +45,6 @@ public class ActuatorSubsystem extends RunnymedeSubsystem {
     	servo.startLiveWindowMode();
     	spike.startLiveWindowMode();
         
-    }
-    
-    public void initDefaultCommand() {
-    	setDefaultCommand(new ActuatorCommand());
     }
 
     /**
@@ -59,7 +65,7 @@ public class ActuatorSubsystem extends RunnymedeSubsystem {
     	servo.updateTable();
     }
     
-    // @Override
+    @Override
     public void updateDashboard() {
     	
     	// Call updateTable on all inputs that implement LiveWindowSendable

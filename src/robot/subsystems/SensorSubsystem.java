@@ -17,12 +17,16 @@ public class SensorSubsystem extends RunnymedeSubsystem {
 	AnalogPotentiometer pot = new AnalogPotentiometer(0);
 
 	
-    public void initDefaultCommand() {
-        // Set the default command for a subsystem here.
-        //setDefaultCommand(new MySpecialCommand());
-    }
+    @Override
+	public void disableSubsystem() { }
     
-    // @Override
+    @Override
+	public void enableSubsystem() { }
+    
+    @Override
+    public void initDefaultCommand() { }
+
+	@Override
     public void initSubsystem() {
     	
 		LiveWindow.addSensor("DigitalIO", "Toggle",    toggleSwitch);
@@ -30,14 +34,15 @@ public class SensorSubsystem extends RunnymedeSubsystem {
 		LiveWindow.addSensor("AnalogIO",  "Pot",       pot);
 
     }
-    
-    
-    // @Override
+
+	@Override
     public void updateDashboard() {
     	
     	// Call the updateTable method for all sensors that implement LiveWindowSendable;
     	toggleSwitch.updateTable();
     	proximitySwitch.updateTable();
     }
+    
+    
 }
 

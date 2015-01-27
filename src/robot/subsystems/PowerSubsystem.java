@@ -12,21 +12,11 @@ public class PowerSubsystem extends RunnymedeSubsystem {
 	PowerDistributionPanel powerDistributionPanel = new PowerDistributionPanel();
 	
 	
-    public void initDefaultCommand() {
-        // Set the default command for a subsystem here.
-        //setDefaultCommand(new MySpecialCommand());
-    }
+    @Override
+	public void disableSubsystem() {}
     
-	// @Override
-    public void initSubsystem() {
-    	
-    	// Add all sensors and motors to the LiveWindow
-    	LiveWindow.addSensor  ("PowerDistributionPanel", "Current", powerDistributionPanel);
-    	
-    	// Start Live Window for all sensors, PIDS and motors that implement LiveWindowSendable
-    	SmartDashboard.putData("PowerDistributionPanel", powerDistributionPanel);
-        
-    }
+	@Override
+	public void enableSubsystem() {}
     
     /**
      * Get the current on any channel on the Power Distribution Panel.  
@@ -43,7 +33,20 @@ public class PowerSubsystem extends RunnymedeSubsystem {
     	return 0;
     }
 
-    // @Override
+    public void initDefaultCommand() { }
+
+	@Override
+    public void initSubsystem() {
+    	
+    	// Add all sensors and motors to the LiveWindow
+    	LiveWindow.addSensor  ("PowerDistributionPanel", "Current", powerDistributionPanel);
+    	
+    	// Start Live Window for all sensors, PIDS and motors that implement LiveWindowSendable
+    	SmartDashboard.putData("PowerDistributionPanel", powerDistributionPanel);
+        
+    }
+
+	@Override
     public void updateDashboard() {
 
     	powerDistributionPanel.updateTable();

@@ -11,7 +11,7 @@ public class ExampleCommand extends Command {
 
     public ExampleCommand() {
         // Use requires() here to declare subsystem dependencies
-        requires(Robot.sensorSubsystem);
+ //       requires(Robot.sensorSubsystem);
     }
 
     // Called once after isFinished returns true

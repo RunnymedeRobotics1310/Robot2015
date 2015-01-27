@@ -57,7 +57,7 @@ public class OI {
 	
 	private Joystick_F310 driverJoystick = new Joystick_F310(0);
 	
-	public int getDirection() { 
+	public int getDirectionPointer() { 
  		
  		if (   driverJoystick.getButton(ButtonMap.NORTH.getButton()) 
  			&& driverJoystick.getButton(ButtonMap.EAST .getButton())) { return 45; }
@@ -125,7 +125,7 @@ public class OI {
 				driverJoystick.getPolarCoordinate    (StickMap.DRIVE_STICK.getStick())   .square().toString() + " " +
 				driverJoystick.getCartesianCoordinate(StickMap.ROTATION_STICK.getStick()).square().toString() + " " +
 				driverJoystick.getButtonsPressedString()
-				+ ((getDirection() > -1) ? " D(" + getDirection() + ")" : "") );
+				+ ((getDirectionPointer() >= 0) ? " D(" + getDirectionPointer() + ")" : "") );
 	}
 }
 

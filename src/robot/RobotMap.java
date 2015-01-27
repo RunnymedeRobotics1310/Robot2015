@@ -6,13 +6,38 @@ package robot;
  * floating around.
  */
 public class RobotMap {
-    // For example to map the left and right motors, you could define the
-    // following variables to use with your drivetrain subsystem.
-    // public static int leftMotor = 1;
-    // public static int rightMotor = 2;
-    
-    // If you are using multiple modules, make sure to define both the port
-    // number and the module. For example you with a rangefinder:
-    // public static int rangefinderPort = 1;
-    // public static int rangefinderModule = 1;
+
+	// PWM Components
+	
+	public static int FRONT_LEFT_MOTOR  = 2;
+	public static int REAR_LEFT_MOTOR   = 3;
+	public static int FRONT_RIGHT_MOTOR = 1;
+	public static int REAR_RIGHT_MOTOR  = 0;
+	
+	// Analog I/O
+
+	public static final int GYRO_PORT = 0;
+	
+	// Digital Inputs
+	
+	public static final int FRONT_LEFT_ENCODER_ONE = 4;
+	public static final int FRONT_LEFT_ENCODER_TWO = 5;
+	
+	public static final int REAR_LEFT_ENCODER_ONE = 6;
+	public static final int REAR_LEFT_ENCODER_TWO = 7;
+	
+	public static final int FRONT_RIGHT_ENCODER_ONE = 2;
+	public static final int FRONT_RIGHT_ENCODER_TWO = 3;
+	
+	public static final int REAR_RIGHT_ENCODER_ONE = 0;
+	public static final int REAR_RIGHT_ENCODER_TWO = 1;
+	
+	// Hardware related constants
+
+	public static final double ENCODER_COUNTS_PER_INCH = 24;
+	public static final double ENCODER_RESOLUTION_CORRECTION = 1.3;
+	public static final double MAX_ANUGLAR_VELOCITY = 120;
+	public static final double MAX_ENCODER_RATE = 1300;
+	
+
 }

@@ -40,8 +40,8 @@ public class RunnymedeMecanumDrive {
      * Speed controller input version of RobotDrive (see previous comments).
      * @param rearLeftMotorInverted  - true if the wheel is inverted, false otherwise
      * @param frontLeftMotorInverted - true if the wheel is inverted, false otherwise
-     * @param rearRightwheel The back right SpeedController object used to drive the robot.
-     * @param frontRightwheel The front right SpeedController object used to drive the robot.
+     * @param rearRightMotorInverted  - true if the wheel is inverted, false otherwise
+     * @param frontRightMotorInverted - true if the wheel is inverted, false otherwise
      */
     public RunnymedeMecanumDrive(boolean frontLeftMotorInverted, boolean rearLeftMotorInverted,
                       boolean frontRightMotorInverted, boolean rearRightMotorInverted) {

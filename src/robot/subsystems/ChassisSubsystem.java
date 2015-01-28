@@ -44,7 +44,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	        new Talon(RobotMap.FRONT_RIGHT_MOTOR),
 	        new Talon(RobotMap.REAR_RIGHT_MOTOR)   };
 	
-	// Motor Inverted indicator
+	// Mecanum Drive for the robot configuration.
 	RunnymedeMecanumDrive mecanumDrive = 
 			new RunnymedeMecanumDrive(MOTOR_NOT_INVERTED,
 					                  MOTOR_INVERTED,
@@ -600,6 +600,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		
 	}
 	
+	// FIXME: This is not the correct distance. :-)
 	private double encoderAverageDistance() { return 0; }
 
 	private PolarCoordinate getDrivePolarCoordinate(PolarCoordinate p, DriveMode driveMode) {

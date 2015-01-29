@@ -57,6 +57,8 @@ public class OI {
 	
 	private Joystick_F310 driverJoystick = new Joystick_F310(0);
 	
+	private NetworkTableOI networkTableOI = new NetworkTableOI();
+	
 	public int getDirectionPointer() { 
  		
  		if (   driverJoystick.getButton(ButtonMap.NORTH.getButton()) 
@@ -120,7 +122,18 @@ public class OI {
 	public boolean getTogglePIDButton() { 
 		return driverJoystick.getRawJoystick().getRawButton(12); }
 
+	public void isNewMouseEvent() {
+		networkTableOI.isNewMouseEvent();
+	}
+	
+	public CartesianCoordinate getMouseEvent() {
+		return networkTableOI.getMouseEvent();
+	}
+	
  	public void updateDashboard() {
+
+ 		networkTableOI.updateDashboard();
+ 		
 		SmartDashboard.putString("Driver Joystick Buttons", 
 				driverJoystick.getPolarCoordinate    (StickMap.DRIVE_STICK.getStick())   .square().toString() + " " +
 				driverJoystick.getCartesianCoordinate(StickMap.ROTATION_STICK.getStick()).square().toString() + " " +

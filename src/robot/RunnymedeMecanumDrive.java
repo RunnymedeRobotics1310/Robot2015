@@ -98,17 +98,10 @@ public class RunnymedeMecanumDrive {
 		 * counter clockwise.
 		 */ 
 
-		if (rotation >= 0) {
-			wheelSpeeds[FRONT_LEFT]  += rotation;
-			wheelSpeeds[REAR_LEFT]   += rotation;
-			wheelSpeeds[FRONT_RIGHT] -= rotation;
-			wheelSpeeds[REAR_RIGHT]  -= rotation;
-		} else {
-			wheelSpeeds[FRONT_LEFT]  -= rotation;
-			wheelSpeeds[REAR_LEFT]   -= rotation;
-			wheelSpeeds[FRONT_RIGHT] += rotation;
-			wheelSpeeds[REAR_RIGHT]  += rotation;
-		}
+		wheelSpeeds[FRONT_LEFT]  += rotation;
+		wheelSpeeds[REAR_LEFT]   += rotation;
+		wheelSpeeds[FRONT_RIGHT] -= rotation;
+		wheelSpeeds[REAR_RIGHT]  -= rotation;
 		
 		// Check the wheel speeds are not above 1.0, and scale them appropriately.
         normalizeWheelSpeeds(wheelSpeeds);

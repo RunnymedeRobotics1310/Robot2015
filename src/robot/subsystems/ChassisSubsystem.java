@@ -54,12 +54,29 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	// SENSORS
 	
 	// Encoders
-	
+	// PID Input and Output are between -1 and 1, so we divide the rate by the max rate
+	// to normalize the encoder output so it can be compared with the motor drive input and output range
 	Encoder [] encoderArr = {
-			new Encoder(RobotMap.FRONT_LEFT_ENCODER_ONE, RobotMap.FRONT_LEFT_ENCODER_TWO, true),
-			new Encoder(RobotMap.REAR_LEFT_ENCODER_ONE,  RobotMap.REAR_LEFT_ENCODER_TWO,  true),
-			new Encoder(RobotMap.FRONT_RIGHT_ENCODER_ONE,RobotMap.FRONT_RIGHT_ENCODER_TWO,true),
-			new Encoder(RobotMap.REAR_RIGHT_ENCODER_ONE, RobotMap.REAR_RIGHT_ENCODER_TWO, true)   };
+			new Encoder(RobotMap.FRONT_LEFT_ENCODER_ONE, RobotMap.FRONT_LEFT_ENCODER_TWO, true){
+				public double pidGet() {
+					return this.getRate() / RobotMap.MAX_ENCODER_RATE;
+				}
+			},
+			new Encoder(RobotMap.REAR_LEFT_ENCODER_ONE,  RobotMap.REAR_LEFT_ENCODER_TWO,  true){
+				public double pidGet() {
+					return this.getRate() / RobotMap.MAX_ENCODER_RATE;
+				}
+			},
+			new Encoder(RobotMap.FRONT_RIGHT_ENCODER_ONE,RobotMap.FRONT_RIGHT_ENCODER_TWO,true){
+				public double pidGet() {
+					return this.getRate() / RobotMap.MAX_ENCODER_RATE;
+				}
+			},
+			new Encoder(RobotMap.REAR_RIGHT_ENCODER_ONE, RobotMap.REAR_RIGHT_ENCODER_TWO, true){
+				public double pidGet() {
+					return this.getRate() / RobotMap.MAX_ENCODER_RATE;
+				}
+			}};
 
 	// Gyro
 	
@@ -113,18 +130,16 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 			new MockSpeedController(),
 			new MockSpeedController()  };
 
-	// FIXME: Don't understand these PID parameters.
 	PIDController [] wheelSpeedPIDArr = {
-			new PIDController(0.001, 0.0, -0.0005,	1.0 / RobotMap.MAX_ENCODER_RATE, 
+			new PIDController(1.3, 0.0, -0.65,	1.0, 
 					encoderArr[FRONT_LEFT], wheelSpeedPIDOutputArr[FRONT_LEFT]),
-			new PIDController(0.001, 0.0, -0.0005,	1.0 / RobotMap.MAX_ENCODER_RATE, 
+			new PIDController(1.3, 0.0, -0.65,	1.0, 
 					encoderArr[REAR_LEFT],  wheelSpeedPIDOutputArr[REAR_LEFT]),
-			new PIDController(0.001, 0.0, -0.0005,	1.0 / RobotMap.MAX_ENCODER_RATE, 
+			new PIDController(1.3, 0.0, -0.65,	1.0, 
 					encoderArr[FRONT_RIGHT],wheelSpeedPIDOutputArr[FRONT_RIGHT]),
-			new PIDController(0.001, 0.0, -0.0005,	1.0 / RobotMap.MAX_ENCODER_RATE, 
+			new PIDController(1.3, 0.0, -0.65,	1.0, 
 					encoderArr[REAR_RIGHT], wheelSpeedPIDOutputArr[REAR_RIGHT])	};
 
-	
 	/**
 	 * Is the angle on target for the specified drive angle driveToAngle which enables the anglePID.
 	 * @return true if on target, false otherwise
@@ -310,10 +325,8 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		distancePID.setOutputRange(-1.0, 1.0);
 
 		// WheelSpeedPID
-		// FIXME:  Look at theory behind wheel speed PID.
 		for (int i=0; i<MOTOR_COUNT; i++) {
-			wheelSpeedPIDArr[i].setInputRange(-RobotMap.MAX_ENCODER_RATE,
-								     		   RobotMap.MAX_ENCODER_RATE);
+			wheelSpeedPIDArr[i].setInputRange(-1.0d, 1.0d);
 			wheelSpeedPIDArr[i].setOutputRange(-1.0d, 1.0d);
 		}
 
@@ -499,10 +512,6 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 			mecanumRotation = rotationPIDOutput.get();
 		} else {
 			disableRotationPID();
-		}
-		// Limit the rotation speed.
-		if (mecanumRotation > MAX_ROTATION_SPEED) {
-			mecanumRotation =  MAX_ROTATION_SPEED;
 		}
 		
 		/* 

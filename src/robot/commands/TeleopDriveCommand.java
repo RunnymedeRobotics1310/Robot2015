@@ -24,11 +24,6 @@ public class TeleopDriveCommand extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		
-		if (Robot.oi.getDirectionPointer() >= 0) {
-//			Scheduler.getInstance().add(new TeleopDriveToAngleCommand());
-			return;
-		}
 
 		Robot.chassisSubsystem.driveJoystick(Robot.oi.getDriverPolarCoordinate(),
 				Robot.oi.getDriverRotation(), DriveMode.FIELD_RELATIVE, PIDEnable.ENABLED, PIDEnable.ENABLED);

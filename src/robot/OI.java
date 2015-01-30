@@ -2,6 +2,7 @@ package robot;
 
 import robot.Joystick_F310.F310Button;
 import robot.Joystick_F310.F310Stick;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -139,6 +140,13 @@ public class OI {
 				driverJoystick.getCartesianCoordinate(StickMap.ROTATION_STICK.getStick()).square().toString() + " " +
 				driverJoystick.getButtonsPressedString()
 				+ ((getDirectionPointer() >= 0) ? " D(" + getDirectionPointer() + ")" : "") );
+	}
+
+	public void periodic() {
+		if (getDirectionPointer() >= 0) {
+//			Scheduler.getInstance().add(new TeleopDriveToAngleCommand());
+			return;
+		}
 	}
 }
 

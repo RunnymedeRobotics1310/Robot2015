@@ -132,6 +132,7 @@ public class Robot extends IterativeRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        oi.periodic();
         updateDashboard();
     }
     

@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  */
 public class Robot extends IterativeRobot {
 
-	private boolean testRobot = true;
+	private boolean testRobot = false;
 	
 	private List<RunnymedeSubsystem> subsystemLs = new ArrayList<RunnymedeSubsystem>();
 	

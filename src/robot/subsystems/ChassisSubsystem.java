@@ -1,5 +1,6 @@
 package robot.subsystems;
 
+import robot.EncoderCorrection;
 import robot.MockSpeedController;
 import robot.PolarCoordinate;
 import robot.RobotMap;
@@ -46,10 +47,10 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	
 	// Mecanum Drive for the robot configuration.
 	RunnymedeMecanumDrive mecanumDrive = 
-			new RunnymedeMecanumDrive(MOTOR_NOT_INVERTED,
+			new RunnymedeMecanumDrive(MOTOR_INVERTED,
 					                  MOTOR_INVERTED,
 					                  MOTOR_NOT_INVERTED,
-					                  MOTOR_INVERTED);
+					                  MOTOR_NOT_INVERTED);
 	
 	// SENSORS
 	
@@ -62,7 +63,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 					return this.getRate() / RobotMap.MAX_ENCODER_RATE;
 				}
 			},
-			new Encoder(RobotMap.REAR_LEFT_ENCODER_ONE,  RobotMap.REAR_LEFT_ENCODER_TWO,  true){
+			new EncoderCorrection(RobotMap.REAR_LEFT_ENCODER_ONE,  RobotMap.REAR_LEFT_ENCODER_TWO,  true){
 				public double pidGet() {
 					return this.getRate() / RobotMap.MAX_ENCODER_RATE;
 				}
@@ -103,10 +104,12 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	
 	MockSpeedController rotationPIDOutput    = new MockSpeedController();
 
-	PIDController rotationPID = new PIDController(0.0005, 0.0015, 0.001, 0.0, 
+	
+	// p 0.4, i 0.0, d 0.0, f RobotMap.MAX_ANGULAR_VELOCITY / 360.0
+	PIDController rotationPID = new PIDController(0.025, 0.075, 0.05, RobotMap.MAX_ANUGLAR_VELOCITY / 190.0, 
 			new PIDSource() {
 				public double pidGet() {
-					return getGyroRotation();
+					return getGyroRotation() / RobotMap.MAX_ANUGLAR_VELOCITY;
 				}
 			},	rotationPIDOutput);
 	
@@ -175,6 +178,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	 * @param p - PolarCoordinate (r, theta) used to determine speed and direction
 	 * @param rotation - the requested rotational speed
 	 * @param driveMode - FIELD_RELATIVE, or ROBOT_RELATIVE.
+	 * @param rotationPIDEnable - ENABLE to use rotation PIDS for driving the motor speeds
 	 * @param motorPIDEnable - ENABLE to use motor PIDS for driving the motor speeds
 	 */
 	public void driveJoystick(PolarCoordinate p, double rotation, DriveMode driveMode, 
@@ -185,7 +189,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		disableDistancePID();
 		
 		// Scale the rotational speed from [0..1.0] to the max rotational speed.
-		double scaledRotation = rotation * MAX_ROTATION_SPEED;
+		double scaledRotation = rotation; //* MAX_ROTATION_SPEED;
 
 		// Calculate the angle of travel relative to the robot heading.
 		PolarCoordinate drivePolarCoordinate = getDrivePolarCoordinate(p, driveMode);
@@ -268,7 +272,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	 */
 	public double getGyroAngle() {
 		
-		double angle = gyro.getAngle() + gyroCalibrationOffset;
+		double angle = gyro.getAngle();// + gyroCalibrationOffset;
 		
 		while (angle < 0)    { angle += 360; }
 		while (angle >= 360) { angle -= 360; }
@@ -306,18 +310,17 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		
 		// Initialize Sensors
 		gyro.setSensitivity(0.0125);
-		gyro.initGyro();
+		//gyro.initGyro();
 
 		// Initialize PID parameters
 		// Angle tolerance to determine if the PID is on target in degrees.
 		anglePID.setAbsoluteTolerance(2.75d);
 		anglePID.setInputRange(0.0d, 360.0d);
-		anglePID.setContinuous(false);
+		anglePID.setContinuous(true);
 		anglePID.setOutputRange(-1.0d, 1.0d);
 
 		// Rotation PID
-		rotationPID.setInputRange(-RobotMap.MAX_ANUGLAR_VELOCITY,
-			 	RobotMap.MAX_ANUGLAR_VELOCITY);
+		rotationPID.setInputRange(-1.0, 1.0);
 		rotationPID.setOutputRange(-1.0d, 1.0d);
 
 		// Distance tolerance to determine if the PID is on target in encoder counts.
@@ -336,6 +339,11 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 
 		SmartDashboard.putData("Gyro", gyro);
 
+		SmartDashboard.putData("FrontLeftTalon", talonArr[FRONT_LEFT]);
+		SmartDashboard.putData("RearLeftTalon",  talonArr[REAR_LEFT]);
+		SmartDashboard.putData("FrontRightTalon",talonArr[FRONT_RIGHT]);
+		SmartDashboard.putData("RearRightTalon", talonArr[REAR_RIGHT]);
+		
 		SmartDashboard.putData("FrontLeftEncoder", encoderArr[FRONT_LEFT]);
 		SmartDashboard.putData("RearLeftEncoder",  encoderArr[REAR_LEFT]);
 		SmartDashboard.putData("FrontRightEncoder",encoderArr[FRONT_RIGHT]);
@@ -421,6 +429,8 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		SmartDashboard.putNumber("Rotation PID Output", rotationPIDOutput.get());
 
 		SmartDashboard.putNumber("Gyro angle",      getGyroAngle());
+		SmartDashboard.putNumber("Gyro rate",      getGyroRotation());
+
 		SmartDashboard.putNumber("EncoderAverager", encoderAverageDistance());
 
 		SmartDashboard.putBoolean("Chassis Subsystem Enabled" , subsystemEnabled);

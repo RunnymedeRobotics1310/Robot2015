@@ -26,7 +26,7 @@ public class TeleopDriveCommand extends Command {
 	protected void execute() {
 
 		Robot.chassisSubsystem.driveJoystick(Robot.oi.getDriverPolarCoordinate(),
-				Robot.oi.getDriverRotation(), DriveMode.FIELD_RELATIVE, PIDEnable.ENABLED, PIDEnable.ENABLED);
+				Robot.oi.getDriverRotation(), DriveMode.ROBOT_RELATIVE, PIDEnable.ENABLED, PIDEnable.ENABLED);
 
 		int directionPointer = Robot.oi.getDriverPov();
 		if (directionPointer != -1) {

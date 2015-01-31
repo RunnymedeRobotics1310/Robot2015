@@ -1,16 +1,12 @@
-
 package robot;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-import robot.commands.ExampleCommand;
-import robot.subsystems.ActuatorSubsystem;
 import robot.subsystems.ChassisSubsystem;
 import robot.subsystems.PowerSubsystem;
 import robot.subsystems.RunnymedeSubsystem;
-import robot.subsystems.SensorSubsystem;
 import robot.subsystems.VisionSubsystem;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -26,38 +22,20 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  */
 public class Robot extends IterativeRobot {
 
-	private boolean testRobot = false;
-	
 	private List<RunnymedeSubsystem> subsystemLs = new ArrayList<RunnymedeSubsystem>();
 	
 	public static OI oi;
 
-	public static       ActuatorSubsystem actuatorSubsystem;
-	public static       SensorSubsystem   sensorSubsystem; 
 	public static final VisionSubsystem   visionSubsystem   = new VisionSubsystem();
 	public static final PowerSubsystem    powerSubsystem    = new PowerSubsystem();
-	public static       ChassisSubsystem  chassisSubsystem;
-	
+	public static final ChassisSubsystem  chassisSubsystem  = new ChassisSubsystem();
+
     Command autonomousCommand;
     
     // Default constructor.
     
     public Robot () { 
     	
-    	// Initialize the different subsytems depending on the mode because
-    	// the subsystems use overlapping outputs which results in the 
-    	// robot not being able to be instantiated.  When an I/O Port is used 
-    	// in more than one subsystem, the driver station will display an 
-    	// unable to instatiate class message.
-    	if (testRobot) {
-    		actuatorSubsystem = new ActuatorSubsystem();
-    		sensorSubsystem   = new SensorSubsystem();
-    		chassisSubsystem  = null;
-    	} else {
-    		actuatorSubsystem = null;
-    		sensorSubsystem   = null;
-    		chassisSubsystem  = new ChassisSubsystem();
-    	}
     }
 
     @Override
@@ -100,11 +78,9 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
 		oi = new OI();
 		
-		if (actuatorSubsystem != null)  { subsystemLs.add(actuatorSubsystem); }
-    	if (sensorSubsystem != null)    { subsystemLs.add(sensorSubsystem); }
     	subsystemLs.add(visionSubsystem);
     	subsystemLs.add(powerSubsystem);
-    	if (chassisSubsystem != null)   { subsystemLs.add(chassisSubsystem); }
+    	subsystemLs.add(chassisSubsystem); 
     	
     	// Initialize all subsystems.
     	for (RunnymedeSubsystem subsystem: subsystemLs) {
@@ -112,7 +88,7 @@ public class Robot extends IterativeRobot {
     	}
 
     	// instantiate the command used for the autonomous period
-        autonomousCommand = new ExampleCommand();
+    	// FIXME: need to write some autonomous code here.
     }
 
     @Override

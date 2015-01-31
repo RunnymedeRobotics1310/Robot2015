@@ -134,7 +134,7 @@ public class Joystick_F310 {
 		
 		JoystickMode joystickMode = getJoystickMode();
 		
-		String buttonString = "";
+		String buttonString = "" + joystickMode + " ";
 		
 		for (F310Button button : F310Button.values()) {
 			if (getButton(button)) {

@@ -2,6 +2,10 @@ package robot;
 
 public class PolarCoordinate {
 	
+	private double r;
+	
+	private double theta;
+
 	/**
 	 * Get a new PolarCoordinate that is the equivalent of the passed in 
 	 * CartesianCoordinate.
@@ -36,10 +40,6 @@ public class PolarCoordinate {
 		return p;
 	}
 	
-	private double r;
-
-	private double theta;
-	
 	/**
 	 * Add the given angle to this PolarCoordinate.
 	 * <p>
@@ -62,6 +62,16 @@ public class PolarCoordinate {
 	 * @return theta - a value between 0 and 360 degrees.
 	 */
 	public double getTheta() { return this.theta; }
+	
+	/**
+	 * Set the Polar Coordinate to the same value as the passed in PolarCoordinate.
+	 * <p>
+	 * @param p - the PolarCoordinate (r, theta) used to set this object.
+	 */
+	public void set(PolarCoordinate p) {
+		this.r     = p.r;
+		this.theta = p.theta;
+	}
 	
 	/**
 	 * Set the r value of the polar coordinate r, theta.

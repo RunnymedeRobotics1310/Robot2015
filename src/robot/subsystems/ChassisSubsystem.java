@@ -2,12 +2,12 @@ package robot.subsystems;
 
 import robot.EncoderCorrection;
 import robot.MockSpeedController;
+import robot.OffsetableGyro;
 import robot.PolarCoordinate;
 import robot.RobotMap;
 import robot.RunnymedeMecanumDrive;
 import robot.commands.TeleopDriveCommand;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.Talon;
@@ -23,8 +23,6 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	
 	private boolean subsystemEnabled = false;
 
-	private static double MAX_ROTATION_SPEED = 0.25;
-	
 	// MOTORS 
 	
 	// Motor definitions for arrays
@@ -80,25 +78,25 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 			}};
 
 	// Gyro
+	OffsetableGyro gyro = new OffsetableGyro(RobotMap.GYRO_PORT);
 	
-	Gyro gyro = new Gyro(RobotMap.GYRO_PORT);
-	private double gyroCalibrationOffset = 0.0;
-
 	// PIDS and PID outputs
 
 	// AnglePID
 	
 	MockSpeedController anglePIDOutput    = new MockSpeedController();
 
-	PIDController anglePID = new PIDController(0.0125, 0.0, -0.00075, 0.0,
+	PIDController anglePID = new PIDController(0.02, 0.0, -0.001, 0.0,
 			new PIDSource() {
 				public double pidGet() {
-					return getGyroAngle();
+					return gyro.getAngle();
 				}
 			}, anglePIDOutput);
 	
 	double angleRelativeSetpoint = 0.0;
 	double angleSetpointPrev     = 0.0;
+	
+	public static final double ANGLE_PID_ABSOLUTE_TOLERANCE = 2.7d;
 
 	// RotationPID - angular velocity
 	
@@ -106,7 +104,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 
 	
 	// p 0.4, i 0.0, d 0.0, f RobotMap.MAX_ANGULAR_VELOCITY / 360.0
-	PIDController rotationPID = new PIDController(0.025, 0.075, 0.05, RobotMap.MAX_ANUGLAR_VELOCITY / 190.0, 
+	PIDController rotationPID = new PIDController(0.025, 0, 0, RobotMap.MAX_ANUGLAR_VELOCITY / 190.0, 
 			new PIDSource() {
 				public double pidGet() {
 					return getGyroRotation() / RobotMap.MAX_ANUGLAR_VELOCITY;
@@ -121,7 +119,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	PIDController distancePID = new PIDController(0.007, 0.0, -0.0005, 0.0, 
 			new PIDSource() {
 				public double pidGet() {
-					return encoderAverageDistance();
+					return getDistance();
 				}
 			}, distancePIDOutput);
 
@@ -188,13 +186,10 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		disableAnglePID();
 		disableDistancePID();
 		
-		// Scale the rotational speed from [0..1.0] to the max rotational speed.
-		double scaledRotation = rotation; //* MAX_ROTATION_SPEED;
-
 		// Calculate the angle of travel relative to the robot heading.
 		PolarCoordinate drivePolarCoordinate = getDrivePolarCoordinate(p, driveMode);
 
-		drivePolar(drivePolarCoordinate, scaledRotation, rotationPIDEnable, motorPIDEnable);
+		drivePolar(drivePolarCoordinate, rotation, rotationPIDEnable, motorPIDEnable);
 
 	}
 
@@ -228,7 +223,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 				// based on the current direction in ROBOT_RELATIVE.
 				if (!anglePID.isEnable() || angleSetpoint != angleSetpointPrev) {
 				
-					angleRelativeSetpoint = getGyroAngle() + angleSetpoint;
+					angleRelativeSetpoint = gyro.getAngle() + angleSetpoint;
 					while (angleRelativeSetpoint > 360.0) {
 						angleRelativeSetpoint -= 360.0d;
 					}
@@ -247,7 +242,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 
 		enableAnglePID();
 		
-		SmartDashboard.putNumber("Angle difference", angleRelativeSetpoint - getGyroAngle());
+		SmartDashboard.putNumber("Angle difference", angleRelativeSetpoint - gyro.getAngle());
 		
 		// Use the output of the gyro angle PID to set the rotational velocity of the robot.
 		anglePID.setSetpoint(angleRelativeSetpoint);
@@ -265,22 +260,6 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	}
 	
 	/**
-	 *  Get the calibrated Gyro angle
-	 *  
-	 *  @return double - Gyro angle between 0 and 360 where 0 represents directly away
-	 *  from the driver station.
-	 */
-	public double getGyroAngle() {
-		
-		double angle = gyro.getAngle();// + gyroCalibrationOffset;
-		
-		while (angle < 0)    { angle += 360; }
-		while (angle >= 360) { angle -= 360; }
-		
-		return angle;
-	}
-
-	/**
 	 *  Get the Gyro rotational speed
 	 *  
 	 *  @return double - Gyro rotational speed.
@@ -289,6 +268,14 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		return gyro.getRate();
 	}
 
+	/**
+	 *  Get the Gyro angle
+	 *  
+	 *  @return double - Gyro angle.
+	 */
+	public double getGyroAngle() {
+		return gyro.getAngle();
+	}
 
 	/**
 	 * Gyro Angle on target
@@ -314,7 +301,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 
 		// Initialize PID parameters
 		// Angle tolerance to determine if the PID is on target in degrees.
-		anglePID.setAbsoluteTolerance(2.75d);
+		anglePID.setAbsoluteTolerance(ANGLE_PID_ABSOLUTE_TOLERANCE);
 		anglePID.setInputRange(0.0d, 360.0d);
 		anglePID.setContinuous(true);
 		anglePID.setOutputRange(-1.0d, 1.0d);
@@ -393,10 +380,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	 */
 	public void resetGyro(int fieldAngle) {
 
-		gyro.reset();
-		anglePID.reset();
-		
-		gyroCalibrationOffset = fieldAngle;
+		gyro.setOffset(fieldAngle);
 		
 	}
 	
@@ -428,10 +412,10 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		rotationPID.updateTable();
 		SmartDashboard.putNumber("Rotation PID Output", rotationPIDOutput.get());
 
-		SmartDashboard.putNumber("Gyro angle",      getGyroAngle());
+		SmartDashboard.putNumber("Gyro angle",     gyro.getAngle());
 		SmartDashboard.putNumber("Gyro rate",      getGyroRotation());
 
-		SmartDashboard.putNumber("EncoderAverager", encoderAverageDistance());
+		SmartDashboard.putNumber("EncoderAverager", getDistance());
 
 		SmartDashboard.putBoolean("Chassis Subsystem Enabled" , subsystemEnabled);
 
@@ -619,17 +603,22 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		
 	}
 	
-	// FIXME: This is not the correct distance. :-)
-	private double encoderAverageDistance() { return 0; }
+	// The distance travelled is roughly the average distance of all the encoders
+	private double getDistance() {
+		double distanceTotal = 0;
+		for (Encoder encoder: encoderArr) {
+			distanceTotal += Math.abs(encoder.getDistance());
+		}
+		return distanceTotal / encoderArr.length;
+	}
 
 	private PolarCoordinate getDrivePolarCoordinate(PolarCoordinate p, DriveMode driveMode) {
 
-		PolarCoordinate drivePolarCoordinate = p;
+		PolarCoordinate drivePolarCoordinate = new PolarCoordinate();
+		drivePolarCoordinate.set(p);
 		
 		if (driveMode == DriveMode.FIELD_RELATIVE) {
-			drivePolarCoordinate = new PolarCoordinate();
-			drivePolarCoordinate.setR(p.getR());
-			drivePolarCoordinate.setTheta(getGyroAngle() - p.getTheta());
+			drivePolarCoordinate.setTheta(p.getTheta() - gyro.getAngle());
 		}
 		
 		return drivePolarCoordinate;

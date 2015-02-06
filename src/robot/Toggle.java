@@ -3,6 +3,7 @@ package robot;
 public class Toggle {
 	
 	boolean state, previousControlValue;
+	long time = System.currentTimeMillis();
 	
 	/**
 	 * Create a Toggle and initialize it to this state.
@@ -26,6 +27,7 @@ public class Toggle {
 		// on the transition only. 
 		if (controlValue && !previousControlValue) {
 			state = !state;
+			time = System.currentTimeMillis();
 		}
 		
 		// Save the control value in order to do proper edge detection.
@@ -50,6 +52,10 @@ public class Toggle {
 	public boolean setState(boolean state) {
 		this.state = state;
 		return this.state;
+	}
+	
+	public long lastStateChangeTime() {
+		return time;
 	}
 
 }

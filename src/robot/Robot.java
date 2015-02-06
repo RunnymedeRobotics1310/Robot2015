@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import robot.subsystems.ChassisSubsystem;
+import robot.subsystems.PickupSubsystem;
 import robot.subsystems.PowerSubsystem;
 import robot.subsystems.RunnymedeSubsystem;
 import robot.subsystems.VisionSubsystem;
@@ -29,6 +30,7 @@ public class Robot extends IterativeRobot {
 	public static final VisionSubsystem   visionSubsystem   = new VisionSubsystem();
 	public static final PowerSubsystem    powerSubsystem    = new PowerSubsystem();
 	public static final ChassisSubsystem  chassisSubsystem  = new ChassisSubsystem();
+	public static final PickupSubsystem  pickupSubsystem  = new PickupSubsystem();
 
     Command autonomousCommand;
     

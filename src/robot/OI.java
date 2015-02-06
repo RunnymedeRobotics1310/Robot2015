@@ -26,13 +26,16 @@ public class OI {
 		EAST   (F310Button.B),
 		WEST   (F310Button.X),
 		
-		ELEVATOR        (F310Button.RB),
-		SINGLE_SOLENOID (F310Button.LB),
-		DOUBLE_SOLENOID (F310Button.START),
+		PICKUP_MOTORS   (F310Button.RB),
+		DEPLOY_PICKUP   (F310Button.LB),
+		LEFT_EYEBROW    (F310Button.LT),
+		RIGHT_EYEBROW   (F310Button.RT),
 		
 		RELAY_ON      (F310Button.Y),
 		RELAY_FORWARD (F310Button.B),
 		RELAY_REVERSE (F310Button.X);
+		
+		
 
 		F310Button button;
 		
@@ -87,9 +90,6 @@ public class OI {
  		
  		return -1;
  	}
-
-	public boolean getDoubleSolenoidButton() { 
-		return driverJoystick.getButton(ButtonMap.DOUBLE_SOLENOID.getButton()); }
 	
 	public PolarCoordinate getDriverPolarCoordinate() { 
 		// Square the coordinates to reduce joystick sensitivity.
@@ -104,9 +104,6 @@ public class OI {
 		return driverJoystick.getCartesianCoordinate(StickMap.ROTATION_STICK.getStick()).square().getX(); 
 	}
 
-	public boolean getElevatorButton() { 
-		return driverJoystick.getButton(ButtonMap.ELEVATOR.getButton()); }
-
 	public PIDEnable getMotorPIDEnable() { return motorPIDEnable; }
 
 	public CartesianCoordinate getMouseEvent() {
@@ -118,8 +115,21 @@ public class OI {
  	public double getServoSetpoint() { 
  		return driverJoystick.getCartesianCoordinate(StickMap.SERVO_STICK.getStick()).getX(); }
 
- 	public boolean getSingleSolenoidButton() { 
- 		return driverJoystick.getButton(ButtonMap.SINGLE_SOLENOID.getButton()); }
+ 	public boolean getPickupButton() {
+		return driverJoystick.getButton(ButtonMap.DEPLOY_PICKUP.getButton());
+	}
+	
+	public boolean getLeftEyebrowButton() {
+		return driverJoystick.getButton(ButtonMap.LEFT_EYEBROW.getButton());
+	}
+	
+	public boolean getRightEyebrowButton() {
+		return driverJoystick.getButton(ButtonMap.RIGHT_EYEBROW.getButton());
+	}
+	
+	public boolean getPickupRollerButton() {
+		return driverJoystick.getButton(ButtonMap.PICKUP_MOTORS.getButton());
+	}
 
 	// FIXME: What button is #12?
 	public boolean getTogglePIDButton() { 

@@ -17,6 +17,7 @@ public class TeleopDriveToAngleCommand extends Command {
 		this.driveMode = driveMode;
 		requires(Robot.chassisSubsystem);
 		this.setInterruptible(true);
+		startTime = 0;
 	}
 
 	@Override
@@ -26,8 +27,8 @@ public class TeleopDriveToAngleCommand extends Command {
 	@Override
 	protected void execute() {
 		
-		// Until the angle is within 10 degrees, use a rotation drive, and then switch to the 
-		// driveToAngle command.
+		// Until the angle is within 18 degrees, use a rotation drive, and then switch to the 
+		// driveToAngle command to finish off when within 18 degrees.
 
 		// Get the difference in angle
 		double currentAngle = Robot.chassisSubsystem.getGyroAngle();
@@ -60,6 +61,8 @@ public class TeleopDriveToAngleCommand extends Command {
 
 	@Override
 	protected boolean isFinished() {
+		
+		// If not within 18 degrees, then not finished.
 		if (startTime == 0) { return false; }
 		
 		// Wait at least 1.5 seconds after the timer starts to end the command.

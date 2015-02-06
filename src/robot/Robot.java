@@ -36,6 +36,10 @@ public class Robot extends IterativeRobot {
     
     public Robot () { 
     	
+    	subsystemLs.add(visionSubsystem);
+    	subsystemLs.add(powerSubsystem);
+    	subsystemLs.add(chassisSubsystem); 
+    	
     }
 
     @Override
@@ -78,10 +82,6 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
 		oi = new OI();
 		
-    	subsystemLs.add(visionSubsystem);
-    	subsystemLs.add(powerSubsystem);
-    	subsystemLs.add(chassisSubsystem); 
-    	
     	// Initialize all subsystems.
     	for (RunnymedeSubsystem subsystem: subsystemLs) {
     		subsystem.initSubsystem();

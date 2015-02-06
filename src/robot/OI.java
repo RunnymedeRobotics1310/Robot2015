@@ -113,18 +113,6 @@ public class OI {
 		return networkTableOI.getMouseEvent();
 	}
 	
-	// FIXME: for the test system only
- 	public boolean getRelayForward() { 
- 		return driverJoystick.getButton(ButtonMap.RELAY_FORWARD.getButton()); }
-
- 	// FIXME: for the test system only
- 	public boolean getRelayOn() { 
- 		return driverJoystick.getButton(ButtonMap.RELAY_ON.getButton()); }
-
- 	// FIXME: for the test system only
- 	public boolean getRelayReverse() { 
- 		return driverJoystick.getButton(ButtonMap.RELAY_REVERSE.getButton()); }
-
  	public PIDEnable getRotationPIDEnable() { return rotationPIDEnable; }
 
  	public double getServoSetpoint() { 

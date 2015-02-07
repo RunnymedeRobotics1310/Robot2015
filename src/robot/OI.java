@@ -2,6 +2,7 @@ package robot;
 
 import robot.Joystick_F310.F310Button;
 import robot.Joystick_F310.F310Stick;
+import robot.commands.ResetGyroCommand;
 import robot.commands.TeleopDriveToAngleCommand;
 import robot.subsystems.ChassisSubsystem.DriveMode;
 import robot.subsystems.ChassisSubsystem.PIDEnable;
@@ -33,9 +34,9 @@ public class OI {
 		
 		RELAY_ON      (F310Button.Y),
 		RELAY_FORWARD (F310Button.B),
-		RELAY_REVERSE (F310Button.X);
+		RELAY_REVERSE (F310Button.X),
 		
-		
+		DRIVE_MODE    (F310Button.L_STICK);
 
 		F310Button button;
 		
@@ -68,6 +69,8 @@ public class OI {
 	
 	private NetworkTableOI networkTableOI = new NetworkTableOI();
 
+	private Toggle robotRelativeToggle = new Toggle(false);
+	
 	public int getDirectionPointer() { 
  		
  		if (   driverJoystick.getButton(ButtonMap.NORTH.getButton()) 
@@ -90,11 +93,18 @@ public class OI {
  		return -1;
  	}
 	
+	public DriveMode getDriveMode() {
+		if (robotRelativeToggle.getState()) {
+			return DriveMode.FIELD_RELATIVE;
+		}
+		return DriveMode.ROBOT_RELATIVE;
+	}
+	
 	public PolarCoordinate getDriverPolarCoordinate() { 
 		// Square the coordinates to reduce joystick sensitivity.
 		return driverJoystick.getPolarCoordinate(StickMap.DRIVE_STICK.getStick()).square(); 
 	}
-	
+
 	public int getDriverPov() { 
 		return driverJoystick.getPOV(); }
 
@@ -103,29 +113,29 @@ public class OI {
 		return driverJoystick.getCartesianCoordinate(StickMap.ROTATION_STICK.getStick()).square().getX(); 
 	}
 
-	public PIDEnable getMotorPIDEnable() { return motorPIDEnable; }
-
-	public CartesianCoordinate getMouseEvent() {
-		return networkTableOI.getMouseEvent();
-	}
-	
- 	public PIDEnable getRotationPIDEnable() { return rotationPIDEnable; }
-
- 	public boolean getPickupButton() {
-		return driverJoystick.getButton(ButtonMap.DEPLOY_PICKUP.getButton());
-	}
-	
 	public boolean getLeftEyebrowButton() {
 		return driverJoystick.getButton(ButtonMap.LEFT_EYEBROW.getButton());
 	}
 	
-	public boolean getRightEyebrowButton() {
-		return driverJoystick.getButton(ButtonMap.RIGHT_EYEBROW.getButton());
+ 	public PIDEnable getMotorPIDEnable() { return motorPIDEnable; }
+
+ 	public CartesianCoordinate getMouseEvent() {
+		return networkTableOI.getMouseEvent();
+	}
+	
+	public boolean getPickupButton() {
+		return driverJoystick.getButton(ButtonMap.DEPLOY_PICKUP.getButton());
 	}
 	
 	public boolean getPickupRollerButton() {
 		return driverJoystick.getButton(ButtonMap.PICKUP_MOTORS.getButton());
 	}
+	
+	public boolean getRightEyebrowButton() {
+		return driverJoystick.getButton(ButtonMap.RIGHT_EYEBROW.getButton());
+	}
+
+	public PIDEnable getRotationPIDEnable() { return rotationPIDEnable; }
 
 	// FIXME: What button is #12?
 	public boolean getTogglePIDButton() { 
@@ -137,6 +147,9 @@ public class OI {
 	
  	public void periodic() {
 		
+ 		// Update all toggles
+ 		robotRelativeToggle.update(driverJoystick.getButton(ButtonMap.DRIVE_MODE.getButton()));
+ 		
  		// Rotate to the requested angle.
 		if (getDirectionPointer() >= 0) {
 			Scheduler.getInstance().add(new TeleopDriveToAngleCommand(getDirectionPointer(), DriveMode.FIELD_RELATIVE));
@@ -145,14 +158,18 @@ public class OI {
 		
 		// Update the relative angle
 		if (getDriverPov() >= 0) {
-			Robot.chassisSubsystem.resetGyro(getDriverPov());
+			Scheduler.getInstance().add(new ResetGyroCommand(getDriverPov()));
+		return;
 		}
+		
 		
 	}
 
 	public void updateDashboard() {
 
  		networkTableOI.updateDashboard();
+ 
+ 		SmartDashboard.putString("DriveMode", getDriveMode().toString());
  		
 		SmartDashboard.putString("Driver Joystick Buttons", 
 				driverJoystick.getPolarCoordinate    (StickMap.DRIVE_STICK.getStick())   .square().toString() + " " +

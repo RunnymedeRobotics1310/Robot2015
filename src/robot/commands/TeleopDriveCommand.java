@@ -2,7 +2,6 @@ package robot.commands;
 
 import robot.Robot;
 import robot.Toggle;
-import robot.subsystems.ChassisSubsystem.DriveMode;
 import robot.subsystems.ChassisSubsystem.PIDEnable;
 import edu.wpi.first.wpilibj.command.Command;
 

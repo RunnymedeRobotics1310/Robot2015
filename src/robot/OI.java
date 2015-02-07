@@ -2,8 +2,8 @@ package robot;
 
 import robot.Joystick_F310.F310Button;
 import robot.Joystick_F310.F310Stick;
+import robot.commands.DriveToAngleCommand;
 import robot.commands.ResetGyroCommand;
-import robot.commands.TeleopDriveToAngleCommand;
 import robot.subsystems.ChassisSubsystem.DriveMode;
 import robot.subsystems.ChassisSubsystem.PIDEnable;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -122,13 +122,10 @@ public class OI {
  	public CartesianCoordinate getMouseEvent() {
 		return networkTableOI.getMouseEvent();
 	}
-	
+
+
 	public boolean getPickupButton() {
 		return driverJoystick.getButton(ButtonMap.DEPLOY_PICKUP.getButton());
-	}
-	
-	public boolean getPickupRollerButton() {
-		return driverJoystick.getButton(ButtonMap.PICKUP_MOTORS.getButton());
 	}
 	
 	public boolean getRightEyebrowButton() {
@@ -136,6 +133,10 @@ public class OI {
 	}
 
 	public PIDEnable getRotationPIDEnable() { return rotationPIDEnable; }
+
+	public boolean getPickupRollerButton() {
+		return driverJoystick.getButton(ButtonMap.PICKUP_MOTORS.getButton());
+	}
 
 	// FIXME: What button is #12?
 	public boolean getTogglePIDButton() { 
@@ -152,7 +153,7 @@ public class OI {
  		
  		// Rotate to the requested angle.
 		if (getDirectionPointer() >= 0) {
-			Scheduler.getInstance().add(new TeleopDriveToAngleCommand(getDirectionPointer(), DriveMode.FIELD_RELATIVE));
+			Scheduler.getInstance().add(new DriveToAngleCommand(getDirectionPointer(), DriveMode.FIELD_RELATIVE));
 			return;
 		}
 		

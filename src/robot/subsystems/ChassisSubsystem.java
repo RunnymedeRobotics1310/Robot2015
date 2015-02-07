@@ -274,6 +274,22 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		drivePolar(drivePolarCoordinate, rotation, rotationPIDEnable, motorPIDEnable);
 
 	}
+	
+	/** theta is the direction to drive in, targetAngle is the angle to rotate to. theta[rad], targetAngle[deg]
+	 * @param p - PolarCoordinate (r, theta) used to determine speed and direction
+	 * @param targetAngle - The angle to face while driving
+	 * @param encoderCounts - Distance to travel
+	 * @param driveMode - FIELD_RELATIVE, or ROBOT_RELATIVE.
+	 */
+		public void driveDistance(PolarCoordinate p, double targetAngle, double encoderCounts, DriveMode driveMode) {
+			if(!distancePID.isEnable()) {
+				distancePID.enable();
+			}
+			
+			distancePID.setSetpoint(encoderCounts);
+						
+			driveToAngle(p, targetAngle, driveMode, PIDEnable.ENABLED, PIDEnable.ENABLED);
+		}
 
 	/**
 	 * Drive while rotating to the target angle.
@@ -286,9 +302,6 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	 */
 	public void driveToAngle(PolarCoordinate p, double angleSetpoint, DriveMode driveMode,
 			PIDEnable rotationPIDEnable, PIDEnable motorPIDEnable) {
-
-		// Disable unused PIDs
-		disableDistancePID();
 		
 		// Update the angle setpoint based on the target angle specified.  If the target angle is 
 		// not specified (-1) then do not update the setpoint angle.
@@ -599,7 +612,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		}
 	}
 
-	private void disablePIDs() {
+	public void disablePIDs() {
 
 		disableAnglePID();
 		disableRotationPID();
@@ -808,7 +821,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		return drivePolarCoordinate;
 	}
 
-	private void resetEncoders() {
+	public void resetEncoders() {
 
 		for (Encoder encoder: encoderArr) {
 			encoder.reset();

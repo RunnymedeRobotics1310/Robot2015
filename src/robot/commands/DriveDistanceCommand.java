@@ -6,7 +6,6 @@ import robot.RobotMap;
 import robot.subsystems.ChassisSubsystem.DriveMode;
 import robot.subsystems.ChassisSubsystem.PIDEnable;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveDistanceCommand extends Command {
 
@@ -22,7 +21,7 @@ public class DriveDistanceCommand extends Command {
 		requires(Robot.chassisSubsystem);
 		this.p = p;
 		this.targetAngle = targetAngle;
-		this.distance = distance * RobotMap.ENCODER_COUNTS_PER_CM;
+		this.distance = distance * RobotMap.ENCODER_COUNTS_PER_INCH;
 	}
 
 	@Override

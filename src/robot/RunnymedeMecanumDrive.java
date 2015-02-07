@@ -86,7 +86,7 @@ public class RunnymedeMecanumDrive {
     	double [] wheelSpeeds = new double [] { 0.0, 0.0, 0.0, 0.0 };
 
     	// If there is no movement requested, then return zeros.
-    	if (p.getR() < MIN_DRIVE_VALUE && Math.abs(rotation) < MIN_DRIVE_VALUE) { return wheelSpeeds; }
+    	if (Math.abs(p.getR()) < MIN_DRIVE_VALUE && Math.abs(rotation) < MIN_DRIVE_VALUE) { return wheelSpeeds; }
     	
     	// Calculate the non-roational normalized wheel speeds required to 
     	// obtain a vector at angle theta.

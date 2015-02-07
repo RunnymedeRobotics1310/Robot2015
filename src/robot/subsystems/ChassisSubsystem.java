@@ -673,7 +673,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		// if there is no rotational input then try to hold the rotation constant.
 		// Override the rotation PID to disabled.
 		double angleRotation = rotation;
-		if (Math.abs(rotation) < .02d) {
+		if (Math.abs(rotation) < .02d && !anglePID.isEnable()) {
 			
 			// Wait 2 seconds after there is zero rotation input before enabling the
 			// driveHoldAnglePID.

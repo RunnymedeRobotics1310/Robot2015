@@ -52,7 +52,7 @@ public class RobotMap {
 	
 	// Hardware related constants
 
-	public static final double ENCODER_COUNTS_PER_CM = 6.7;
+	public static final double ENCODER_COUNTS_PER_CM = 24;//6.7;
 	
 	public static final double ENCODER_RESOLUTION_CORRECTION = 1.3;
 	public static final double MAX_ANUGLAR_VELOCITY = 120;

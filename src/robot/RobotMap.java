@@ -7,6 +7,13 @@ package robot;
  */
 public class RobotMap {
 
+	// Robot
+	public static final int ROBOT_PRODUCTION = 1;
+	public static final int ROBOT_PRACTICE   = 2;
+	public static final int ROBOT_TEST       = 3;
+
+	public static int currentRobot = ROBOT_PRACTICE;
+	
 	// PWM Components
 	
 	public static int FRONT_LEFT_MOTOR  = 2;

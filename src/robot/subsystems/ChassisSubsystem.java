@@ -107,6 +107,18 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	
 	public static final double ANGLE_PID_ABSOLUTE_TOLERANCE = 2.7d;
 
+	public static final double ANGLE_PID_PRODUCTION_P = 0.02d;
+	public static final double ANGLE_PID_PRODUCTION_I = 0.0d;
+	public static final double ANGLE_PID_PRODUCTION_D = -0.001d;
+	
+	public static final double ANGLE_PID_PRACTICE_P = 0.02d;
+	public static final double ANGLE_PID_PRACTICE_I = 0.0d;
+	public static final double ANGLE_PID_PRACTICE_D = -0.001d;
+	
+	public static final double ANGLE_PID_TEST_P = 0.02d;
+	public static final double ANGLE_PID_TEST_I = 0.0d;
+	public static final double ANGLE_PID_TEST_D = -0.001d;
+	
 	// DriveAnglePID
 	
 	MockSpeedController driveHoldAnglePIDOutput  = new MockSpeedController();
@@ -121,6 +133,18 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	double driveHoldAngle = -1.0d;
 	long driveHoldEnableTimerStart = -1;
 	
+	public static final double DRIVE_HOLD_ANGLE_PID_PRODUCTION_P = 0.02d;
+	public static final double DRIVE_HOLD_ANGLE_PID_PRODUCTION_I = 0.001d;
+	public static final double DRIVE_HOLD_ANGLE_PID_PRODUCTION_D = 0.0d;
+	
+	public static final double DRIVE_HOLD_ANGLE_PID_PRACTICE_P = 0.02d;
+	public static final double DRIVE_HOLD_ANGLE_PID_PRACTICE_I = 0.001d;
+	public static final double DRIVE_HOLD_ANGLE_PID_PRACTICE_D = 0.0d;
+	
+	public static final double DRIVE_HOLD_ANGLE_PID_TEST_P = 0.02d;
+	public static final double DRIVE_HOLD_ANGLE_PID_TEST_I = 0.001d;
+	public static final double DRIVE_HOLD_ANGLE_PID_TEST_D = 0.0d;
+
 	// RotationPID - angular velocity
 	
 	MockSpeedController rotationPIDOutput    = new MockSpeedController();
@@ -134,6 +158,17 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 				}
 			},	rotationPIDOutput);
 	
+	public static final double ROTATION_PID_PRODUCTION_P = 0.02d;
+	public static final double ROTATION_PID_PRODUCTION_I = 0.001d;
+	public static final double ROTATION_PID_PRODUCTION_D = 0.0d;
+	
+	public static final double ROTATION_PID_PRACTICE_P = 0.02d;
+	public static final double ROTATION_PID_PRACTICE_I = 0.001d;
+	public static final double ROTATION_PID_PRACTICE_D = 0.0d;
+	
+	public static final double ROTATION_PID_TEST_P = 0.02d;
+	public static final double ROTATION_PID_TEST_I = 0.001d;
+	public static final double ROTATION_PID_TEST_D = 0.0d;
 
 	// Distance PID
 	
@@ -145,6 +180,18 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 					return getDistance();
 				}
 			}, distancePIDOutput);
+
+	public static final double DISTANCE_PID_PRODUCTION_P = 0.007d;
+	public static final double DISTANCE_PID_PRODUCTION_I = 0.0d;
+	public static final double DISTANCE_PID_PRODUCTION_D = -0.0005d;
+	
+	public static final double DISTANCE_PID_PRACTICE_P = 0.007d;
+	public static final double DISTANCE_PID_PRACTICE_I = 0.0d;
+	public static final double DISTANCE_PID_PRACTICE_D = -0.0005d;
+	
+	public static final double DISTANCE_PID_TEST_P = 0.007d;
+	public static final double DISTANCE_PID_TEST_I = 0.0d;
+	public static final double DISTANCE_PID_TEST_D = -0.0005d;
 
 	// Wheel Speed PID
 
@@ -163,6 +210,18 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 					encoderArr[FRONT_RIGHT],wheelSpeedPIDOutputArr[FRONT_RIGHT]),
 			new PIDController(0.4, 0.0, -0.0,	1.0, 
 					encoderArr[REAR_RIGHT], wheelSpeedPIDOutputArr[REAR_RIGHT])	};
+
+	public static final double WHEEL_SPEED_PID_PRODUCTION_P = 1.3d;
+	public static final double WHEEL_SPEED_PID_PRODUCTION_I = 0.0d;
+	public static final double WHEEL_SPEED_PID_PRODUCTION_D = -0.65d;
+	
+	public static final double WHEEL_SPEED_PID_PRACTICE_P = 1.3d;
+	public static final double WHEEL_SPEED_PID_PRACTICE_I = 0.0d;
+	public static final double WHEEL_SPEED_PID_PRACTICE_D = -0.65d;
+	
+	public static final double WHEEL_SPEED_PID_TEST_P = 1.3d;
+	public static final double WHEEL_SPEED_PID_TEST_I = 0.0d;
+	public static final double WHEEL_SPEED_PID_TEST_D = -0.65d;
 
 	/**
 	 * Is the angle on target for the specified drive angle driveToAngle which enables the anglePID.
@@ -326,27 +385,54 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 
 		// Initialize PID parameters
 		// Angle tolerance to determine if the PID is on target in degrees.
+		// Set the PID Constants based on the robot that is executing.  The default is the 
+		// test robot
 		anglePID.setInputRange(0.0d, 360.0d);
 		anglePID.setContinuous(true);
 		anglePID.setOutputRange(-1.0d, 1.0d);
+		switch (RobotMap.currentRobot) {
+		case RobotMap.ROBOT_PRODUCTION:anglePID.setPID(ANGLE_PID_PRODUCTION_P, ANGLE_PID_PRODUCTION_I, ANGLE_PID_PRODUCTION_D); break;
+		case RobotMap.ROBOT_PRACTICE:  anglePID.setPID(ANGLE_PID_PRACTICE_P,   ANGLE_PID_PRACTICE_I,   ANGLE_PID_PRACTICE_D);   break;
+		case RobotMap.ROBOT_TEST:      anglePID.setPID(ANGLE_PID_TEST_P,       ANGLE_PID_TEST_I,       ANGLE_PID_TEST_D);       break;
+		default: break;	}
 
 		// Angle tolerance to determine if the PID is on target in degrees.
 		driveHoldAnglePID.setInputRange(0.0d, 360.0d);
 		driveHoldAnglePID.setContinuous(true);
 		driveHoldAnglePID.setOutputRange(-1.0d, 1.0d);
+		switch (RobotMap.currentRobot) {
+		case RobotMap.ROBOT_PRODUCTION:driveHoldAnglePID.setPID(DRIVE_HOLD_ANGLE_PID_PRODUCTION_P, DRIVE_HOLD_ANGLE_PID_PRODUCTION_I, DRIVE_HOLD_ANGLE_PID_PRODUCTION_D); break;
+		case RobotMap.ROBOT_PRACTICE:  driveHoldAnglePID.setPID(DRIVE_HOLD_ANGLE_PID_PRACTICE_P,   DRIVE_HOLD_ANGLE_PID_PRACTICE_I,   DRIVE_HOLD_ANGLE_PID_PRACTICE_D);   break;
+		case RobotMap.ROBOT_TEST:      driveHoldAnglePID.setPID(DRIVE_HOLD_ANGLE_PID_TEST_P,       DRIVE_HOLD_ANGLE_PID_TEST_I,       DRIVE_HOLD_ANGLE_PID_TEST_D);       break;
+		default: break;	}
 
 		// Rotation PID
 		rotationPID.setInputRange(-1.0, 1.0);
 		rotationPID.setOutputRange(-1.0d, 1.0d);
-
+		switch (RobotMap.currentRobot) {
+		case RobotMap.ROBOT_PRODUCTION:rotationPID.setPID(ROTATION_PID_PRODUCTION_P, ROTATION_PID_PRODUCTION_I, ROTATION_PID_PRODUCTION_D); break;
+		case RobotMap.ROBOT_PRACTICE:  rotationPID.setPID(ROTATION_PID_PRACTICE_P,   ROTATION_PID_PRACTICE_I,   ROTATION_PID_PRACTICE_D);   break;
+		case RobotMap.ROBOT_TEST:      rotationPID.setPID(ROTATION_PID_TEST_P,       ROTATION_PID_TEST_I,       ROTATION_PID_TEST_D);       break;
+		default: break;	}
+		
 		// Distance tolerance to determine if the PID is on target in encoder counts.
 		distancePID.setAbsoluteTolerance(8d);
 		distancePID.setOutputRange(-1.0, 1.0);
+		switch (RobotMap.currentRobot) {
+		case RobotMap.ROBOT_PRODUCTION:distancePID.setPID(DISTANCE_PID_PRODUCTION_P, DISTANCE_PID_PRODUCTION_I, DISTANCE_PID_PRODUCTION_D); break;
+		case RobotMap.ROBOT_PRACTICE:  distancePID.setPID(DISTANCE_PID_PRACTICE_P,   DISTANCE_PID_PRACTICE_I,   DISTANCE_PID_PRACTICE_D);   break;
+		case RobotMap.ROBOT_TEST:      distancePID.setPID(DISTANCE_PID_TEST_P,       DISTANCE_PID_TEST_I,       DISTANCE_PID_TEST_D);       break;
+		default: break;	}
 
 		// WheelSpeedPID
 		for (int i=0; i<MOTOR_COUNT; i++) {
 			wheelSpeedPIDArr[i].setInputRange(-1.0d, 1.0d);
 			wheelSpeedPIDArr[i].setOutputRange(-1.0d, 1.0d);
+			switch (RobotMap.currentRobot) {
+			case RobotMap.ROBOT_PRODUCTION:wheelSpeedPIDArr[i].setPID(WHEEL_SPEED_PID_PRODUCTION_P, WHEEL_SPEED_PID_PRODUCTION_I, WHEEL_SPEED_PID_PRODUCTION_D, 1.0d); break;
+			case RobotMap.ROBOT_PRACTICE:  wheelSpeedPIDArr[i].setPID(WHEEL_SPEED_PID_PRACTICE_P,   WHEEL_SPEED_PID_PRACTICE_I,   WHEEL_SPEED_PID_PRACTICE_D,   1.0d); break;
+			case RobotMap.ROBOT_TEST:      wheelSpeedPIDArr[i].setPID(WHEEL_SPEED_PID_TEST_P,       WHEEL_SPEED_PID_TEST_I,       WHEEL_SPEED_PID_TEST_D,       1.0d); break;
+			default: break;	}
 		}
 
 		// Initialize SmartDashboard objects

@@ -35,6 +35,8 @@ public class DriveDistanceCommand extends Command {
 		// Y axis is inverted on controller, the robot drive compensates for this, so a negative is needed here
 		//Robot.chassisSubsystem.drive(r * Math.cos(thetaRad), -r * Math.sin(thetaRad), rotation, true);
 		Robot.chassisSubsystem.driveDistance(p, targetAngle, distance, Robot.oi.getDriveMode());
+		
+		
 	}
 
 	@Override

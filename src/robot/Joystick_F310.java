@@ -6,7 +6,7 @@ public class Joystick_F310 {
 
 	// Each of the sticks has 2 axis
 	private enum Axis { X, Y, Z };
-	
+
 	// Each of the sticks has 2 axis
 	private enum JoystickMode { D, X };
 
@@ -24,13 +24,13 @@ public class Joystick_F310 {
 		START   ( 8,10),
 		L_STICK ( 9,11),
 		R_STICK (10,12);
-		
+
 		int xModeButtonNumber, dModeButtonNumber;
 		F310Button(int xModeButtonNumber, int dModeButtonNumber) {
 			this.xModeButtonNumber = xModeButtonNumber;
 			this.dModeButtonNumber = dModeButtonNumber;
 		}
-		
+
 		static F310Button toEnum(int buttonNumber, JoystickMode joystickMode) {
 			for(F310Button button: F310Button.values()) {
 				if (joystickMode == JoystickMode.D) {
@@ -46,9 +46,24 @@ public class Joystick_F310 {
 			return null;
 		}
 	}
-	
+
 	// The F310 has 2 sticks
 	public enum F310Stick { LEFT, RIGHT }
+
+	private enum F310StickPorts { 
+		LEFT_X_AXIS (0,0),
+		LEFT_Y_AXIS (1,1),
+		LEFT_Z_AXIS (2,2), //FIXME:z axis doesn't exist
+
+		RIGHT_X_AXIS (4,4),
+		RIGHT_Y_AXIS (5,5);
+
+		int xModeStickPort, dModeStickPort;
+		F310StickPorts(int xModeStickPort, int dModeStickPort) {
+			this.xModeStickPort = xModeStickPort;
+			this.dModeStickPort = dModeStickPort;
+		}
+	}
 
 	private static int LEFT_X_AXIS = 0;
 	private static int LEFT_Y_AXIS = 1;
@@ -59,7 +74,7 @@ public class Joystick_F310 {
 	private static int RIGHT_Z_AXIS = 3;
 
 	private final Joystick joystick;
-	
+
 	public Joystick_F310(int port) {
 		joystick = new Joystick(port);
 	}
@@ -74,13 +89,13 @@ public class Joystick_F310 {
 	public CartesianCoordinate getCartesianCoordinate(F310Stick stick) {
 
 		CartesianCoordinate xy = new CartesianCoordinate();
-		
+
 		xy.setX(getRawAxis(stick, Axis.X));
-		
+
 		// NOTE: The y axis values are inverted on the stick. A negative Y
 		// value is north.
 		xy.setY( - getRawAxis(stick, Axis.Y) );
-		
+
 		return xy;
 	}
 
@@ -131,11 +146,11 @@ public class Joystick_F310 {
 	}
 
 	public String getButtonsPressedString() {
-		
+
 		JoystickMode joystickMode = getJoystickMode();
-		
+
 		String buttonString = "" + joystickMode + " ";
-		
+
 		for (F310Button button : F310Button.values()) {
 			if (getButton(button)) {
 				if (joystickMode == JoystickMode.X) {
@@ -145,14 +160,14 @@ public class Joystick_F310 {
 				}
 			}
 		}
-		
+
 		if (isPOVPressed()) {
 			buttonString += "POV(" + joystick.getPOV() + ")";
 		}
-		
+
 		return buttonString;
 	}
-	
+
 	private JoystickMode getJoystickMode() {
 		if (joystick.getButtonCount() > 10) {
 			return JoystickMode.D;
@@ -160,13 +175,13 @@ public class Joystick_F310 {
 			return JoystickMode.X;
 		}
 	}
-	
+
 	/**
 	 * Get the underlying Joystick object used for this Joystick_F310.
 	 * @return Joystick - underlying Joystick object.
 	 */
 	public Joystick getRawJoystick() { return joystick; }
-	
+
 	/** 
 	 * Get the Point of View control value
 	 * @param stick - LEFT_STICK or RIGHT_STICK
@@ -182,14 +197,14 @@ public class Joystick_F310 {
 	 * are pressed.
 	 */
 	public boolean isPOVPressed() { return joystick.getPOV() > -1; }
-	
+
 	/**
 	 * Get the specified axis of the control stick
 	 * @param axis - LEFT_X_AXIS, LEFT_Y_AXIS, RIGHT_X_AXIS, RIGHT_Y_AXIS
 	 * @return - double representing the axis value from 0 to 1.0
 	 */
 	private double getRawAxis(F310Stick stick, Axis axis) {
-	
+
 		switch (stick) {
 		case LEFT:
 			switch (axis) {
@@ -213,5 +228,5 @@ public class Joystick_F310 {
 		}
 		return 0.0d;
 	}
-	
+
 }

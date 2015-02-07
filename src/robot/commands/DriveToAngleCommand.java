@@ -6,13 +6,13 @@ import robot.subsystems.ChassisSubsystem.DriveMode;
 import edu.wpi.first.wpilibj.command.Command;
 
 
-public class TeleopDriveToAngleCommand extends Command {
+public class DriveToAngleCommand extends Command {
 
 	private final int targetAngle;
 	private final DriveMode driveMode;
 	long startTime = 0;
 	
-	public TeleopDriveToAngleCommand(int targetAngle, DriveMode driveMode) {
+	public DriveToAngleCommand(int targetAngle, DriveMode driveMode) {
 		this.targetAngle = targetAngle;
 		this.driveMode = driveMode;
 		requires(Robot.chassisSubsystem);

@@ -6,6 +6,16 @@ public class PolarCoordinate {
 	
 	private double theta;
 
+	public PolarCoordinate(double r, double theta) {
+		this.r = r;
+		this.theta = theta;
+	}
+	
+	public PolarCoordinate() {
+		this.r = 0.0;
+		this.theta = 0.0;
+	}
+
 	/**
 	 * Get a new PolarCoordinate that is the equivalent of the passed in 
 	 * CartesianCoordinate.

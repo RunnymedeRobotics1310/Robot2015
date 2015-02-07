@@ -2,7 +2,7 @@ package robot;
 
 import robot.Joystick_F310.F310Button;
 import robot.Joystick_F310.F310Stick;
-import robot.commands.TeleopDriveToAngleCommand;
+import robot.commands.DriveToAngleCommand;
 import robot.subsystems.ChassisSubsystem.DriveMode;
 import robot.subsystems.ChassisSubsystem.PIDEnable;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -139,7 +139,7 @@ public class OI {
 		
  		// Rotate to the requested angle.
 		if (getDirectionPointer() >= 0) {
-			Scheduler.getInstance().add(new TeleopDriveToAngleCommand(getDirectionPointer(), DriveMode.FIELD_RELATIVE));
+			Scheduler.getInstance().add(new DriveToAngleCommand(getDirectionPointer(), DriveMode.FIELD_RELATIVE));
 			return;
 		}
 		

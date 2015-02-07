@@ -94,7 +94,7 @@ public class OI {
  	}
 	
 	public DriveMode getDriveMode() {
-		if (robotRelativeToggle.getState()) {
+		if (!robotRelativeToggle.getState()) {
 			return DriveMode.FIELD_RELATIVE;
 		}
 		return DriveMode.ROBOT_RELATIVE;

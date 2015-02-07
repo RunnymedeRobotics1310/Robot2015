@@ -4,6 +4,9 @@ package robot;
 import java.util.ArrayList;
 import java.util.List;
 
+import robot.commands.autonomous.commandgroup.AutonomousTestCommandGroup;
+import robot.commands.autonomous.commandgroup.AutonomousThreeToteAngledCommandGroup;
+import robot.commands.autonomous.commandgroup.AutonomousThreeToteStackCommandGroup;
 import robot.subsystems.ChassisSubsystem;
 import robot.subsystems.PickupSubsystem;
 import robot.subsystems.PowerSubsystem;
@@ -11,8 +14,11 @@ import robot.subsystems.RunnymedeSubsystem;
 import robot.subsystems.VisionSubsystem;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -32,6 +38,7 @@ public class Robot extends IterativeRobot {
 	public static final ChassisSubsystem  chassisSubsystem  = new ChassisSubsystem();
 	public static final PickupSubsystem  pickupSubsystem  = new PickupSubsystem();
 
+	SendableChooser autonomousChooser;
     Command autonomousCommand;
     
     // Default constructor.
@@ -47,8 +54,13 @@ public class Robot extends IterativeRobot {
     @Override
     public void autonomousInit() {
         // schedule the autonomous command (example)
-        if (autonomousCommand != null) autonomousCommand.start();
-        
+    	
+    	Object selected = autonomousChooser.getSelected();
+		if (selected instanceof CommandGroup) {
+			autonomousCommand = ((CommandGroup) selected);
+			Scheduler.getInstance().add(autonomousCommand);
+		}
+    	        
         enableSubsystems();
     }
 	
@@ -84,6 +96,18 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
 		oi = new OI();
 		
+		autonomousChooser = new SendableChooser();
+		
+		autonomousChooser.addDefault("TestCommandGroup",
+				new AutonomousTestCommandGroup());
+		autonomousChooser.addObject("ThreeTote",
+				new AutonomousThreeToteStackCommandGroup());
+		autonomousChooser.addObject("ThreeToteAngled",
+				new AutonomousThreeToteAngledCommandGroup());
+		autonomousChooser.addObject("Nothing", null);
+		
+		SmartDashboard.putData("Autonomous Mode", autonomousChooser);
+		
     	// Initialize all subsystems.
     	for (RunnymedeSubsystem subsystem: subsystemLs) {
     		subsystem.initSubsystem();
@@ -99,6 +123,7 @@ public class Robot extends IterativeRobot {
         // teleop starts running. If you want the autonomous to 
         // continue until interrupted by another command, remove
         // this line or comment it out.
+    	
         if (autonomousCommand != null) autonomousCommand.cancel();
         
         enableSubsystems();

@@ -70,6 +70,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 					return this.getRate() / RobotMap.MAX_ENCODER_RATE;
 				}
 			},
+			//FIXME
 			new EncoderCorrection(RobotMap.REAR_LEFT_ENCODER_ONE,  RobotMap.REAR_LEFT_ENCODER_TWO,  true){
 				public double pidGet() {
 					return this.getRate() / RobotMap.MAX_ENCODER_RATE;
@@ -286,9 +287,13 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 				distancePID.enable();
 			}
 			
+			SmartDashboard.putNumber("R", p.getR());
+			
 			distancePID.setSetpoint(encoderCounts);
-						
-			driveToAngle(p, targetAngle, driveMode, PIDEnable.ENABLED, PIDEnable.ENABLED);
+			
+			double R = p.getR() * distancePIDOutput.get();
+			
+			driveToAngle(new PolarCoordinate(R, p.getTheta()), targetAngle, driveMode, PIDEnable.ENABLED, PIDEnable.ENABLED);
 		}
 
 	/**
@@ -393,13 +398,14 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	public void initSubsystem() {
 		
 		// Initialize Sensors
-		gyro.setSensitivity(0.0125);
+		//gyro.setSensitivity(0.0125);
 		//gyro.initGyro();
 
 		// Initialize PID parameters
 		// Angle tolerance to determine if the PID is on target in degrees.
 		// Set the PID Constants based on the robot that is executing.  The default is the 
 		// test robot
+		anglePID.setAbsoluteTolerance(2.7d);
 		anglePID.setInputRange(0.0d, 360.0d);
 		anglePID.setContinuous(true);
 		anglePID.setOutputRange(-1.0d, 1.0d);
@@ -553,6 +559,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 
 		distancePID.updateTable();
 		SmartDashboard.putNumber("Distance PID Output", distancePIDOutput.get());
+		SmartDashboard.putNumber("Encoder Distance", getDistance());
 		
 		anglePID.updateTable();
 		SmartDashboard.putNumber("Angle PID Output", anglePIDOutput.get());

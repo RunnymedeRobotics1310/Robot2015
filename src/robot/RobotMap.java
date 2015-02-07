@@ -12,7 +12,7 @@ public class RobotMap {
 	public static final int ROBOT_PRACTICE   = 2;
 	public static final int ROBOT_TEST       = 3;
 
-	public static int currentRobot = ROBOT_PRACTICE;
+	public static int currentRobot = ROBOT_TEST;
 	
 	// PWM Components
 	

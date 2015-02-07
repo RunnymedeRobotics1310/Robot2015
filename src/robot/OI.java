@@ -26,8 +26,8 @@ public class OI {
 		EAST   (F310Button.B),
 		WEST   (F310Button.X),
 		
-		PICKUP_MOTORS   (F310Button.RB),
-		DEPLOY_PICKUP   (F310Button.LB),
+		PICKUP_MOTORS   (F310Button.LB),
+		DEPLOY_PICKUP   (F310Button.RB),
 		LEFT_EYEBROW    (F310Button.LT),
 		RIGHT_EYEBROW   (F310Button.RT),
 		
@@ -49,8 +49,7 @@ public class OI {
 		
 		// Driver Joystick stick mapping
 		DRIVE_STICK    (F310Stick.LEFT),
-		ROTATION_STICK (F310Stick.RIGHT),
-		SERVO_STICK    (F310Stick.RIGHT);
+		ROTATION_STICK (F310Stick.RIGHT);
 		
 		F310Stick stick;
 		
@@ -111,9 +110,6 @@ public class OI {
 	}
 	
  	public PIDEnable getRotationPIDEnable() { return rotationPIDEnable; }
-
- 	public double getServoSetpoint() { 
- 		return driverJoystick.getCartesianCoordinate(StickMap.SERVO_STICK.getStick()).getX(); }
 
  	public boolean getPickupButton() {
 		return driverJoystick.getButton(ButtonMap.DEPLOY_PICKUP.getButton());

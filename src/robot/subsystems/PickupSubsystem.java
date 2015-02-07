@@ -35,8 +35,8 @@ public class PickupSubsystem extends Subsystem {
 
 		if(rollers) {
 			// FIXME FLIPPED IN TESTING, REVERSE DIRECTIONS
-			leftPickupMotor.set(-0.5);
-			rightPickupMotor.set(0.5);
+			leftPickupMotor.set(-0.75);
+			rightPickupMotor.set(0.75);
 		} else {
 			leftPickupMotor.set(0.0);
 			rightPickupMotor.set(0.0);

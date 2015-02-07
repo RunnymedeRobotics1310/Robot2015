@@ -44,11 +44,20 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	        new Talon(RobotMap.REAR_RIGHT_MOTOR)   };
 	
 	// Mecanum Drive for the robot configuration.
+	
+	RunnymedeMecanumDrive mecanumDrive = 
+			new RunnymedeMecanumDrive(MOTOR_NOT_INVERTED,
+									  MOTOR_NOT_INVERTED,
+					                  MOTOR_INVERTED,
+					                  MOTOR_INVERTED);
+	
+	/*
 	RunnymedeMecanumDrive mecanumDrive = 
 			new RunnymedeMecanumDrive(MOTOR_INVERTED,
 					                  MOTOR_INVERTED,
 					                  MOTOR_NOT_INVERTED,
 					                  MOTOR_NOT_INVERTED);
+	*/
 	
 	// SENSORS
 	
@@ -102,7 +111,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	
 	MockSpeedController driveHoldAnglePIDOutput  = new MockSpeedController();
 
-	PIDController driveHoldAnglePID = new PIDController(0.02, 0.001, 0.0, 0.0,
+	PIDController driveHoldAnglePID = new PIDController(0.04, 0.004, 0.0, 0.0,
 			new PIDSource() {
 				public double pidGet() {
 					return gyro.getAngle();
@@ -146,13 +155,13 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 			new MockSpeedController()  };
 
 	PIDController [] wheelSpeedPIDArr = {
-			new PIDController(1.3, 0.0, -0.65,	1.0, 
+			new PIDController(0.4, 0.0, -0.0,	1.0, 
 					encoderArr[FRONT_LEFT], wheelSpeedPIDOutputArr[FRONT_LEFT]),
-			new PIDController(1.3, 0.0, -0.65,	1.0, 
+			new PIDController(0.4, 0.0, -0.0,	1.0, 
 					encoderArr[REAR_LEFT],  wheelSpeedPIDOutputArr[REAR_LEFT]),
-			new PIDController(1.3, 0.0, -0.65,	1.0, 
+			new PIDController(0.4, 0.0, -0.0,	1.0, 
 					encoderArr[FRONT_RIGHT],wheelSpeedPIDOutputArr[FRONT_RIGHT]),
-			new PIDController(1.3, 0.0, -0.65,	1.0, 
+			new PIDController(0.4, 0.0, -0.0,	1.0, 
 					encoderArr[REAR_RIGHT], wheelSpeedPIDOutputArr[REAR_RIGHT])	};
 
 	/**
@@ -261,8 +270,10 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		// Use the output of the gyro angle PID to set the rotational velocity of the robot.
 		anglePID.setSetpoint(angleRelativeSetpoint);
 		
+		PolarCoordinate drivePolarCoordinate = getDrivePolarCoordinate(p, driveMode);
+		
 		// Drive the robot using the input p and use the anglePID to set the rotation.
-		drivePolar(p, anglePIDOutput.get(), rotationPIDEnable, motorPIDEnable);
+		drivePolar(drivePolarCoordinate, anglePIDOutput.get(), rotationPIDEnable, motorPIDEnable);
 		
 	}
 	
@@ -458,6 +469,19 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	}
 	
 	/**
+	 * Disable the HoldAnglePID
+	 * 
+	 * If already disabled, this routine does nothing.
+	 */
+	private void disableHoldAnglePID() {
+
+		if (driveHoldAnglePID.isEnable()) {
+			driveHoldAnglePID.disable();
+		}
+		
+	}
+	
+	/**
 	 * Disable the DistancePID
 	 * 
 	 * If already disabled, this routine does nothing.
@@ -475,6 +499,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		disableRotationPID();
 		disableDistancePID();
 		disableWheelSpeedPIDs();
+		disableHoldAnglePID();
 		
 	}
 	

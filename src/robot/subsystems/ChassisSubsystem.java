@@ -121,29 +121,29 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	
 	// DriveAnglePID
 	
-	MockSpeedController driveHoldAnglePIDOutput  = new MockSpeedController();
+	MockSpeedController holdAnglePIDOutput  = new MockSpeedController();
 
-	PIDController driveHoldAnglePID = new PIDController(0.04, 0.004, 0.0, 0.0,
+	PIDController holdAnglePID = new PIDController(0.04, 0.004, 0.0, 0.0,
 			new PIDSource() {
 				public double pidGet() {
 					return gyro.getAngle();
 				}
-			}, driveHoldAnglePIDOutput);
+			}, holdAnglePIDOutput);
 	
-	double driveHoldAngle = -1.0d;
-	long driveHoldEnableTimerStart = -1;
+	double holdAngle = -1.0d;
+	long   holdAngleEnableTimerStart = -1;
 	
-	public static final double DRIVE_HOLD_ANGLE_PID_PRODUCTION_P = 0.02d;
-	public static final double DRIVE_HOLD_ANGLE_PID_PRODUCTION_I = 0.001d;
-	public static final double DRIVE_HOLD_ANGLE_PID_PRODUCTION_D = 0.0d;
+	public static final double HOLD_ANGLE_PID_PRODUCTION_P = 0.04d;
+	public static final double HOLD_ANGLE_PID_PRODUCTION_I = 0.004d;
+	public static final double HOLD_ANGLE_PID_PRODUCTION_D = 0.0d;
 	
-	public static final double DRIVE_HOLD_ANGLE_PID_PRACTICE_P = 0.02d;
-	public static final double DRIVE_HOLD_ANGLE_PID_PRACTICE_I = 0.001d;
-	public static final double DRIVE_HOLD_ANGLE_PID_PRACTICE_D = 0.0d;
+	public static final double HOLD_ANGLE_PID_PRACTICE_P = 0.04d;
+	public static final double HOLD_ANGLE_PID_PRACTICE_I = 0.004d;
+	public static final double HOLD_ANGLE_PID_PRACTICE_D = 0.0d;
 	
-	public static final double DRIVE_HOLD_ANGLE_PID_TEST_P = 0.02d;
-	public static final double DRIVE_HOLD_ANGLE_PID_TEST_I = 0.001d;
-	public static final double DRIVE_HOLD_ANGLE_PID_TEST_D = 0.0d;
+	public static final double HOLD_ANGLE_PID_TEST_P = 0.02d;
+	public static final double HOLD_ANGLE_PID_TEST_I = 0.001d;
+	public static final double HOLD_ANGLE_PID_TEST_D = 0.0d;
 
 	// RotationPID - angular velocity
 	
@@ -158,12 +158,12 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 				}
 			},	rotationPIDOutput);
 	
-	public static final double ROTATION_PID_PRODUCTION_P = 0.02d;
-	public static final double ROTATION_PID_PRODUCTION_I = 0.001d;
+	public static final double ROTATION_PID_PRODUCTION_P = 0.025d;
+	public static final double ROTATION_PID_PRODUCTION_I = 0.0d;
 	public static final double ROTATION_PID_PRODUCTION_D = 0.0d;
 	
-	public static final double ROTATION_PID_PRACTICE_P = 0.02d;
-	public static final double ROTATION_PID_PRACTICE_I = 0.001d;
+	public static final double ROTATION_PID_PRACTICE_P = 0.025d;
+	public static final double ROTATION_PID_PRACTICE_I = 0.0d;
 	public static final double ROTATION_PID_PRACTICE_D = 0.0d;
 	
 	public static final double ROTATION_PID_TEST_P = 0.02d;
@@ -211,13 +211,13 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 			new PIDController(0.4, 0.0, -0.0,	1.0, 
 					encoderArr[REAR_RIGHT], wheelSpeedPIDOutputArr[REAR_RIGHT])	};
 
-	public static final double WHEEL_SPEED_PID_PRODUCTION_P = 1.3d;
+	public static final double WHEEL_SPEED_PID_PRODUCTION_P = 0.4;
 	public static final double WHEEL_SPEED_PID_PRODUCTION_I = 0.0d;
-	public static final double WHEEL_SPEED_PID_PRODUCTION_D = -0.65d;
+	public static final double WHEEL_SPEED_PID_PRODUCTION_D = 0.0d;
 	
-	public static final double WHEEL_SPEED_PID_PRACTICE_P = 1.3d;
+	public static final double WHEEL_SPEED_PID_PRACTICE_P = 0.4d;
 	public static final double WHEEL_SPEED_PID_PRACTICE_I = 0.0d;
-	public static final double WHEEL_SPEED_PID_PRACTICE_D = -0.65d;
+	public static final double WHEEL_SPEED_PID_PRACTICE_D = 0.0d;
 	
 	public static final double WHEEL_SPEED_PID_TEST_P = 1.3d;
 	public static final double WHEEL_SPEED_PID_TEST_I = 0.0d;
@@ -397,13 +397,13 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		default: break;	}
 
 		// Angle tolerance to determine if the PID is on target in degrees.
-		driveHoldAnglePID.setInputRange(0.0d, 360.0d);
-		driveHoldAnglePID.setContinuous(true);
-		driveHoldAnglePID.setOutputRange(-1.0d, 1.0d);
+		holdAnglePID.setInputRange(0.0d, 360.0d);
+		holdAnglePID.setContinuous(true);
+		holdAnglePID.setOutputRange(-1.0d, 1.0d);
 		switch (RobotMap.currentRobot) {
-		case RobotMap.ROBOT_PRODUCTION:driveHoldAnglePID.setPID(DRIVE_HOLD_ANGLE_PID_PRODUCTION_P, DRIVE_HOLD_ANGLE_PID_PRODUCTION_I, DRIVE_HOLD_ANGLE_PID_PRODUCTION_D); break;
-		case RobotMap.ROBOT_PRACTICE:  driveHoldAnglePID.setPID(DRIVE_HOLD_ANGLE_PID_PRACTICE_P,   DRIVE_HOLD_ANGLE_PID_PRACTICE_I,   DRIVE_HOLD_ANGLE_PID_PRACTICE_D);   break;
-		case RobotMap.ROBOT_TEST:      driveHoldAnglePID.setPID(DRIVE_HOLD_ANGLE_PID_TEST_P,       DRIVE_HOLD_ANGLE_PID_TEST_I,       DRIVE_HOLD_ANGLE_PID_TEST_D);       break;
+		case RobotMap.ROBOT_PRODUCTION:holdAnglePID.setPID(HOLD_ANGLE_PID_PRODUCTION_P, HOLD_ANGLE_PID_PRODUCTION_I, HOLD_ANGLE_PID_PRODUCTION_D); break;
+		case RobotMap.ROBOT_PRACTICE:  holdAnglePID.setPID(HOLD_ANGLE_PID_PRACTICE_P,   HOLD_ANGLE_PID_PRACTICE_I,   HOLD_ANGLE_PID_PRACTICE_D);   break;
+		case RobotMap.ROBOT_TEST:      holdAnglePID.setPID(HOLD_ANGLE_PID_TEST_P,       HOLD_ANGLE_PID_TEST_I,       HOLD_ANGLE_PID_TEST_D);       break;
 		default: break;	}
 
 		// Rotation PID
@@ -435,6 +435,25 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 			default: break;	}
 		}
 
+		switch (RobotMap.currentRobot) {
+		case RobotMap.ROBOT_PRODUCTION:
+		case RobotMap.ROBOT_PRACTICE:
+			mecanumDrive.setMotorInversion(
+					MOTOR_NOT_INVERTED,
+					MOTOR_NOT_INVERTED,
+					MOTOR_INVERTED,
+					MOTOR_INVERTED);
+			break;
+		case RobotMap.ROBOT_TEST:
+			mecanumDrive.setMotorInversion(
+					MOTOR_INVERTED,
+					MOTOR_INVERTED,
+					MOTOR_NOT_INVERTED,
+					MOTOR_NOT_INVERTED);
+			break;
+		default: break;
+		}
+		
 		// Initialize SmartDashboard objects
 
 		// SmartDashboard.putData("Accel", accel);
@@ -458,7 +477,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		
 		SmartDashboard.putData("DistancePID", distancePID);
 		SmartDashboard.putData("GyroAnglePID", anglePID);
-		SmartDashboard.putData("DriveAnglePID", driveHoldAnglePID);
+		SmartDashboard.putData("DriveAnglePID", holdAnglePID);
 		SmartDashboard.putData("GyroRotationPID", rotationPID);
 
 	}
@@ -525,8 +544,8 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		anglePID.updateTable();
 		SmartDashboard.putNumber("Angle PID Output", anglePIDOutput.get());
 
-		driveHoldAnglePID.updateTable();
-		SmartDashboard.putNumber("Drive Angle PID Output", driveHoldAnglePIDOutput.get());
+		holdAnglePID.updateTable();
+		SmartDashboard.putNumber("Drive Angle PID Output", holdAnglePIDOutput.get());
 		
 		rotationPID.updateTable();
 		SmartDashboard.putNumber("Rotation PID Output", rotationPIDOutput.get());
@@ -561,8 +580,9 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	 */
 	private void disableHoldAnglePID() {
 
-		if (driveHoldAnglePID.isEnable()) {
-			driveHoldAnglePID.disable();
+		if (holdAnglePID.isEnable()) {
+			holdAnglePID.disable();
+			holdAngle = -1.0d;
 		}
 		
 	}
@@ -637,29 +657,27 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 			
 			// Wait 2 seconds after there is zero rotation input before enabling the
 			// driveHoldAnglePID.
-			if (driveHoldEnableTimerStart < 0) {
-				driveHoldEnableTimerStart = System.currentTimeMillis();
+			if (holdAngleEnableTimerStart < 0) {
+				holdAngleEnableTimerStart = System.currentTimeMillis();
 			}
 			
 			// Enable the driveHoldPID after 2 seconds
-			if (System.currentTimeMillis() - driveHoldEnableTimerStart > 2000) {
+			if (System.currentTimeMillis() - holdAngleEnableTimerStart > 2000) {
 				disableRotationPID();
 				rotationPIDEnable = PIDEnable.DISABLED;
-				if (driveHoldAngle < 0) { 
-					driveHoldAngle = gyro.getAngle(); 
-					driveHoldAnglePID.reset();
-					driveHoldAnglePID.enable();
-					driveHoldAnglePID.setSetpoint(driveHoldAngle);
+				if (holdAngle < 0) { 
+					holdAngle = gyro.getAngle(); 
+					holdAnglePID.reset();
+					holdAnglePID.enable();
+					holdAnglePID.setSetpoint(holdAngle);
 				}
-				angleRotation = driveHoldAnglePIDOutput.get();
+				angleRotation = holdAnglePIDOutput.get();
 			} else {
-				driveHoldAnglePID.disable();
-				driveHoldAngle = -1.0d;
+				disableHoldAnglePID();
 			}
 		} else {
-			driveHoldAnglePID.disable();
-			driveHoldAngle = -1.0d;
-			driveHoldEnableTimerStart = -1;
+			disableHoldAnglePID();
+			holdAngleEnableTimerStart = -1;
 		}
 
 		// Use a rotation PID if required.

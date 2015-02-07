@@ -51,6 +51,22 @@ public class RunnymedeMecanumDrive {
     			                         frontRightMotorInverted,
     			                         rearRightMotorInverted };
     }
+
+    /**
+     * Set the motor inversion on each of the motors.  {@literal true} for not inverted, {@literal false} for inverted.
+     * @param frontLeftMotorInverted
+     * @param rearLeftMotorInverted
+     * @param frontRightMotorInverted
+     * @param rearRightMotorInverted
+     */
+    public void setMotorInversion(boolean frontLeftMotorInverted, boolean rearLeftMotorInverted,
+            boolean frontRightMotorInverted, boolean rearRightMotorInverted) {
+    	
+    	motorInverted[FRONT_LEFT]  = frontLeftMotorInverted;
+    	motorInverted[REAR_LEFT]   = rearLeftMotorInverted;
+    	motorInverted[FRONT_RIGHT] = frontRightMotorInverted;
+    	motorInverted[REAR_RIGHT]  = rearRightMotorInverted;
+    }
     
     /**
      * Calculate the mecanum wheel speeds to drive the mecanum drive.

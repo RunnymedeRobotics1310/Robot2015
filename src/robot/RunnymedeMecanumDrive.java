@@ -170,10 +170,10 @@ public class RunnymedeMecanumDrive {
 	 * Scale the wheel speeds so that they maintain the same relative magnitude, but
 	 * the maximum value is the passed in maxValue.
 	 */
-	private void scaleWheelSpeeds(double [] wheelSpeeds, double maxValue) {
+	private void scaleWheelSpeeds(double [] wheelSpeeds, double scalingValue) {
 		
-		// If the maxValue is 0, then all of the values will be scaled to 0.
-		if (maxValue < MIN_DRIVE_VALUE) {
+		// If the scalingValue is 0, then all of the values will be scaled to 0.
+		if (Math.abs(scalingValue) < MIN_DRIVE_VALUE) {
 			for (int i=0; i<wheelSpeeds.length; i++) { 
 				wheelSpeeds[i] = 0; 
 			}
@@ -181,7 +181,8 @@ public class RunnymedeMecanumDrive {
 		}
 		
 		// If the maxValue is > 1.0, then scale the values to a maximum of 1.0
-		if (maxValue > 1.0) { maxValue = 1.0; }
+		if (scalingValue > 1.0)  { scalingValue = 1.0; }
+		if (scalingValue < -1.0) { scalingValue = -1.0; }
 		
 		double maxMagnitude = getMaxWheelSpeedMagnitude(wheelSpeeds);
 		
@@ -194,7 +195,7 @@ public class RunnymedeMecanumDrive {
 		}
 		
 		// Get the scaling factor for the wheels
-		double scalingFactor = maxValue / maxMagnitude;
+		double scalingFactor = scalingValue / maxMagnitude;
 		
 		// Scale all of the wheel values
 		for (int i=0; i<wheelSpeeds.length; i++) {

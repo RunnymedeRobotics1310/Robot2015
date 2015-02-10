@@ -3,6 +3,7 @@ package robot;
 import robot.Joystick_F310.F310Button;
 import robot.Joystick_F310.F310Stick;
 import robot.commands.DriveToAngleCommand;
+import robot.commands.DriveToClickCommand;
 import robot.commands.ResetGyroCommand;
 import robot.subsystems.ChassisSubsystem.DriveMode;
 import robot.subsystems.ChassisSubsystem.PIDEnable;
@@ -142,8 +143,8 @@ public class OI {
 	public boolean getTogglePIDButton() { 
 		return driverJoystick.getRawJoystick().getRawButton(12); }
 	
-	public void isNewMouseEvent() {
-		networkTableOI.isNewMouseEvent();
+	public boolean isNewMouseEvent() {
+		return networkTableOI.isNewMouseEvent();
 	}
 	
  	public void periodic() {
@@ -163,6 +164,10 @@ public class OI {
 		return;
 		}
 		
+		// Drive to a click
+		if (isNewMouseEvent()) {
+			Scheduler.getInstance().add(new DriveToClickCommand(getMouseEvent()));
+		}
 		
 	}
 

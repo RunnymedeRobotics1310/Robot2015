@@ -284,25 +284,24 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	 */
 		public void driveDistance(PolarCoordinate p, double targetAngle, double encoderCounts, DriveMode driveMode) {
 			
+
+			if(!distancePID.isEnable()) {
+				distancePID.enable();
+			}
+			
+			distancePID.setSetpoint(encoderCounts);
+			
 			// Drive at the requested power until the distance is close, and then 
 			// turn on the distance PID.
-			if ((encoderCounts - getDistance()) > 100) {
-
-				distancePID.disable();
+			if ((encoderCounts - getDistance()) > 200) {
 				
 				driveToAngle(p, targetAngle, driveMode, PIDEnable.ENABLED, PIDEnable.ENABLED);
 				
 				return;
 			}
-			
-			if(!distancePID.isEnable()) {
-				distancePID.enable();
-			}
 
 			SmartDashboard.putNumber("R", p.getR());
-			
-			distancePID.setSetpoint(encoderCounts);
-			
+						
 			double R = p.getR() * distancePIDOutput.get();
 			
 			driveToAngle(new PolarCoordinate(R, p.getTheta()), targetAngle, driveMode, PIDEnable.ENABLED, PIDEnable.ENABLED);

@@ -2,6 +2,8 @@ package robot.commands;
 
 import robot.CartesianCoordinate;
 import robot.PolarCoordinate;
+import robot.RobotMap;
+import robot.subsystems.ChassisSubsystem.DriveMode;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
@@ -25,13 +27,13 @@ public class DriveToClickCommand extends Command {
     		theta += 360;
     	}
     	
-    	double distance     = 200;
+    	double distance     = 59 * Math.tan(49 + 17 * xy.getY());
     	
     	double angle = theta;
     	
     	PolarCoordinate p = new PolarCoordinate(.5, theta);
     	
-    	driveDistanceCommand = new DriveDistanceCommand(p, angle, distance);
+    	driveDistanceCommand = new DriveDistanceCommand(p, angle, distance, DriveMode.ROBOT_RELATIVE);
     	
     }
 

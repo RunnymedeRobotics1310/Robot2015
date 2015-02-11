@@ -12,11 +12,11 @@ public class RobotMap {
 	public static final int ROBOT_PRACTICE   = 2;
 	public static final int ROBOT_TEST       = 3;
 
-	public static int currentRobot = ROBOT_PRODUCTION;
+	public static int currentRobot = ROBOT_TEST;
 
 	/*
 	 * Test Robot - 2010
-	 * 
+	 */
 	// PWM Components
 	
 	public static int FRONT_LEFT_MOTOR  = 2;
@@ -50,8 +50,8 @@ public class RobotMap {
 	public static final int DROP_DOWN_SOLENOID_ONE = 0;
 	public static final int DROP_DOWN_SOLENOID_TWO = 1;
 	
-	public static final int EYEBROW_SOLENOID_ONE = 4;
-	public static final int EYEBROW_SOLENOID_TWO = 5;
+	public static final int EYEBROW_SOLENOID_LEFT = 4;
+	public static final int EYEBROW_SOLENOID_RIGHT = 5;
 	
 	// Hardware related constants
 
@@ -64,13 +64,13 @@ public class RobotMap {
 	public static final long EYEBROW_DEPLOY_PULSE_TIME = 800;
 	public static final long EYEBROW_RETRACT_PULSE_TIME = 1200;
 	
-*/
+
 
 	/*
 	 * Production/Test robot port mappings
 	 */
 	// PWM Components
-	
+	/*
 	public static int FRONT_LEFT_MOTOR  = 7;
 	public static int REAR_LEFT_MOTOR   = 6;
 	public static int FRONT_RIGHT_MOTOR = 3;
@@ -119,5 +119,5 @@ public class RobotMap {
 	
 	public static final long EYEBROW_DEPLOY_PULSE_TIME = 800;
 	public static final long EYEBROW_RETRACT_PULSE_TIME = 1200;
-
+*/
 }

@@ -62,7 +62,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 					return this.getRate() / RobotMap.MAX_ENCODER_RATE;
 				}
 			},
-			new Encoder(RobotMap.REAR_LEFT_ENCODER_ONE,  RobotMap.REAR_LEFT_ENCODER_TWO,  true){
+			new EncoderCorrection(RobotMap.REAR_LEFT_ENCODER_ONE,  RobotMap.REAR_LEFT_ENCODER_TWO,  true){
 				public double pidGet() {
 					return this.getRate() / RobotMap.MAX_ENCODER_RATE;
 				}
@@ -475,18 +475,6 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		default: break;
 		}
 		
-		
-		// The rear left encoder is not calibrated the same as the other encoders on the
-		// test robot
-		
-		if (RobotMap.currentRobot == RobotMap.ROBOT_TEST) {
-			encoderArr[REAR_LEFT] = new EncoderCorrection(RobotMap.REAR_LEFT_ENCODER_ONE,  RobotMap.REAR_LEFT_ENCODER_TWO,  true){
-				public double pidGet() {
-					return this.getRate() / RobotMap.MAX_ENCODER_RATE;
-				}
-			};
-		}
-
 		// Initialize SmartDashboard objects
 
 		// SmartDashboard.putData("Accel", accel);

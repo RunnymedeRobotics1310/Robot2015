@@ -12,12 +12,13 @@ public class DriveDistanceCommand extends Command {
 	PolarCoordinate p;
 	double targetAngle;
 	double distance;
+	DriveMode driveMode;
 
-	public DriveDistanceCommand(double r, double thetaDeg, double targetAngle, double distance) {
-		this(new PolarCoordinate(r, thetaDeg), targetAngle, distance);
+	public DriveDistanceCommand(double r, double thetaDeg, double targetAngle, double distance, DriveMode driveMode) {
+		this(new PolarCoordinate(r, thetaDeg), targetAngle, distance, driveMode);
 	}
 	
-	public DriveDistanceCommand(PolarCoordinate p, double targetAngle, double distance) {
+	public DriveDistanceCommand(PolarCoordinate p, double targetAngle, double distance, DriveMode driveMode) {
 		requires(Robot.chassisSubsystem);
 		this.p = p;
 		this.targetAngle = targetAngle;
@@ -33,7 +34,7 @@ public class DriveDistanceCommand extends Command {
 	protected void execute() {
 		// Y axis is inverted on controller, the robot drive compensates for this, so a negative is needed here
 		//Robot.chassisSubsystem.drive(r * Math.cos(thetaRad), -r * Math.sin(thetaRad), rotation, true);
-		Robot.chassisSubsystem.driveDistance(p, targetAngle, distance, Robot.oi.getDriveMode());
+		Robot.chassisSubsystem.driveDistance(p, targetAngle, distance, driveMode);
 		
 		
 	}

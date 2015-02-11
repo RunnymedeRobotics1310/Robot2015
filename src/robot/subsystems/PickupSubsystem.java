@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class PickupSubsystem extends Subsystem {
 
 	DoubleSolenoid dropDownSolenoid = new DoubleSolenoid(RobotMap.DROP_DOWN_SOLENOID_ONE, RobotMap.DROP_DOWN_SOLENOID_TWO);
-	Solenoid eyebrowSolenoidLeft = new Solenoid(RobotMap.EYEBROW_SOLENOID_ONE);
-	Solenoid eyebrowSolenoidRight = new Solenoid(RobotMap.EYEBROW_SOLENOID_TWO);
+	Solenoid eyebrowSolenoidLeft = new Solenoid(RobotMap.EYEBROW_SOLENOID_LEFT);
+	Solenoid eyebrowSolenoidRight = new Solenoid(RobotMap.EYEBROW_SOLENOID_RIGHT);
 
 	Talon leftPickupMotor = new Talon(RobotMap.LEFT_PICKUP_MOTOR_PORT);
 	Talon rightPickupMotor = new Talon(RobotMap.RIGHT_PICKUP_MOTOR_PORT);

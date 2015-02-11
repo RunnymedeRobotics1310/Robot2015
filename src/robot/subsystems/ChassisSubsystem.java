@@ -45,19 +45,11 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	
 	// Mecanum Drive for the robot configuration.
 	
-	RunnymedeMecanumDrive mecanumDrive = 
-			new RunnymedeMecanumDrive(MOTOR_NOT_INVERTED,
-									  MOTOR_NOT_INVERTED,
-					                  MOTOR_INVERTED,
-					                  MOTOR_INVERTED);
-	
-	/*
-	RunnymedeMecanumDrive mecanumDrive = 
-			new RunnymedeMecanumDrive(MOTOR_INVERTED,
-					                  MOTOR_INVERTED,
-					                  MOTOR_NOT_INVERTED,
-					                  MOTOR_NOT_INVERTED);
-	*/
+	RunnymedeMecanumDrive mecanumDrive = new RunnymedeMecanumDrive(
+			MOTOR_NOT_INVERTED,
+			MOTOR_NOT_INVERTED,
+			MOTOR_INVERTED,
+			MOTOR_INVERTED);
 	
 	// SENSORS
 	
@@ -70,8 +62,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 					return this.getRate() / RobotMap.MAX_ENCODER_RATE;
 				}
 			},
-			//FIXME
-			new EncoderCorrection(RobotMap.REAR_LEFT_ENCODER_ONE,  RobotMap.REAR_LEFT_ENCODER_TWO,  true){
+			new Encoder(RobotMap.REAR_LEFT_ENCODER_ONE,  RobotMap.REAR_LEFT_ENCODER_TWO,  true){
 				public double pidGet() {
 					return this.getRate() / RobotMap.MAX_ENCODER_RATE;
 				}
@@ -484,6 +475,18 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		default: break;
 		}
 		
+		
+		// The rear left encoder is not calibrated the same as the other encoders on the
+		// test robot
+		
+		if (RobotMap.currentRobot == RobotMap.ROBOT_TEST) {
+			encoderArr[REAR_LEFT] = new EncoderCorrection(RobotMap.REAR_LEFT_ENCODER_ONE,  RobotMap.REAR_LEFT_ENCODER_TWO,  true){
+				public double pidGet() {
+					return this.getRate() / RobotMap.MAX_ENCODER_RATE;
+				}
+			};
+		}
+
 		// Initialize SmartDashboard objects
 
 		// SmartDashboard.putData("Accel", accel);
@@ -683,7 +686,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		// Determine if the angle should be held constant during this move sequence.
 		// if there is no rotational input then try to hold the rotation constant.
 		// Override the rotation PID to disabled.
-		double angleRotation = rotation;
+/*		double angleRotation = rotation;
 		if (Math.abs(rotation) < .02d && !anglePID.isEnable()) {
 			
 			// Wait 2 seconds after there is zero rotation input before enabling the
@@ -710,14 +713,14 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 			disableHoldAnglePID();
 			holdAngleEnableTimerStart = -1;
 		}
-
+*/
 		// Use a rotation PID if required.
-		double mecanumRotation = angleRotation;
+		double mecanumRotation = rotation; //FIXME:angleRotation;
 		
 		// If the rotationPID is enabled, then put the rotation through the PID.
 		if (rotationPIDEnable == PIDEnable.ENABLED) {
 			enableRotationPID();
-			rotationPID.setSetpoint(angleRotation);
+			rotationPID.setSetpoint(rotation);//FIXME:(angleRotation);
 			mecanumRotation = rotationPIDOutput.get();
 		} else {
 			disableRotationPID();

@@ -27,7 +27,7 @@ public class DriveToClickCommand extends Command {
     		theta += 360;
     	}
     	
-    	double distance     = 59 * Math.tan(49 + 17 * xy.getY());
+    	double distance     = 59 * Math.tan(Math.toRadians(49 + 17 * xy.getY()));
     	
     	double angle = theta;
     	

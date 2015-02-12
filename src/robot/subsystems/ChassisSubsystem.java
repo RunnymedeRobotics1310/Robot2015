@@ -475,6 +475,10 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		default: break;
 		}
 		
+		for (int i=0; i<MOTOR_COUNT; i++) {
+			talonArr[i].stopMotor();
+		}
+		
 		// Initialize SmartDashboard objects
 
 		// SmartDashboard.putData("Accel", accel);

@@ -8,9 +8,11 @@ import robot.commands.autonomous.commandgroup.AutonomousTestCommandGroup;
 import robot.commands.autonomous.commandgroup.AutonomousThreeToteAngledCommandGroup;
 import robot.commands.autonomous.commandgroup.AutonomousThreeToteStackCommandGroup;
 import robot.subsystems.ChassisSubsystem;
+import robot.subsystems.ElevatorSubsystem;
 import robot.subsystems.PickupSubsystem;
 import robot.subsystems.PowerSubsystem;
 import robot.subsystems.RunnymedeSubsystem;
+import robot.subsystems.SensorSubsystem;
 import robot.subsystems.VisionSubsystem;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -37,7 +39,9 @@ public class Robot extends IterativeRobot {
 	public static final PowerSubsystem    powerSubsystem    = new PowerSubsystem();
 	public static final ChassisSubsystem  chassisSubsystem  = new ChassisSubsystem();
 	public static final PickupSubsystem  pickupSubsystem  = new PickupSubsystem();
-
+	public static final SensorSubsystem  sensorSubsystem  = new SensorSubsystem();
+	public static final ElevatorSubsystem  elevatorSubsystem  = new ElevatorSubsystem();
+	
 	SendableChooser autonomousChooser;
     Command autonomousCommand;
     
@@ -47,7 +51,9 @@ public class Robot extends IterativeRobot {
     	
     	subsystemLs.add(visionSubsystem);
     	subsystemLs.add(powerSubsystem);
-    	subsystemLs.add(chassisSubsystem); 
+    	subsystemLs.add(chassisSubsystem);
+    	subsystemLs.add(sensorSubsystem); 
+    	subsystemLs.add(elevatorSubsystem); 
     	
     }
 

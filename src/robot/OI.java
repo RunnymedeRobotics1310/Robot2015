@@ -183,5 +183,9 @@ public class OI {
 				driverJoystick.getButtonsPressedString()
 				+ ((getDirectionPointer() >= 0) ? " D(" + getDirectionPointer() + ")" : "") );
 	}
+
+	public boolean getDebugButton() {
+		return driverJoystick.getButton(F310Button.START);
+	}
 }
 

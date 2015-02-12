@@ -61,7 +61,7 @@ public class ElevatorSubsystem extends RunnymedeSubsystem {
 	}
 
 	public boolean onTarget() {
-		return difference < 100;
+		return Math.abs(difference) < 200;
 	}
 
 	public void driveToLevel(double setpoint) {

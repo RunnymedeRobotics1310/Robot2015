@@ -1,7 +1,5 @@
 package robot;
 
-import edu.wpi.first.wpilibj.DigitalSource;
-
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -29,8 +27,8 @@ public class RobotMap {
 	
 	public static final int ELEVATOR_MOTOR = 4;
 	
-	public static final int LEFT_PICKUP_MOTOR_PORT = 9;
-	public static final int RIGHT_PICKUP_MOTOR_PORT = 0;
+	public static final int LEFT_PICKUP_MOTOR_PORT = 6;
+	public static final int RIGHT_PICKUP_MOTOR_PORT = 5;
 	
 	// Analog I/O
 
@@ -50,8 +48,8 @@ public class RobotMap {
 	public static final int REAR_RIGHT_ENCODER_ONE = 0;
 	public static final int REAR_RIGHT_ENCODER_TWO = 1;
 	
-	public static final int ELEVATOR_ENCODER_ONE = 0;
-	public static final int ELEVATOR_ENCODER_TWO = 1;
+	public static final int ELEVATOR_ENCODER_ONE = 8;
+	public static final int ELEVATOR_ENCODER_TWO = 9;
 	
 	public static final int TOTE_SENSOR_PORT = 10;
 	
@@ -63,7 +61,7 @@ public class RobotMap {
 	public static final int EYEBROW_SOLENOID_LEFT = 4;
 	public static final int EYEBROW_SOLENOID_RIGHT = 5;
 	
-	public static final int BRAKE_SOLENOID = 0;
+	public static final int BRAKE_SOLENOID = 6;
 	
 	// Hardware related constants
 

@@ -125,7 +125,7 @@ public class OI {
 	}
 
 
-	public boolean getPickupButton() {
+	public boolean getToteIntakeDeployButton() {
 		return driverJoystick.getButton(ButtonMap.DEPLOY_PICKUP.getButton());
 	}
 	

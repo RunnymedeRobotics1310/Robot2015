@@ -1,13 +1,13 @@
 package robot.commands;
 
-import robot.subsystems.ElevatorSubsystem.Levels;
+import robot.subsystems.ToteElevatorSubsystem.Level;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class ElevatorCommandGroup extends CommandGroup {
 
 	public ElevatorCommandGroup() {
-		addSequential(new DriveElevatorCommand(Levels.TWO.encoderSetpoint));
-		addSequential(new DriveElevatorCommand(Levels.FLOOR.encoderSetpoint));
+		addSequential(new DriveElevatorCommand(Level.TWO));
+		addSequential(new DriveElevatorCommand(Level.FLOOR));
 	}
 	
 }

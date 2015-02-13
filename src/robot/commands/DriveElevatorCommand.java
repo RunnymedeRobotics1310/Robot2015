@@ -1,25 +1,25 @@
 package robot.commands;
 
 import robot.Robot;
+import robot.subsystems.ToteElevatorSubsystem.Level;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveElevatorCommand extends Command {
 	
-	double setpoint;
+	Level level;
 	
-	public DriveElevatorCommand(double setpoint) {
+	public DriveElevatorCommand(Level level) {
 		requires(Robot.elevatorSubsystem);
-		this.setpoint = setpoint;
+		this.level = level;
 	}
 	
 	@Override
 	protected void initialize() {
-		Robot.elevatorSubsystem.enableSubsystem();
 	}
 
 	@Override
 	protected void execute() {
-		Robot.elevatorSubsystem.driveToLevel(setpoint);
+		Robot.elevatorSubsystem.driveToLevel(level);
 	}
 
 	@Override
@@ -29,12 +29,10 @@ public class DriveElevatorCommand extends Command {
 
 	@Override
 	protected void end() {
-		Robot.elevatorSubsystem.disableSubsystem();
 	}
 
 	@Override
 	protected void interrupted() {
-		Robot.elevatorSubsystem.disableSubsystem();
 	}
 
 	

@@ -23,6 +23,7 @@ public class DriveDistanceCommand extends Command {
 		this.p = p;
 		this.targetAngle = targetAngle;
 		this.distance = distance * RobotMap.ENCODER_COUNTS_PER_INCH;
+		this.driveMode = driveMode;
 	}
 
 	@Override

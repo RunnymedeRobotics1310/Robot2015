@@ -67,7 +67,7 @@ public class RobotMap {
 
 	public static final double ENCODER_COUNTS_PER_ELEVATOR_LEVEL = 1400;
 	
-	public static final double ENCODER_COUNTS_PER_INCH = 24;//6.7 per cm;
+	public static final double ENCODER_COUNTS_PER_INCH = 16.72;//6.7 per cm;
 	
 	public static final double ENCODER_RESOLUTION_CORRECTION = 1.3;
 	public static final double MAX_ANUGLAR_VELOCITY = 120;

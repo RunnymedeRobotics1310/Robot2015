@@ -38,10 +38,10 @@ public class RunnymedeMecanumDrive {
 	/**
      * Constructor for RobotDrive with 4 wheels specified as SpeedController objects.
      * Speed controller input version of RobotDrive (see previous comments).
-     * @param rearLeftMotorInverted  - true if the wheel is inverted, false otherwise
      * @param frontLeftMotorInverted - true if the wheel is inverted, false otherwise
-     * @param rearRightMotorInverted  - true if the wheel is inverted, false otherwise
+     * @param rearLeftMotorInverted  - true if the wheel is inverted, false otherwise
      * @param frontRightMotorInverted - true if the wheel is inverted, false otherwise
+     * @param rearRightMotorInverted  - true if the wheel is inverted, false otherwise
      */
     public RunnymedeMecanumDrive(boolean frontLeftMotorInverted, boolean rearLeftMotorInverted,
                       boolean frontRightMotorInverted, boolean rearRightMotorInverted) {
@@ -50,6 +50,16 @@ public class RunnymedeMecanumDrive {
     									 rearLeftMotorInverted,
     			                         frontRightMotorInverted,
     			                         rearRightMotorInverted };
+    }
+
+	/**
+     * Constructor for RobotDrive with 4 wheels specified as SpeedController objects.
+     * Speed controller input version of RobotDrive (see previous comments).
+     * @param motorInversionArr - boolean [frontLeftMotorInverted, rearLeftMotorInverted,
+     * frontRightMotorInverted, rearRightMotorInverted] - true if the wheel is inverted, false otherwise
+     */
+    public RunnymedeMecanumDrive(boolean [] motorInversionArr) {
+    	motorInverted = motorInversionArr;
     }
 
     /**
@@ -66,6 +76,17 @@ public class RunnymedeMecanumDrive {
     	motorInverted[REAR_LEFT]   = rearLeftMotorInverted;
     	motorInverted[FRONT_RIGHT] = frontRightMotorInverted;
     	motorInverted[REAR_RIGHT]  = rearRightMotorInverted;
+    }
+    
+    /**
+     * Set the motor inversion on each of the motors.  {@literal true} for not inverted, {@literal false} for inverted.
+     * @param motorInversionArr [frontLeftMotorInverted, rearLeftMotorInverted, frontRightMotorInverted, rearRightMotorInverted]
+     */
+    public void setMotorInversion(boolean [] motorInversionArr) {
+    	
+    	for (int i=0; i<MOTOR_COUNT; i++) {
+    	motorInverted[i]  = motorInversionArr[i];
+    	}
     }
     
     /**

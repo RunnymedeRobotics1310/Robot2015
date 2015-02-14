@@ -20,6 +20,23 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class OI {
 	
+	private Joystick_F310 driverJoystick = new Joystick_F310(0);
+
+	private enum StickMap {
+		
+		// Driver Joystick stick mapping
+		DRIVE_STICK    (F310Stick.LEFT),
+		ROTATION_STICK (F310Stick.RIGHT);
+		
+		F310Stick stick;
+		
+		StickMap(F310Stick stick) {
+			this.stick = stick;
+		}
+		
+		F310Stick getStick() { return this.stick; }
+	}
+
 	private enum ButtonMap {
 		
 		// Driver Joystick button mapping
@@ -47,26 +64,11 @@ public class OI {
 		
 		F310Button getButton() { return this.button; }
 	}
-	private enum StickMap {
-		
-		// Driver Joystick stick mapping
-		DRIVE_STICK    (F310Stick.LEFT),
-		ROTATION_STICK (F310Stick.RIGHT);
-		
-		F310Stick stick;
-		
-		StickMap(F310Stick stick) {
-			this.stick = stick;
-		}
-		
-		F310Stick getStick() { return this.stick; }
-	}
-
+	
 	private PIDEnable motorPIDEnable    = PIDEnable.ENABLED;
 	
 	private PIDEnable rotationPIDEnable = PIDEnable.ENABLED;
 
-	private Joystick_F310 driverJoystick = new Joystick_F310(0);
 	
 	private NetworkTableOI networkTableOI = new NetworkTableOI();
 

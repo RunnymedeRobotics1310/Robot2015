@@ -54,6 +54,19 @@ public class LinearRamp {
 		return enable;
 	}
 	
+	/**
+	 * Is this LinearRamp complete
+	 * <p>
+	 * This routine returns true if the ramp is disabled.
+	 * @return {@literal true} if the ramp is complete, {@literal false} otherwise
+	 */
+	public boolean isComplete() {
+		
+		if (!isEnable()) { return true; }
+		
+		return System.currentTimeMillis() > endTime;
+	}
+	
 	/** 
 	 * Disable the LinearRamp.  This will allow the ramp to be re-started.
 	 */

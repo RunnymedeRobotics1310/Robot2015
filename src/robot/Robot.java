@@ -145,6 +145,14 @@ public class Robot extends IterativeRobot {
         updateDashboard();
     }
     
+    @Override
+    public void testInit() {
+		// Ensure all of the motors are not moving when the test
+    	// mode starts by disabling all subsystems
+    	
+        disableSubsystems();
+    }
+
     /**
      * This function is called periodically during test mode
      */

@@ -67,7 +67,7 @@ public class RobotMap {
 
 	public static final double ENCODER_COUNTS_PER_ELEVATOR_LEVEL = 1400;
 	
-	public static final double ENCODER_COUNTS_PER_INCH = 16.72;//6.7 per cm;
+	public static final double ENCODER_COUNTS_PER_INCH = 16.72;
 	
 	public static final double ENCODER_RESOLUTION_CORRECTION = 1.3;
 	public static final double MAX_ANUGLAR_VELOCITY = 120;
@@ -76,6 +76,7 @@ public class RobotMap {
 	public static final long EYEBROW_DEPLOY_PULSE_TIME = 800;
 	public static final long EYEBROW_RETRACT_PULSE_TIME = 1200;	
 
+	public static final double MAX_DRIVE_ACCELERATION = .5; // change in motor speed control / sec
 
 	/*
 	 * Production/Test robot port mappings

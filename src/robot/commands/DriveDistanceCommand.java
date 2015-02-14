@@ -2,7 +2,6 @@ package robot.commands;
 
 import robot.PolarCoordinate;
 import robot.Robot;
-import robot.RobotMap;
 import robot.subsystems.ChassisSubsystem.DriveMode;
 import robot.subsystems.ChassisSubsystem.PIDEnable;
 import edu.wpi.first.wpilibj.command.Command;
@@ -22,7 +21,7 @@ public class DriveDistanceCommand extends Command {
 		requires(Robot.chassisSubsystem);
 		this.p = p;
 		this.targetAngle = targetAngle;
-		this.distance = distance * RobotMap.ENCODER_COUNTS_PER_INCH;
+		this.distance = distance;
 		this.driveMode = driveMode;
 	}
 

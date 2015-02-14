@@ -16,7 +16,7 @@ public class SensorCommand extends Command {
 
 	@Override
 	protected void execute() {
-		if(Robot.oi.getDebugButton()) {//Robot.sensorSubsystem.getToteSensor()) {
+		if(Robot.oi.getStartButton()) {//Robot.sensorSubsystem.getToteSensor()) {
 			Scheduler.getInstance().add(new ElevatorCommandGroup());
 		}
 	}

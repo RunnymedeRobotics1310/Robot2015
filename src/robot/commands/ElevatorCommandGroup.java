@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class ElevatorCommandGroup extends CommandGroup {
 
 	public ElevatorCommandGroup() {
-		addSequential(new DriveElevatorCommand(Level.TWO));
 		addSequential(new DriveElevatorCommand(Level.FLOOR));
+		addSequential(new DriveElevatorCommand(Level.TWO));
 	}
 	
 }

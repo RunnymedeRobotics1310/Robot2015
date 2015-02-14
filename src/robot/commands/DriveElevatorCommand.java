@@ -29,12 +29,12 @@ public class DriveElevatorCommand extends Command {
 
 	@Override
 	protected void end() {
+		Robot.elevatorSubsystem.disableSubsystem();
 	}
 
 	@Override
 	protected void interrupted() {
+		Robot.elevatorSubsystem.disableSubsystem();
 	}
 
-	
-	
 }

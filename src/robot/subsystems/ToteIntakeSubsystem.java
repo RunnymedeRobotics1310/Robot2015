@@ -26,15 +26,14 @@ public class ToteIntakeSubsystem extends Subsystem {
 		// FIXME: Make these delays into a Command or a CommandGroup
 		if((System.currentTimeMillis() - lastDeployTime < RobotMap.EYEBROW_DEPLOY_PULSE_TIME && !deploy) ||
 				(System.currentTimeMillis() - lastDeployTime < RobotMap.EYEBROW_RETRACT_PULSE_TIME && deploy)) {
-			eyebrowSolenoidLeft.set(true);
-			eyebrowSolenoidRight.set(true);
+			eyebrowSolenoidLeft.set(false);
+			eyebrowSolenoidRight.set(false);
 		} else {
-			eyebrowSolenoidLeft.set(leftEyebrowState);
-			eyebrowSolenoidRight.set(rightEyebrowState);
+			eyebrowSolenoidLeft.set(!leftEyebrowState);
+			eyebrowSolenoidRight.set(!rightEyebrowState);
 		}
 
 		if(rollers) {
-			// FIXME FLIPPED IN TESTING, REVERSE DIRECTIONS
 			leftPickupMotor.set(-0.75);
 			rightPickupMotor.set(0.75);
 		} else {

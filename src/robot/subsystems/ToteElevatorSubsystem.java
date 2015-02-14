@@ -1,10 +1,8 @@
 package robot.subsystems;
 
-import robot.Robot;
 import robot.RobotMap;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDSource.PIDSourceParameter;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,11 +11,11 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 
 	public enum Level {
 		FLOOR(0), 
-		TWO(-1 * RobotMap.ENCODER_COUNTS_PER_ELEVATOR_LEVEL), 
-		THREE(-2 * RobotMap.ENCODER_COUNTS_PER_ELEVATOR_LEVEL), 
-		FOUR(-3 * RobotMap.ENCODER_COUNTS_PER_ELEVATOR_LEVEL), 
-		FIVE(-4 * RobotMap.ENCODER_COUNTS_PER_ELEVATOR_LEVEL), 
-		SIX(-5 * RobotMap.ENCODER_COUNTS_PER_ELEVATOR_LEVEL);
+		ONE(-1 * RobotMap.ENCODER_COUNTS_PER_ELEVATOR_LEVEL), 
+		TWO(-2 * RobotMap.ENCODER_COUNTS_PER_ELEVATOR_LEVEL), 
+		THREE(-3 * RobotMap.ENCODER_COUNTS_PER_ELEVATOR_LEVEL), 
+		FOUR(-4 * RobotMap.ENCODER_COUNTS_PER_ELEVATOR_LEVEL), 
+		FIVE(-5 * RobotMap.ENCODER_COUNTS_PER_ELEVATOR_LEVEL);
 
 		public double encoderSetpoint;
 

@@ -45,15 +45,17 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 			new Talon(RobotMap.REAR_LEFT_MOTOR),
 			new Talon(RobotMap.FRONT_RIGHT_MOTOR),
 			new Talon(RobotMap.REAR_RIGHT_MOTOR)   };
-
-	// Mecanum Drive for the robot configuration.
-
-	private RunnymedeMecanumDrive mecanumDrive = new RunnymedeMecanumDrive(
+	
+	private boolean [] motorInversionArr = {
 			MOTOR_NOT_INVERTED,
 			MOTOR_NOT_INVERTED,
 			MOTOR_INVERTED,
-			MOTOR_INVERTED);
+			MOTOR_INVERTED };
 
+	// Mecanum Drive for the robot configuration.
+
+	private RunnymedeMecanumDrive mecanumDrive = new RunnymedeMecanumDrive(motorInversionArr);
+	
 	// SENSORS
 
 	// Encoders
@@ -275,7 +277,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		}
 		
 		// Drive at the requested power until the distance is close, and then 
-		// turn on the distance PID.
+		// turn on the deceleration.
 		// When decelerating linearly, we know the distance travelled will be 
 		// d = 1/2 a t^2
 		// The initial velocity in encoder counts is given by 
@@ -294,15 +296,17 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		// d = 1/2 (V0/tdec) tdec^2
 		// d = 1/2 V0 tdec
 		
-		// Deceleration time
-		double decelerationTime = p.getR() / RobotMap.MAX_DRIVE_ACCELERATION;
-
-		double stoppingDistance = getSpeed() * decelerationTime / 2.0d; // in encoderCounts
 	
-		// If the robot has not yet got to the stopping point, then continue driving.
+		// If the robot has not yet got to the deceleration point, then continue driving.
 		if (!distanceSlowDownRamp.isEnable()) {
 		
-			if (getDistance(Units.ENCODER_COUNTS) < distanceInches*RobotMap.ENCODER_COUNTS_PER_INCH - stoppingDistance) {
+			// Deceleration time
+			double decelerationTime = p.getR() / RobotMap.MAX_DRIVE_ACCELERATION;
+
+			// d = 1/2 V0 tdec
+			double stoppingDistance = getSpeed() * decelerationTime / 2.0d; // in encoderCounts
+
+			if (getDistance(Units.ENCODER_COUNTS) + stoppingDistance < distanceInches*RobotMap.ENCODER_COUNTS_PER_INCH) {
 	
 				driveToAngle(p, targetAngle, driveMode, PIDEnable.ENABLED, PIDEnable.ENABLED);
 				
@@ -310,17 +314,24 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	
 				return;
 			}
+			
+			// Initiate the distance slow down based on the current velocity and deceleration time
+			distanceSlowDownRamp.start(decelerationTime, p.getR(), 0.0);
 		}
 		
 		// The drive distance command determines the speed ramp down based on the current distance from the 
 		// target and the speed of the robot.
 
-		distanceSlowDownRamp.start(decelerationTime, p.getR(), 0.0);
-
 		double r = distanceSlowDownRamp.getValue();
 
 		SmartDashboard.putNumber("R", r);
 
+		if (distanceSlowDownRamp.isComplete()) {
+			distanceOnTarget = true;
+		} else {
+			distanceOnTarget = false;
+		}
+		
 		driveToAngle(new PolarCoordinate(r, p.getTheta()), targetAngle, driveMode, PIDEnable.ENABLED, PIDEnable.ENABLED);
 	}
 
@@ -511,21 +522,23 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		switch (RobotMap.currentRobot) {
 		case RobotMap.ROBOT_PRODUCTION:
 		case RobotMap.ROBOT_PRACTICE:
-			mecanumDrive.setMotorInversion(
+			motorInversionArr = new boolean [] {
 					MOTOR_NOT_INVERTED,
 					MOTOR_NOT_INVERTED,
 					MOTOR_INVERTED,
-					MOTOR_INVERTED);
+					MOTOR_INVERTED };
+			
 			break;
 		case RobotMap.ROBOT_TEST:
-			mecanumDrive.setMotorInversion(
+			motorInversionArr = new boolean [] {
 					MOTOR_INVERTED,
 					MOTOR_INVERTED,
 					MOTOR_NOT_INVERTED,
-					MOTOR_NOT_INVERTED);
+					MOTOR_NOT_INVERTED };
 			break;
 		default: break;
 		}
+		mecanumDrive.setMotorInversion(motorInversionArr);
 
 		for (int i=0; i<MOTOR_COUNT; i++) {
 			talonArr[i].stopMotor();
@@ -556,6 +569,8 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		SmartDashboard.putData("GyroAnglePID", anglePID);
 		SmartDashboard.putData("DriveAnglePID", holdAnglePID);
 		SmartDashboard.putData("GyroRotationPID", rotationPID);
+
+		disableSubsystem();
 
 	}
 
@@ -632,6 +647,8 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		SmartDashboard.putNumber("Encoder Distance", getDistance(Units.ENCODER_COUNTS));
 		SmartDashboard.putNumber("Encoder Distance(in)", getDistance(Units.INCHES));
 		SmartDashboard.putNumber("Encoder Speed", getSpeed());
+		SmartDashboard.putBoolean("Distance Slow Down Ramp Enabled", distanceSlowDownRamp.isEnable());
+		SmartDashboard.putNumber("Distance Slow Down Ramp Output", distanceSlowDownRamp.getValue());
 
 		anglePID.updateTable();
 		SmartDashboard.putNumber("Angle PID Output", anglePIDOutput.get());
@@ -876,9 +893,11 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		// does not contribute to the distance traveled.
 		
 		double distanceDiagonal1 = 
-				(encoderArr[FRONT_LEFT].getDistance() + encoderArr[REAR_RIGHT].getDistance()) / 2.0d;
+				( encoderArr[FRONT_LEFT].getDistance() * (motorInversionArr[FRONT_LEFT] ? 1.0d : -1.0d)
+				+ encoderArr[REAR_RIGHT].getDistance() * (motorInversionArr[REAR_RIGHT] ? 1.0d : -1.0d)) / 2.0d;
 		double distanceDiagonal2 = 
-				(encoderArr[REAR_LEFT].getDistance() + encoderArr[FRONT_RIGHT].getDistance()) / 2.0d;
+				( encoderArr[REAR_LEFT]  .getDistance() * (motorInversionArr[REAR_LEFT] ? 1.0d : -1.0d)
+				+ encoderArr[FRONT_RIGHT].getDistance() * (motorInversionArr[FRONT_RIGHT] ? 1.0d : -1.0d)) / 2.0d;
 
 		double distanceEncoderCounts = 
 				(Math.abs(distanceDiagonal1) + Math.abs(distanceDiagonal2)) / 2;

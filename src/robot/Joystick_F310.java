@@ -53,25 +53,28 @@ public class Joystick_F310 {
 	private enum F310StickPorts { 
 		LEFT_X_AXIS (0,0),
 		LEFT_Y_AXIS (1,1),
-		LEFT_Z_AXIS (2,2), //FIXME:z axis doesn't exist
+		LEFT_Z_AXIS (2,-1),
 
-		RIGHT_X_AXIS (4,4),
-		RIGHT_Y_AXIS (5,5);
+		RIGHT_X_AXIS (4,2),
+		RIGHT_Y_AXIS (5,3);
 
 		int xModeStickPort, dModeStickPort;
 		F310StickPorts(int xModeStickPort, int dModeStickPort) {
 			this.xModeStickPort = xModeStickPort;
 			this.dModeStickPort = dModeStickPort;
 		}
+		int getPort(JoystickMode joystickmode) {
+		
+			if (joystickmode == JoystickMode.D) {
+				return dModeStickPort;
+			}
+			else {
+				return xModeStickPort;
+			}
+			
+		}
 	}
 
-	private static int LEFT_X_AXIS = 0;
-	private static int LEFT_Y_AXIS = 1;
-	private static int LEFT_Z_AXIS = 2;
-
-	private static int RIGHT_X_AXIS = 4;
-	private static int RIGHT_Y_AXIS = 5;
-	private static int RIGHT_Z_AXIS = 3;
 
 	private final Joystick joystick;
 
@@ -209,21 +212,21 @@ public class Joystick_F310 {
 		case LEFT:
 			switch (axis) {
 			case X:
-				return joystick.getRawAxis(LEFT_X_AXIS);
+				return joystick.getRawAxis (F310StickPorts.LEFT_X_AXIS.getPort(getJoystickMode()));
 			case Y:
-				return joystick.getRawAxis(LEFT_Y_AXIS);
+				return joystick.getRawAxis(F310StickPorts.LEFT_Y_AXIS.getPort(getJoystickMode()));
 			case Z:
-				return joystick.getRawAxis(LEFT_Z_AXIS);
+				return joystick.getRawAxis(F310StickPorts.LEFT_Z_AXIS.getPort(getJoystickMode()));
 			}
 			break;
 		case RIGHT:
 			switch (axis) {
 			case X:
-				return joystick.getRawAxis(RIGHT_X_AXIS);
+				return joystick.getRawAxis(F310StickPorts.RIGHT_X_AXIS.getPort(getJoystickMode()));
 			case Y:
-				return joystick.getRawAxis(RIGHT_Y_AXIS);
+				return joystick.getRawAxis(F310StickPorts.RIGHT_Y_AXIS.getPort(getJoystickMode()));
 			case Z:
-				return joystick.getRawAxis(RIGHT_Z_AXIS);
+				return 0.0d;
 			}
 		}
 		return 0.0d;

@@ -8,11 +8,12 @@ import robot.commands.autonomous.commandgroup.AutonomousTestCommandGroup;
 import robot.commands.autonomous.commandgroup.AutonomousThreeToteAngledCommandGroup;
 import robot.commands.autonomous.commandgroup.AutonomousThreeToteStackCommandGroup;
 import robot.subsystems.ChassisSubsystem;
-import robot.subsystems.ToteElevatorSubsystem;
-import robot.subsystems.ToteIntakeSubsystem;
+import robot.subsystems.ContainerElevatorSubsystem;
 import robot.subsystems.PowerSubsystem;
 import robot.subsystems.RunnymedeSubsystem;
 import robot.subsystems.SensorSubsystem;
+import robot.subsystems.ToteElevatorSubsystem;
+import robot.subsystems.ToteIntakeSubsystem;
 import robot.subsystems.VisionSubsystem;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -38,9 +39,10 @@ public class Robot extends IterativeRobot {
 	public static final VisionSubsystem   visionSubsystem   = new VisionSubsystem();
 	public static final PowerSubsystem    powerSubsystem    = new PowerSubsystem();
 	public static final ChassisSubsystem  chassisSubsystem  = new ChassisSubsystem();
-	public static final ToteIntakeSubsystem  pickupSubsystem  = new ToteIntakeSubsystem();
+	public static final ToteIntakeSubsystem  toteIntakeSubsystem  = new ToteIntakeSubsystem();
 	public static final SensorSubsystem  sensorSubsystem  = new SensorSubsystem();
-	public static final ToteElevatorSubsystem  elevatorSubsystem  = new ToteElevatorSubsystem();
+	public static final ToteElevatorSubsystem  toteElevatorSubsystem  = new ToteElevatorSubsystem();
+	public static final ContainerElevatorSubsystem  containerElevatorSubsystem  = new ContainerElevatorSubsystem();
 	
 	SendableChooser autonomousChooser;
     Command autonomousCommand;
@@ -53,8 +55,8 @@ public class Robot extends IterativeRobot {
     	subsystemLs.add(powerSubsystem);
     	subsystemLs.add(chassisSubsystem);
     	subsystemLs.add(sensorSubsystem); 
-    	subsystemLs.add(elevatorSubsystem); 
-    	
+    	subsystemLs.add(toteElevatorSubsystem); 
+    	subsystemLs.add(containerElevatorSubsystem);
     }
 
     @Override

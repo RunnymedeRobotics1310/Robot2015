@@ -9,7 +9,7 @@ public class TeleopPickupCommand extends Command {
 	private Toggle pickupToggle = new Toggle(false);
 	
 	public TeleopPickupCommand() {
-		requires(Robot.pickupSubsystem);
+		requires(Robot.toteIntakeSubsystem);
 	}
 	
 	@Override
@@ -19,7 +19,7 @@ public class TeleopPickupCommand extends Command {
 	@Override
 	protected void execute() {
 		pickupToggle.update(Robot.oi.getToteIntakeDeployButton());
-		Robot.pickupSubsystem.update(pickupToggle.getState(), pickupToggle.lastStateChangeTime(),
+		Robot.toteIntakeSubsystem.update(pickupToggle.getState(), pickupToggle.lastStateChangeTime(),
 				Robot.oi.getLeftEyebrowButton(), Robot.oi.getRightEyebrowButton(), Robot.oi.getPickupRollerButton());
 	}
 

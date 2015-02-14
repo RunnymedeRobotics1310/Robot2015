@@ -9,17 +9,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 
-	public enum Level {
+	public enum ToteElevatorLevel {
 		FLOOR(0), 
-		ONE(-1 * RobotMap.ENCODER_COUNTS_PER_ELEVATOR_LEVEL), 
-		TWO(-2 * RobotMap.ENCODER_COUNTS_PER_ELEVATOR_LEVEL), 
-		THREE(-3 * RobotMap.ENCODER_COUNTS_PER_ELEVATOR_LEVEL), 
-		FOUR(-4 * RobotMap.ENCODER_COUNTS_PER_ELEVATOR_LEVEL), 
-		FIVE(-5 * RobotMap.ENCODER_COUNTS_PER_ELEVATOR_LEVEL);
+		ONE(-RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL), 
+		TWO(-RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL + (1 * -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL)), 
+		THREE(-RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL + (2 * -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL)), 
+		FOUR(-RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL + (3 * -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL)), 
+		FIVE(-RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL + (4 * -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL));
 
 		public double encoderSetpoint;
 
-		Level(double encoderSetpoint) {
+		ToteElevatorLevel(double encoderSetpoint) {
 			this.encoderSetpoint = encoderSetpoint;
 		}
 
@@ -27,28 +27,28 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 	
 	double difference = 0.0;
 	
-	Encoder encoder = new Encoder(RobotMap.ELEVATOR_ENCODER_ONE,
-			RobotMap.ELEVATOR_ENCODER_TWO) {
+	Encoder encoder = new Encoder(RobotMap.TOTE_ELEVATOR_ENCODER_ONE,
+			RobotMap.TOTE_ELEVATOR_ENCODER_TWO) {
 		@Override
 		public double pidGet() {
-			return this.getRate() / RobotMap.MAX_ELEVATOR_ENCODER_RATE;
+			return this.getRate() / RobotMap.TOTE_ELEVATOR_MAX_ELEVATOR_ENCODER_RATE;
 		}
 	};
 	
-	Talon elevatorMotor = new Talon(RobotMap.ELEVATOR_MOTOR);
+	Talon elevatorMotor = new Talon(RobotMap.TOTE_ELEVATOR_MOTOR);
 	Solenoid brake = new Solenoid(RobotMap.BRAKE_SOLENOID);
 
-	PIDController elevatorRatePID = new PIDController(0.5, 0.0, 0.0, 0.0004 * RobotMap.MAX_ELEVATOR_ENCODER_RATE, encoder, elevatorMotor);
+	PIDController elevatorRatePID = new PIDController(0.5, 0.0, 0.0, 0.0004 * RobotMap.TOTE_ELEVATOR_MAX_ELEVATOR_ENCODER_RATE, encoder, elevatorMotor);
 
 	public void initDefaultCommand() {
 		setDefaultCommand(null);
 	}
 
 	public boolean onTarget() {
-		return Math.abs(difference) < 100;
+		return Math.abs(difference) < 25;
 	}
 
-	public void driveToLevel(Level level) {
+	public void driveToLevel(ToteElevatorLevel level) {
 		difference = encoder.getDistance() - level.encoderSetpoint;
 
 		disengageBrake();
@@ -58,7 +58,7 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 		} else {
 			elevatorRatePID.setSetpoint(1.0);
 		}
-		
+				
 	}
 
 	private void disengageBrake() {
@@ -91,9 +91,9 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 
 	@Override
 	public void updateDashboard() {
-		SmartDashboard.putData("Elevator Encoder", encoder);
-		SmartDashboard.putData("Elevator PID", elevatorRatePID);
-		SmartDashboard.putData("Elevator Talon", elevatorMotor);
+		SmartDashboard.putData("Tote Elevator Encoder", encoder);
+		SmartDashboard.putData("Tote Elevator PID", elevatorRatePID);
+		SmartDashboard.putData("Tote Elevator Talon", elevatorMotor);
 	}
 
 }

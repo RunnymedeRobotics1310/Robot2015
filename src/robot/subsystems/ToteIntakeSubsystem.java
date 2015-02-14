@@ -24,8 +24,8 @@ public class ToteIntakeSubsystem extends Subsystem {
 	public void update(boolean deploy, long lastDeployTime, boolean leftEyebrowState, boolean rightEyebrowState, boolean rollers) {
 
 		// FIXME: Make these delays into a Command or a CommandGroup
-		if((System.currentTimeMillis() - lastDeployTime < RobotMap.EYEBROW_DEPLOY_PULSE_TIME && !deploy) ||
-				(System.currentTimeMillis() - lastDeployTime < RobotMap.EYEBROW_RETRACT_PULSE_TIME && deploy)) {
+		if((System.currentTimeMillis() - lastDeployTime < RobotMap.EYEBROW_RETRACT_PULSE_TIME && !deploy) ||
+				(System.currentTimeMillis() - lastDeployTime < RobotMap.EYEBROW_DEPLOY_PULSE_TIME && deploy)) {
 			eyebrowSolenoidLeft.set(false);
 			eyebrowSolenoidRight.set(false);
 		} else {
@@ -48,4 +48,13 @@ public class ToteIntakeSubsystem extends Subsystem {
 		}
 
 	}
+	/**
+	 * 
+	 * @param state False is open, true is closed
+	 */
+	public void actuateEyebrows(boolean state) {
+		eyebrowSolenoidLeft.set(state);
+		eyebrowSolenoidRight.set(state);
+	}
+	
 }

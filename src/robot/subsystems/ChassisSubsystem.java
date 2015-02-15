@@ -227,6 +227,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	 * @return true if on target, false otherwise
 	 */
 	public boolean angleOnTarget() {
+		if (!anglePID.isEnable()) { return true; }
 		return anglePID.onTarget();
 	}
 
@@ -274,6 +275,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		if (getDistance(Units.INCHES) > distanceInches) { 
 			driveToAngle(new PolarCoordinate(), targetAngle, driveMode, PIDEnable.ENABLED, PIDEnable.ENABLED);
 			distanceOnTarget = true;
+			return;
 		}
 		
 		// Drive at the requested power until the distance is close, and then 
@@ -442,17 +444,6 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	 */
 	public double getGyroRotation() {
 		return gyro.getRate();
-	}
-
-
-	/**
-	 * Gyro Angle on target
-	 * 
-	 * @return - true if the gyro angle is at the gyro setpoint after calling
-	 * driveToAngle.
-	 */
-	public boolean gyroAngleOnTarget() {
-		return anglePID.onTarget();
 	}
 
 	@Override
@@ -752,6 +743,9 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 				disableRotationPID();
 				rotationPIDEnable = PIDEnable.DISABLED;
 				if (holdAngle < 0) { 
+					
+					// The drive hold angle must equal the value of the drive to angle
+					// so that the PIDs do not fight eachother.
 					if(anglePID.isEnable()) {
 						holdAngle = (anglePID.getSetpoint());
 					} else {

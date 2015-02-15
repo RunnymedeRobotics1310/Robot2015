@@ -1,5 +1,7 @@
 package robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class LinearRamp {
 
 	private long startTime = 0;
@@ -29,6 +31,7 @@ public class LinearRamp {
 		this.targetValue = targetValue;
 		this.startTime = System.currentTimeMillis();
 		this.endTime = this.startTime + Math.round(t*1000);
+		this.enable = true;
 		return this.startValue;
 	}
 	
@@ -43,7 +46,17 @@ public class LinearRamp {
 		if (currentTime > endTime) { return this.targetValue; }
 		
 		double completeRatio = ((currentTime - this.startTime) * 1.0d) / ((this.endTime - this.startTime) * 1.0d);
-		return  startValue + ((targetValue-startValue)/completeRatio);
+
+		double rtnVal =  startValue + ((targetValue-startValue)*completeRatio);
+
+		SmartDashboard.putNumber("RampStartValue", startValue);
+		SmartDashboard.putNumber("RampEndValue", targetValue);
+		
+		SmartDashboard.putNumber("RampCompleteRatio", completeRatio);
+		SmartDashboard.putNumber("RampValue", rtnVal);
+		
+		return rtnVal;
+		
 	}
 
 	/**

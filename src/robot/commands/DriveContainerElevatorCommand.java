@@ -12,6 +12,7 @@ public class DriveContainerElevatorCommand extends Command {
 	public DriveContainerElevatorCommand(ContainerElevatorLevel level) {
 		requires(Robot.containerElevatorSubsystem);
 		this.level = level;
+		setInterruptible(true);
 	}
 	
 	@Override
@@ -20,6 +21,7 @@ public class DriveContainerElevatorCommand extends Command {
 
 	@Override
 	protected void execute() {
+		Robot.containerElevatorSubsystem.updatePickup(Robot.oi.getContainerPickupToggle(), Robot.oi.getContainerDeployToggle());
 		Robot.containerElevatorSubsystem.driveToLevel(level);
 	}
 

@@ -455,6 +455,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 
 		// Initialize Sensors
 		//gyro.setSensitivity(0.0125);
+		gyro.setSensitivity(0.0011);
 		//gyro.initGyro();
 
 		// Initialize PID parameters

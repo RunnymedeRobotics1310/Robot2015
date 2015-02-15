@@ -3,13 +3,14 @@ package robot.subsystems;
 import robot.RobotMap;
 import robot.commands.SensorCommand;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SensorSubsystem extends RunnymedeSubsystem {
 
 	DigitalInput toteSensor = new DigitalInput(RobotMap.TOTE_SENSOR_PORT);
 	
 	public boolean getToteSensor() {
-		return toteSensor.get();
+		return !toteSensor.get();
 	}
 	
 	@Override

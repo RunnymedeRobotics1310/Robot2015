@@ -68,7 +68,8 @@ public class OI {
 		
 		TOTE_FIX_BUTTON (F310Button.START),
 		
-		DRIVE_MODE    (F310Button.L_STICK);
+		DRIVE_MODE    (F310Button.R_STICK),
+		ACCELERATION_OVERRIDE (F310Button.L_STICK);
 
 		F310Button button;
 		
@@ -176,6 +177,8 @@ public class OI {
 	public PIDEnable getRotationPIDEnable() { return rotationPIDEnable; }
 
 	public boolean getPickupRollerButton() { return driverJoystick.getButton(Driver_ButtonMap.PICKUP_MOTORS.getButton()); }
+
+	public boolean getAccelerationOverride() { return driverJoystick.getButton(Driver_ButtonMap.ACCELERATION_OVERRIDE.getButton()); }
 
 	public boolean isNewMouseEvent() { return networkTableOI.isNewMouseEvent();	}
 	

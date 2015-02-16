@@ -69,14 +69,16 @@ public class Timer {
 	/**
 	 * Is this timer expired
 	 * <p>
-	 * This routine will return true if the timer is not yet enabled.
+	 * This routine will return false if the timer is not yet enabled.  A timer that is not
+	 * started is also not yet expired.
+	 * <p>
 	 * Timers are enabled using the {@link #start()} or {@link #start(seconds)} method.
 	 * 
 	 * @return {@literal true} if the timer has expired, {@literal false otherwise}
 	 */
 	public boolean isExpired() {
 		
-		if (! isEnable) { return true; }
+		if (! isEnable) { return false; }
 		
 		return System.currentTimeMillis() > endTime;
 	}

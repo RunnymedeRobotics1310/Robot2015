@@ -127,6 +127,9 @@ public class RobotMap {
 	
 	public static final int CONTAINER_SENSOR_PORT = 12;
 	
+	public static final int TOTE_ELEVATOR_UPPER_LIMIT_SWITCH = 11;
+	public static final int TOTE_ELEVATOR_LOWER_LIMIT_SWITCH = 10;
+	
 	// Pneumatic Ports
 	
 	public static final int DROP_DOWN_SOLENOID_ONE = 1;

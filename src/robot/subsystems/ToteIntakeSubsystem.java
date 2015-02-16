@@ -28,14 +28,17 @@ public class ToteIntakeSubsystem extends Subsystem {
 				(System.currentTimeMillis() - lastDeployTime < RobotMap.EYEBROW_DEPLOY_PULSE_TIME && deploy)) {
 			eyebrowSolenoidLeft.set(false);
 			eyebrowSolenoidRight.set(false);
-		} else {
-			eyebrowSolenoidLeft.set(!leftEyebrowState);
-			eyebrowSolenoidRight.set(!rightEyebrowState);
+		} else if(!rollers) {
+			eyebrowSolenoidLeft.set(leftEyebrowState);
+			eyebrowSolenoidRight.set(rightEyebrowState);
 		}
 
 		if(rollers) {
-			leftPickupMotor.set(-0.75);
-			rightPickupMotor.set(0.75);
+			leftPickupMotor.set(-1.0);
+			rightPickupMotor.set(1.0);
+			
+			eyebrowSolenoidLeft.set(true);
+			eyebrowSolenoidRight.set(true);
 		} else {
 			leftPickupMotor.set(0.0);
 			rightPickupMotor.set(0.0);

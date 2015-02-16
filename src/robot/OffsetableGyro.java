@@ -17,8 +17,13 @@ public class OffsetableGyro extends Gyro {
 	}
 	
 	@Override
+	public double getRate() {
+		return -super.getRate();
+	}
+	
+	@Override
 	public double getAngle() {
-		double angle = super.getAngle() + offset;
+		double angle = -super.getAngle() + offset;
 		
 		while (angle < 0)    { angle += 360; }
 		while (angle >= 360) { angle -= 360; }

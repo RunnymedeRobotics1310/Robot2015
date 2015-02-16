@@ -13,7 +13,7 @@ public class RobotMap {
 	public static final int ROBOT_PRACTICE   = 2;
 	public static final int ROBOT_TEST       = 3;
 
-	public static int currentRobot = ROBOT_TEST;
+	public static int currentRobot = ROBOT_PRACTICE;
 
 	/*
 	 * Test Robot - 2010
@@ -147,7 +147,7 @@ public class RobotMap {
 	
 	public static final double ENCODER_RESOLUTION_CORRECTION = 1.3;
 	public static final double MAX_ANUGLAR_VELOCITY = 120;
-	public static final double MAX_ENCODER_RATE = 1300;
+	public static final double MAX_ENCODER_RATE = 900;
 	
 	public static final long EYEBROW_DEPLOY_PULSE_TIME = 1200;
 	public static final long EYEBROW_RETRACT_PULSE_TIME = 2000;

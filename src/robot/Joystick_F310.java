@@ -56,7 +56,8 @@ public class Joystick_F310 {
 		LEFT_Z_AXIS (2,-1),
 
 		RIGHT_X_AXIS (4,2),
-		RIGHT_Y_AXIS (5,3);
+		RIGHT_Y_AXIS (5,3),
+		RIGHT_Z_AXIS (3,-1);
 
 		int xModeStickPort, dModeStickPort;
 		F310StickPorts(int xModeStickPort, int dModeStickPort) {
@@ -226,7 +227,7 @@ public class Joystick_F310 {
 			case Y:
 				return joystick.getRawAxis(F310StickPorts.RIGHT_Y_AXIS.getPort(getJoystickMode()));
 			case Z:
-				return 0.0d;
+				return joystick.getRawAxis(F310StickPorts.RIGHT_Z_AXIS.getPort(getJoystickMode()));
 			}
 		}
 		return 0.0d;

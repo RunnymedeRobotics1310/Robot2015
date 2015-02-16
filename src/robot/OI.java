@@ -3,11 +3,11 @@ package robot;
 import robot.Joystick_Extreme3DPro.Extreme3DProButton;
 import robot.Joystick_F310.F310Button;
 import robot.Joystick_F310.F310Stick;
-import robot.commands.DriveContainerElevatorCommand;
 import robot.commands.DriveToAngleCommand;
 import robot.commands.DriveToClickCommand;
 import robot.commands.DriveToteElevatorCommand;
 import robot.commands.ResetGyroCommand;
+import robot.commands.ToteElevatorCommandGroup;
 import robot.subsystems.ChassisSubsystem.DriveMode;
 import robot.subsystems.ChassisSubsystem.PIDEnable;
 import robot.subsystems.ContainerElevatorSubsystem.ContainerElevatorLevel;
@@ -66,6 +66,8 @@ public class OI {
 		RELAY_FORWARD (F310Button.B),
 		RELAY_REVERSE (F310Button.X),
 		
+		TOTE_FIX_BUTTON (F310Button.START),
+		
 		DRIVE_MODE    (F310Button.L_STICK);
 
 		F310Button button;
@@ -80,20 +82,17 @@ public class OI {
 	private enum Operator_ButtonMap {
 		
 		// Operator Joystick button mapping
-		TOTE_OVERRIDE           (Extreme3DProButton.BUTTON_4),
+		//TOTE_OVERRIDE           (Extreme3DProButton.BUTTON_4),
 		CONTAINER_OVERRIDE      (Extreme3DProButton.BUTTON_3),
-		ELEVATOR_LEVEL_FLOOR    (Extreme3DProButton.BUTTON_11, ToteElevatorLevel.FLOOR, ContainerElevatorLevel.FLOOR),
-		ELEVATOR_LEVEL_ONE      (Extreme3DProButton.BUTTON_9, ToteElevatorLevel.ONE, ContainerElevatorLevel.ONE),
-		ELEVATOR_LEVEL_TWO      (Extreme3DProButton.BUTTON_7, ToteElevatorLevel.TWO, ContainerElevatorLevel.TWO),
-		ELEVATOR_LEVEL_THREE    (Extreme3DProButton.BUTTON_12, ToteElevatorLevel.THREE, ContainerElevatorLevel.THREE),
-		ELEVATOR_LEVEL_FOUR     (Extreme3DProButton.BUTTON_10, ToteElevatorLevel.FOUR, ContainerElevatorLevel.FOUR),
-		ELEVATOR_LEVEL_FIVE     (Extreme3DProButton.BUTTON_8, ToteElevatorLevel.FLOOR, ContainerElevatorLevel.FIVE),
-		ELEVATOR_LEVEL_SIX     (Extreme3DProButton.TRIGGER, ToteElevatorLevel.FLOOR, ContainerElevatorLevel.SIX),
 		
-		CLAW_TIPPER             (Extreme3DProButton.BUTTON_9),
-		CLAW_UP_OVERRIDE        (Extreme3DProButton.BUTTON_10),
-		CLAW_DOWN_OVERRIDE      (Extreme3DProButton.BUTTON_12),
-
+		ELEVATOR_LEVEL_FLOOR    (Extreme3DProButton.TRIGGER, ToteElevatorLevel.FLOOR, ContainerElevatorLevel.FLOOR),
+		ELEVATOR_LEVEL_ONE      (Extreme3DProButton.BUTTON_11, ToteElevatorLevel.ONE, ContainerElevatorLevel.ONE),
+		ELEVATOR_LEVEL_TWO      (Extreme3DProButton.BUTTON_9, ToteElevatorLevel.TWO, ContainerElevatorLevel.TWO),
+		ELEVATOR_LEVEL_THREE    (Extreme3DProButton.BUTTON_7, ToteElevatorLevel.THREE, ContainerElevatorLevel.THREE),
+		ELEVATOR_LEVEL_FOUR     (Extreme3DProButton.BUTTON_12, ToteElevatorLevel.FOUR, ContainerElevatorLevel.FOUR),
+		ELEVATOR_LEVEL_FIVE     (Extreme3DProButton.BUTTON_10, ToteElevatorLevel.FLOOR, ContainerElevatorLevel.FIVE),
+		ELEVATOR_LEVEL_SIX     (Extreme3DProButton.BUTTON_8, ToteElevatorLevel.FLOOR, ContainerElevatorLevel.SIX),
+		
 		CONTAINER_PICKUP_BUTTON (Extreme3DProButton.THUMB),
 		CONTAINER_DEPLOY_BUTTON (Extreme3DProButton.BUTTON_5);
 		
@@ -180,7 +179,7 @@ public class OI {
 
 	public boolean isNewMouseEvent() { return networkTableOI.isNewMouseEvent();	}
 	
-	public boolean getStartButton() { return driverJoystick.getButton(F310Button.START); }
+	public boolean getToteFixButton() { return driverJoystick.getButton(Driver_ButtonMap.TOTE_FIX_BUTTON.getButton()); }
 	
 	public boolean getBackButton() { return driverJoystick.getButton(F310Button.BACK); }
 
@@ -188,7 +187,7 @@ public class OI {
 	 * OPERATOR GETTERS
 	 */
 	
-	private boolean getToteOverrideButton() { return operatorJoystick.getButton(Operator_ButtonMap.TOTE_OVERRIDE.getButton()); }
+	//private boolean getToteOverrideButton() { return operatorJoystick.getButton(Operator_ButtonMap.TOTE_OVERRIDE.getButton()); }
 	private boolean getContainerOverrideButton() { return operatorJoystick.getButton(Operator_ButtonMap.CONTAINER_OVERRIDE.getButton()); }
 	
 	private boolean getFloorLevelButton() { return operatorJoystick.getButton(Operator_ButtonMap.ELEVATOR_LEVEL_FLOOR.getButton()); }
@@ -259,14 +258,19 @@ public class OI {
 		
 		// Drives to operator selected level if they are overriding
 		ToteElevatorLevel toteLevel = getOperatorOverrideToteLevel();
-		if(getToteOverrideButton() && toteLevel != null && Robot.toteElevatorSubsystem.getLevel() != Robot.toteElevatorSubsystem.getPrevLevel()) {
+		if(/*getToteOverrideButton() &&*/ toteLevel != null &&
+				Robot.toteElevatorSubsystem.getLevel() != toteLevel) {
 			Scheduler.getInstance().add(new DriveToteElevatorCommand(toteLevel));
 		}
-				
-		ContainerElevatorLevel containerLevel = getOperatorOverrideContainerLevel();
-		if(getContainerOverrideButton() && containerLevel != null) {
-			Scheduler.getInstance().add(new DriveContainerElevatorCommand(containerLevel));
+		
+		if(getToteFixButton()) {
+			Scheduler.getInstance().add(new ToteElevatorCommandGroup());
 		}
+				
+//		ContainerElevatorLevel containerLevel = getOperatorOverrideContainerLevel();
+//		if(getContainerOverrideButton() && containerLevel != null) {
+//			Scheduler.getInstance().add(new DriveContainerElevatorCommand(containerLevel));
+//		}
 		
 		// Update the relative angle
 		if (getDriverPov() >= 0) {

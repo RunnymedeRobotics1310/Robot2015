@@ -114,9 +114,7 @@ public class SafeTalon extends Talon {
 	 * @param negativeLimitSwitch
 	 */
 	public void setNegativeLimitSwitch(DigitalInput negativeLimitSwitch) {
-		this.negativeLimitSwitch = negativeLimitSwitch;
-		this.negativeLimitSwitchCounter = new Counter(this.negativeLimitSwitch);
-		this.negativeLimitSwitchCounter.reset();
+		setNegativeLimitSwitch(negativeLimitSwitch, false);
 	}
 
 	/**

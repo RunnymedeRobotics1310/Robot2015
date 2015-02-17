@@ -162,6 +162,6 @@ public class RobotMap {
 	public static final double CONTAINER_ELEVATOR_MAX_ELEVATOR_ENCODER_RATE = 100;
 	
 	public static final double MAX_DRIVE_ACCELERATION = .5; // change in motor speed control / sec
-	public static final double MAX_TELEOP_DRIVE_ACCELERATION = .3; // change in motor speed control / sec
+	public static final double MAX_TELEOP_DRIVE_ACCELERATION = 1.0; // change in motor speed control / sec
 	
 }

@@ -10,7 +10,7 @@ public class SensorSubsystem extends RunnymedeSubsystem {
 	DigitalInput toteSensor = new DigitalInput(RobotMap.TOTE_SENSOR_PORT);
 	
 	public boolean getToteSensor() {
-		return !toteSensor.get();
+		return false;//!toteSensor.get();
 	}
 	
 	@Override

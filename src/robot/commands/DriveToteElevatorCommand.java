@@ -26,7 +26,7 @@ public class DriveToteElevatorCommand extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return Robot.toteElevatorSubsystem.onTarget();
+		return Robot.toteElevatorSubsystem.onTarget() || level == Robot.toteElevatorSubsystem.getPrevLevel();
 	}
 
 	@Override

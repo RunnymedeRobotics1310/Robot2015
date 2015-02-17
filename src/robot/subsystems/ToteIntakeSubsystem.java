@@ -34,8 +34,8 @@ public class ToteIntakeSubsystem extends Subsystem {
 		}
 
 		if(rollers) {
-			leftPickupMotor.set(-1.0);
-			rightPickupMotor.set(1.0);
+			leftPickupMotor.set(-0.5);
+			rightPickupMotor.set(0.5);
 			
 			eyebrowSolenoidLeft.set(true);
 			eyebrowSolenoidRight.set(true);

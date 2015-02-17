@@ -33,6 +33,7 @@ public class OI {
 	private Toggle robotRelativeToggle = new Toggle(false);
 	Toggle containerPickupToggle = new Toggle(false);
 	Toggle containerDeployToggle = new Toggle(false);
+	Toggle accelerationOverride = new Toggle(true);
 	
 	private enum StickMap {
 		
@@ -66,6 +67,7 @@ public class OI {
 		RELAY_FORWARD (F310Button.B),
 		RELAY_REVERSE (F310Button.X),
 		
+		TOTE_ELEVATOR_ZERO_BUTTON (F310Button.BACK),
 		TOTE_FIX_BUTTON (F310Button.START),
 		
 		DRIVE_MODE    (F310Button.R_STICK),
@@ -87,6 +89,7 @@ public class OI {
 		CONTAINER_OVERRIDE      (Extreme3DProButton.BUTTON_3),
 		
 		ELEVATOR_LEVEL_FLOOR    (Extreme3DProButton.TRIGGER, ToteElevatorLevel.FLOOR, ContainerElevatorLevel.FLOOR),
+		ELEVATOR_LEVEL_HALF     (Extreme3DProButton.BUTTON_4, ToteElevatorLevel.HALF, ContainerElevatorLevel.FLOOR),
 		ELEVATOR_LEVEL_ONE      (Extreme3DProButton.BUTTON_11, ToteElevatorLevel.ONE, ContainerElevatorLevel.ONE),
 		ELEVATOR_LEVEL_TWO      (Extreme3DProButton.BUTTON_9, ToteElevatorLevel.TWO, ContainerElevatorLevel.TWO),
 		ELEVATOR_LEVEL_THREE    (Extreme3DProButton.BUTTON_7, ToteElevatorLevel.THREE, ContainerElevatorLevel.THREE),
@@ -178,13 +181,13 @@ public class OI {
 
 	public boolean getPickupRollerButton() { return driverJoystick.getButton(Driver_ButtonMap.PICKUP_MOTORS.getButton()); }
 
-	public boolean getAccelerationOverride() { return driverJoystick.getButton(Driver_ButtonMap.ACCELERATION_OVERRIDE.getButton()); }
+	public boolean getAccelerationOverride() { return accelerationOverride.getState(); }
 
 	public boolean isNewMouseEvent() { return networkTableOI.isNewMouseEvent();	}
 	
 	public boolean getToteFixButton() { return driverJoystick.getButton(Driver_ButtonMap.TOTE_FIX_BUTTON.getButton()); }
 	
-	public boolean getBackButton() { return driverJoystick.getButton(F310Button.BACK); }
+	public boolean getToteElevatorZeroButton() { return driverJoystick.getButton(Driver_ButtonMap.TOTE_ELEVATOR_ZERO_BUTTON.getButton()); }
 
 	/*
 	 * OPERATOR GETTERS
@@ -194,6 +197,7 @@ public class OI {
 	private boolean getContainerOverrideButton() { return operatorJoystick.getButton(Operator_ButtonMap.CONTAINER_OVERRIDE.getButton()); }
 	
 	private boolean getFloorLevelButton() { return operatorJoystick.getButton(Operator_ButtonMap.ELEVATOR_LEVEL_FLOOR.getButton()); }
+	private boolean getHalfLevelButton() { return operatorJoystick.getButton(Operator_ButtonMap.ELEVATOR_LEVEL_HALF.getButton()); }
 	private boolean getFirstLevelButton() { return operatorJoystick.getButton(Operator_ButtonMap.ELEVATOR_LEVEL_ONE.getButton()); }
 	private boolean getSecondLevelButton() { return operatorJoystick.getButton(Operator_ButtonMap.ELEVATOR_LEVEL_TWO.getButton()); }
 	private boolean getThirdLevelButton() { return operatorJoystick.getButton(Operator_ButtonMap.ELEVATOR_LEVEL_THREE.getButton()); }
@@ -208,6 +212,8 @@ public class OI {
 		
 		if(getFloorLevelButton()) {
 			return Operator_ButtonMap.ELEVATOR_LEVEL_FLOOR.getToteLevel();
+		} else if(getHalfLevelButton()) {
+			return Operator_ButtonMap.ELEVATOR_LEVEL_HALF.getToteLevel();
 		} else if(getFirstLevelButton()) {
 			return Operator_ButtonMap.ELEVATOR_LEVEL_ONE.getToteLevel();
 		} else if(getSecondLevelButton()) {
@@ -252,6 +258,11 @@ public class OI {
  		robotRelativeToggle.update(driverJoystick.getButton(Driver_ButtonMap.DRIVE_MODE.getButton()));
  		containerPickupToggle.update(operatorJoystick.getButton(Operator_ButtonMap.CONTAINER_PICKUP_BUTTON.getButton()));
  		containerDeployToggle.update(operatorJoystick.getButton(Operator_ButtonMap.CONTAINER_DEPLOY_BUTTON.getButton()));
+ 		accelerationOverride.update(driverJoystick.getButton(Driver_ButtonMap.ACCELERATION_OVERRIDE.getButton()));
+ 		
+ 		if(getToteElevatorZeroButton()) {
+ 			Robot.toteElevatorSubsystem.reset();
+ 		}
  		
  		// Rotate to the requested angle.
 		if (getDirectionPointer() >= 0) {

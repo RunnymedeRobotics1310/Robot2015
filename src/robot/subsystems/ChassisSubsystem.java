@@ -455,7 +455,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 
 		// Initialize Sensors
 		//gyro.setSensitivity(0.0125);
-		gyro.setSensitivity(0.0011);
+		gyro.setSensitivity(0.00165);
 		//gyro.initGyro();
 
 		// Initialize PID parameters
@@ -730,48 +730,48 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		// Determine if the angle should be held constant during this move sequence.
 		// if there is no rotational input then try to hold the rotation constant.
 		// Override the rotation PID to disabled.
-//		double angleRotation = rotation;
-//		if (Math.abs(rotation) < .02d && !anglePID.isEnable()) {
-//
-//			// Wait 2 seconds after there is zero rotation input before enabling the
-//			// driveHoldAnglePID.
-//			if (holdAngleEnableTimerStart < 0) {
-//				holdAngleEnableTimerStart = System.currentTimeMillis();
-//			}
-//
-//			// Enable the driveHoldPID after 2 seconds
-//			if (System.currentTimeMillis() - holdAngleEnableTimerStart > 2000) {
-//				disableRotationPID();
-//				rotationPIDEnable = PIDEnable.DISABLED;
-//				if (holdAngle < 0) { 
-//					
-//					// The drive hold angle must equal the value of the drive to angle
-//					// so that the PIDs do not fight eachother.
-//					if(anglePID.isEnable()) {
-//						holdAngle = (anglePID.getSetpoint());
-//					} else {
-//						holdAngle = gyro.getAngle(); 
-//					}
-//					holdAnglePID.reset();
-//					holdAnglePID.enable();
-//					holdAnglePID.setSetpoint(holdAngle);
-//				}
-//				angleRotation = holdAnglePIDOutput.get();
-//			} else {
-//				disableHoldAnglePID();
-//			}
-//		} else {
-//			disableHoldAnglePID();
-//			holdAngleEnableTimerStart = -1;
-//		}
+		double angleRotation = rotation;
+		if (Math.abs(rotation) < .02d && !anglePID.isEnable()) {
+
+			// Wait 2 seconds after there is zero rotation input before enabling the
+			// driveHoldAnglePID.
+			if (holdAngleEnableTimerStart < 0) {
+				holdAngleEnableTimerStart = System.currentTimeMillis();
+			}
+
+			// Enable the driveHoldPID after 2 seconds
+			if (System.currentTimeMillis() - holdAngleEnableTimerStart > 2000) {
+				disableRotationPID();
+				rotationPIDEnable = PIDEnable.DISABLED;
+				if (holdAngle < 0) { 
+					
+					// The drive hold angle must equal the value of the drive to angle
+					// so that the PIDs do not fight eachother.
+					if(anglePID.isEnable()) {
+						holdAngle = (anglePID.getSetpoint());
+					} else {
+						holdAngle = gyro.getAngle(); 
+					}
+					holdAnglePID.reset();
+					holdAnglePID.enable();
+					holdAnglePID.setSetpoint(holdAngle);
+				}
+				angleRotation = holdAnglePIDOutput.get();
+			} else {
+				disableHoldAnglePID();
+			}
+		} else {
+			disableHoldAnglePID();
+			holdAngleEnableTimerStart = -1;
+		}
 
 		// Use a rotation PID if required.
-		double mecanumRotation = rotation;
+		double mecanumRotation = angleRotation;
 
 		// If the rotationPID is enabled, then put the rotation through the PID.
 		if (rotationPIDEnable == PIDEnable.ENABLED) {
 			enableRotationPID();
-			rotationPID.setSetpoint(rotation);
+			rotationPID.setSetpoint(angleRotation);
 			mecanumRotation = rotationPIDOutput.get();
 		} else {
 			disableRotationPID();

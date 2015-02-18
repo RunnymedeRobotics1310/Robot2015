@@ -27,6 +27,7 @@ public class SafeTalon extends Talon {
 		OVER_CURRENT, NO_POWER_PORT }
 
 	public static double ENCODER_DISTANCE_NO_LIMIT = 0.00001d;;
+	public static double CURRENT_NO_LIMIT = 0d;
 	
 	private TalonState talonState = (super.isAlive() ? TalonState.ENABLED : TalonState.DISABLED);
 	
@@ -51,6 +52,8 @@ public class SafeTalon extends Talon {
 	private double currentLimit = 0;
 	private double currentLimitFuseDelay = 0;
 	private Timer currentLimitTimer = null;
+	private double current = 0;
+	private double peakCurrent = 0;
 	
 	public SafeTalon(int channel) {
 		super(channel);
@@ -75,6 +78,7 @@ public class SafeTalon extends Talon {
 	 */
 	public void reset() {
 		talonState = (super.isAlive() ? TalonState.ENABLED : TalonState.DISABLED);
+		peakCurrent = 0;
 	}
 
 	@Override
@@ -114,7 +118,7 @@ public class SafeTalon extends Talon {
 	 * @param negativeLimitSwitch
 	 */
 	public void setNegativeLimitSwitch(DigitalInput negativeLimitSwitch) {
-		setNegativeLimitSwitch(negativeLimitSwitch, false);
+		setNegativeLimitSwitch(negativeLimitSwitch, true);
 	}
 
 	/**
@@ -179,7 +183,7 @@ public class SafeTalon extends Talon {
 	 * limit has been hit.
 	 */
 	public void setPositiveLimitSwitch(DigitalInput positiveLimitSwitch) {
-		setPositiveLimitSwitch(positiveLimitSwitch, false);
+		setPositiveLimitSwitch(positiveLimitSwitch, true);
 	}
 
 	/**
@@ -211,7 +215,33 @@ public class SafeTalon extends Talon {
 	@Override
 	public void updateTable() {
 		super.updateTable();
+		
 		SmartDashboard.putString("Talon(" + channel + ")", this.getState().toString());
+		
+		if (positiveLimitSwitch != null) {
+			SmartDashboard.putBoolean("Talon(" + channel + ") positive limit switch", positiveLimitSwitch.get() );
+			SmartDashboard.putNumber("Talon(" + channel + ") positive limit switch counter", positiveLimitSwitchCounter.get() );
+		} else {
+			SmartDashboard.putBoolean("Talon(" + channel + ") positive limit switch", true );
+			SmartDashboard.putNumber("Talon(" + channel + ") positive limit switch counter", 0 );
+		}
+		
+		if (negativeLimitSwitch != null) {
+			SmartDashboard.putBoolean("Talon(" + channel + ") negative limit switch", negativeLimitSwitch.get() );
+			SmartDashboard.putNumber("Talon(" + channel + ") negative limit switch counter", negativeLimitSwitchCounter.get() );
+		} else {
+			SmartDashboard.putBoolean("Talon(" + channel + ") negative limit switch", true );
+			SmartDashboard.putNumber("Talon(" + channel + ") negative limit switch counter", 0);
+		}
+		
+		if (powerDistributionPort >= 0) {
+			SmartDashboard.putNumber("Talon(" + channel + ") current", current );
+			SmartDashboard.putNumber("Talon(" + channel + ") peak current", peakCurrent );
+		} else {
+			SmartDashboard.putNumber("Talon(" + channel + ") current", 0 );
+			SmartDashboard.putNumber("Talon(" + channel + ") peak current", 0 );
+		}
+		
 	}
 	
 	// An encoder fault occurs if the speed setting is > 0.1 for 1 second
@@ -242,10 +272,20 @@ public class SafeTalon extends Talon {
 	private boolean checkOverCurrent(double speed) {
 		
 		// The port and current limit must be specified for this check.
-		if (powerDistributionPort < 0 || currentLimit == 0) { return false; }
+		if (powerDistributionPort < 0) { return false; }
+
+		// Record the peak current
+		current = Robot.powerSubsystem.getCurrent(powerDistributionPort);
 		
+		if (current > peakCurrent) {
+			peakCurrent = current;
+		}
+		
+		// If the current limit is not set then there is no over current check
+		if (currentLimit == 0) { return false; }
+
 		// If the current is within bounds then there is no overcurrent.
-		if (Robot.powerSubsystem.getCurrent(powerDistributionPort) <= currentLimit) {
+		if (current <= currentLimit) {
 			if (currentLimitTimer != null) {
 				currentLimitTimer.disable();
 			}
@@ -278,6 +318,17 @@ public class SafeTalon extends Talon {
 		
 		// If the talon is not alive, then set the speed to zero and return
 		if (talonState != TalonState.ENABLED) { return 0.0d; }
+		
+		if (checkEncoderFault(speed)) {
+			talonState = TalonState.NO_ENCODER;
+			return 0.0d;
+		}
+		
+		// Check for over current
+		if (checkOverCurrent(speed)) { 
+			talonState = TalonState.OVER_CURRENT;
+			return 0.0d;
+		}
 		
 		// Check for a negative speed limit switch
 		if (negativeLimitSwitch != null) {
@@ -327,16 +378,6 @@ public class SafeTalon extends Talon {
 					return 0.0d;
 				}
 			}
-		}
-		if (checkEncoderFault(speed)) {
-			talonState = TalonState.NO_ENCODER;
-			return 0.0d;
-		}
-		
-		// Check for over current
-		if (checkOverCurrent(speed)) { 
-			talonState = TalonState.OVER_CURRENT;
-			return 0.0d;
 		}
 		
 		return speed;

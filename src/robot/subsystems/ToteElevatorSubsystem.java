@@ -1,11 +1,11 @@
 package robot.subsystems;
 
 import robot.RobotMap;
+import robot.SafeTalon;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ToteElevatorSubsystem extends RunnymedeSubsystem {
@@ -44,7 +44,7 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 		}
 	};
 
-	Talon elevatorMotor = new Talon(RobotMap.TOTE_ELEVATOR_MOTOR);
+	SafeTalon elevatorMotor = new SafeTalon(RobotMap.TOTE_ELEVATOR_MOTOR);
 	Solenoid brake = new Solenoid(RobotMap.BRAKE_SOLENOID);
 
 	PIDController elevatorRatePID = new PIDController(0.2, 0.0, 0.0,
@@ -54,8 +54,9 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 	public ToteElevatorSubsystem() {
 		// Add the safety elements to the elevator talon
 		// Since negative power drives the motor up, the negative limit switch is the elevator upper limit switch
-//		elevatorMotor.setNegativeLimitSwitch(new DigitalInput(RobotMap.TOTE_ELEVATOR_UPPER_LIMIT_SWITCH));
-//		elevatorMotor.setPositiveLimitSwitch(new DigitalInput(RobotMap.TOTE_ELEVATOR_LOWER_LIMIT_SWITCH));
+		elevatorMotor.setNegativeLimitSwitch(new DigitalInput(RobotMap.TOTE_ELEVATOR_UPPER_LIMIT_SWITCH));
+		elevatorMotor.setPositiveLimitSwitch(new DigitalInput(RobotMap.TOTE_ELEVATOR_LOWER_LIMIT_SWITCH));
+		elevatorMotor.setOverCurrentFuse(RobotMap.TOTE_ELEVATOR_POWER_DISTRIBUTION_PORT, SafeTalon.CURRENT_NO_LIMIT, 0);
 	}
 	
 	public void initDefaultCommand() {
@@ -128,6 +129,8 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 		SmartDashboard.putData("Tote Elevator Encoder", encoder);
 		SmartDashboard.putData("Tote Elevator PID", elevatorRatePID);
 		SmartDashboard.putData("Tote Elevator Talon", elevatorMotor);
+		
+		elevatorMotor.updateTable();
 	}
 	
 	public void reset() {

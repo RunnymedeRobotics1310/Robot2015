@@ -144,6 +144,9 @@ public class RobotMap {
 	public static final int CONTAINER_DEPLOY_PORT_ONE = 6;
 	public static final int CONTAINER_DEPLOY_PORT_TWO = 7;
 	
+	// Power Distribution Ports
+	public static final int TOTE_ELEVATOR_POWER_DISTRIBUTION_PORT = 13;
+	
 	// Hardware related constants
 
 	public static final double ENCODER_COUNTS_PER_INCH = 24;//6.7 per cm;

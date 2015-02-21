@@ -107,15 +107,13 @@ public class PolarCoordinate {
 	 * @param theta - the angle of the (r, theta) coordinate.
 	 */
 	public void setTheta(double theta) {
-		this.theta = Math.round(theta);
 		
-		while (this.theta < 0.0) {
+		this.theta = Math.round(theta) % 360;
+		
+		if (this.theta < 0.0) {
 			this.theta += 360;
 		}
 		
-		while (this.theta >= 360.0) {
-			this.theta -= 360;
-		}
 	}
 	
 	/**

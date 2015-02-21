@@ -35,10 +35,11 @@ public class DriveToAngleCommand extends Command {
 		// Get the difference in angle
 		double currentAngle = Robot.chassisSubsystem.getGyroAngle();
 		double angleDifference = targetAngle - currentAngle;
-		while (angleDifference > 180) {
+		
+		if (angleDifference > 180) {
 			angleDifference -= 360;
 		}
-		while (angleDifference < -180) {
+		if (angleDifference < -180) {
 			angleDifference += 360;
 		}
 		

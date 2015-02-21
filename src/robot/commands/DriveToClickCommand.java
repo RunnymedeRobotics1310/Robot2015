@@ -23,7 +23,7 @@ public class DriveToClickCommand extends Command {
     	
     	// Assume the angle of the screen is 56deg
     	double theta = xy.getX() * 28;
-    	while (theta < 0) {
+    	if (theta < 0) {
     		theta += 360;
     	}
     	

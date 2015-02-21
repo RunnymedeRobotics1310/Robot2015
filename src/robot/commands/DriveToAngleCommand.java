@@ -1,6 +1,7 @@
 package robot.commands;
 
 import robot.Robot;
+import robot.CountDownTimer;
 import robot.subsystems.ChassisSubsystem;
 import robot.subsystems.ChassisSubsystem.DriveMode;
 import edu.wpi.first.wpilibj.command.Command;
@@ -10,6 +11,7 @@ public class DriveToAngleCommand extends Command {
 
 	private final int targetAngle;
 	private final DriveMode driveMode;
+	CountDownTimer settlingTimer = new CountDownTimer();
 	long startTime = 0;
 	
 	public DriveToAngleCommand(int targetAngle, DriveMode driveMode) {

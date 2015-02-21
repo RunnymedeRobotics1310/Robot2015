@@ -1,13 +1,12 @@
 package robot.subsystems;
 
-import robot.EncoderCorrection;
+import robot.CountDownTimer;
 import robot.LinearRamp;
 import robot.MockSpeedController;
 import robot.OffsetableGyro;
 import robot.PolarCoordinate;
 import robot.RobotMap;
 import robot.RunnymedeMecanumDrive;
-import robot.Timer;
 import robot.commands.TeleopDriveCommand;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
@@ -99,9 +98,6 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		}
 	}, anglePIDOutput);
 
-	private double angleRelativeSetpoint = 0.0;
-	private double angleSetpointPrev     = 0.0;
-
 	public static final double ANGLE_PID_ABSOLUTE_TOLERANCE = 2.7d;
 
 	private static final double ANGLE_PID_PRODUCTION_P = 0.02d;
@@ -111,10 +107,6 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	private static final double ANGLE_PID_PRACTICE_P = 0.02d;
 	private static final double ANGLE_PID_PRACTICE_I = 0.0d;
 	private static final double ANGLE_PID_PRACTICE_D = -0.001d;
-
-	private static final double ANGLE_PID_TEST_P = 0.02d;
-	private static final double ANGLE_PID_TEST_I = 0.0d;
-	private static final double ANGLE_PID_TEST_D = -0.001d;
 
 	// DriveAnglePID
 
@@ -128,7 +120,8 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	}, holdAnglePIDOutput);
 
 	private double holdAngle = -1.0d;
-	private long   holdAngleEnableTimerStart = -1;
+	private double lastAngleSetpoint = -1.0d;
+	private CountDownTimer  holdAngleTimer = new CountDownTimer();
 
 	private static final double HOLD_ANGLE_PID_PRODUCTION_P = 0.04d;
 	private static final double HOLD_ANGLE_PID_PRODUCTION_I = 0.004d;
@@ -137,10 +130,6 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	private static final double HOLD_ANGLE_PID_PRACTICE_P = 0.04d;
 	private static final double HOLD_ANGLE_PID_PRACTICE_I = 0.004d;
 	private static final double HOLD_ANGLE_PID_PRACTICE_D = 0.0d;
-
-	private static final double HOLD_ANGLE_PID_TEST_P = 0.02d;
-	private static final double HOLD_ANGLE_PID_TEST_I = 0.001d;
-	private static final double HOLD_ANGLE_PID_TEST_D = 0.0d;
 
 	// RotationPID - angular velocity
 
@@ -161,15 +150,11 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	private static final double ROTATION_PID_PRACTICE_I = 0.0d;
 	private static final double ROTATION_PID_PRACTICE_D = 0.0d;
 
-	private static final double ROTATION_PID_TEST_P = 0.02d;
-	private static final double ROTATION_PID_TEST_I = 0.001d;
-	private static final double ROTATION_PID_TEST_D = 0.0d;
-
 	// Distance PID
 
-	private Timer      distancePIDTimer = new Timer(5.0);
-	private boolean    distanceOnTarget = false;
-	private LinearRamp distanceSlowDownRamp = new LinearRamp();
+	private CountDownTimer distancePIDTimer = new CountDownTimer(5.0);
+	private boolean        distanceOnTarget = false;
+	private LinearRamp     distanceSlowDownRamp = new LinearRamp();
 
 	private MockSpeedController distancePIDOutput = new MockSpeedController();
 
@@ -187,10 +172,6 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	private static final double DISTANCE_PID_PRACTICE_P = 0.007d;
 	private static final double DISTANCE_PID_PRACTICE_I = 0.0d;
 	private static final double DISTANCE_PID_PRACTICE_D = -0.0005d;
-
-	private static final double DISTANCE_PID_TEST_P = 0.007d;
-	private static final double DISTANCE_PID_TEST_I = 0.0d;
-	private static final double DISTANCE_PID_TEST_D = -0.0005d;
 
 	// Wheel Speed PID
 
@@ -218,17 +199,23 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	private static final double WHEEL_SPEED_PID_PRACTICE_I = 0.0d;
 	private static final double WHEEL_SPEED_PID_PRACTICE_D = 0.0d;
 
-	private static final double WHEEL_SPEED_PID_TEST_P = 1.3d;
-	private static final double WHEEL_SPEED_PID_TEST_I = 0.0d;
-	private static final double WHEEL_SPEED_PID_TEST_D = -0.65d;
-
 	/**
 	 * Is the angle on target for the specified drive angle driveToAngle which enables the anglePID.
 	 * @return true if on target, false otherwise
 	 */
 	public boolean angleOnTarget() {
+		
 		if (!anglePID.isEnable()) { return true; }
-		return anglePID.onTarget();
+		
+		// Get the current angle and look for an difference of less than 3 degrees
+		double difference = anglePID.getSetpoint() - gyro.getAngle();
+		if (difference > 180) { difference -= 360; }
+		
+		if (difference < -180) { difference += 360; }
+
+		SmartDashboard.putNumber("Angle difference", difference);
+		
+		return Math.abs(difference) < 15;
 	}
 
 	public void disablePIDs() {
@@ -272,9 +259,11 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 
 		// If the drive distance is past the target, then stop the robot.
 		// A new PolarCoordinate is set to stopped by default.
+		
 		if (getDistance(Units.INCHES) > distanceInches) { 
 			driveToAngle(new PolarCoordinate(), targetAngle, driveMode, PIDEnable.ENABLED, PIDEnable.ENABLED);
 			distanceOnTarget = true;
+			distanceSlowDownRamp.disable();
 			return;
 		}
 		
@@ -354,10 +343,14 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		disableAnglePID();
 		disableDistancePID();
 
-		// Calculate the angle of travel relative to the robot heading.
+		// Calculate the direction of travel relative to the robot heading.
 		PolarCoordinate drivePolarCoordinate = getDrivePolarCoordinate(p, driveMode);
 
-		drivePolar(drivePolarCoordinate, rotation, rotationPIDEnable, motorPIDEnable);
+		if (rotation != 0.0d) { 
+			lastAngleSetpoint = -1.0;
+		}
+		
+		drivePolar(drivePolarCoordinate, rotation, -1, rotationPIDEnable, motorPIDEnable);
 
 	}
 
@@ -373,36 +366,13 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	public void driveToAngle(PolarCoordinate p, double angleSetpoint, DriveMode driveMode,
 			PIDEnable rotationPIDEnable, PIDEnable motorPIDEnable) {
 
-		// Update the angle setpoint based on the target angle specified.  If the target angle is 
-		// not specified (-1) then do not update the setpoint angle.
-
-		if (angleSetpoint >= 0) {
-
-			// In FIELD_RELATIVE mode, this command will try to line the robot up with the angle
-			// specified.
-			// In ROBOT_RELATIVE mode, this command will rotate the robot to face in the new
-			// direction indicated relative to the current direction.  
-			if (driveMode == DriveMode.ROBOT_RELATIVE) {
-
-				// If the PID is not yet enabled, or the angle changes, then set the target
-				// based on the current direction in ROBOT_RELATIVE.
-				if (!anglePID.isEnable() || angleSetpoint != angleSetpointPrev) {
-
-					angleRelativeSetpoint = gyro.getAngle() + angleSetpoint;
-					while (angleRelativeSetpoint > 360.0) {
-						angleRelativeSetpoint -= 360.0d;
-					}
-				}
-
-			} else {
-
-				// Drive mode is field relative.
-				angleRelativeSetpoint = angleSetpoint;
+		double angleRelativeSetpoint = angleSetpoint;
+		
+		if (driveMode == DriveMode.ROBOT_RELATIVE) {
+			angleRelativeSetpoint = gyro.getAngle() + angleSetpoint;
+			if (angleRelativeSetpoint > 360.0) {
+				angleRelativeSetpoint -= 360.0d;
 			}
-
-			// Keep track of the input setpoint to track when it changes which is important for 
-			// ROBOT_RELATIVE mode.
-			angleSetpointPrev = angleSetpoint;
 		}
 
 		enableAnglePID();
@@ -414,10 +384,13 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 
 		PolarCoordinate drivePolarCoordinate = getDrivePolarCoordinate(p, driveMode);
 
-		SmartDashboard.putNumber("drivePolarCoordinate", drivePolarCoordinate.getTheta());
+		SmartDashboard.putNumber("drivePolarAngle", drivePolarCoordinate.getTheta());
 
+		lastAngleSetpoint = angleRelativeSetpoint;
+		
 		// Drive the robot using the input p and use the anglePID to set the rotation.
-		drivePolar(drivePolarCoordinate, anglePIDOutput.get(), rotationPIDEnable, motorPIDEnable);
+		drivePolar(drivePolarCoordinate, anglePIDOutput.get(), angleRelativeSetpoint, 
+				rotationPIDEnable, motorPIDEnable);
 
 	}
 
@@ -456,7 +429,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		// Initialize Sensors
 		//gyro.setSensitivity(0.0125);
 		gyro.setSensitivity(0.00165);
-		//gyro.initGyro();
+		gyro.initGyro();
 
 		// Initialize PID parameters
 		// Angle tolerance to determine if the PID is on target in degrees.
@@ -469,7 +442,6 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		switch (RobotMap.currentRobot) {
 		case RobotMap.ROBOT_PRODUCTION:anglePID.setPID(ANGLE_PID_PRODUCTION_P, ANGLE_PID_PRODUCTION_I, ANGLE_PID_PRODUCTION_D); break;
 		case RobotMap.ROBOT_PRACTICE:  anglePID.setPID(ANGLE_PID_PRACTICE_P,   ANGLE_PID_PRACTICE_I,   ANGLE_PID_PRACTICE_D);   break;
-		case RobotMap.ROBOT_TEST:      anglePID.setPID(ANGLE_PID_TEST_P,       ANGLE_PID_TEST_I,       ANGLE_PID_TEST_D);       break;
 		default: break;	}
 
 		// Angle tolerance to determine if the PID is on target in degrees.
@@ -479,7 +451,6 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		switch (RobotMap.currentRobot) {
 		case RobotMap.ROBOT_PRODUCTION:holdAnglePID.setPID(HOLD_ANGLE_PID_PRODUCTION_P, HOLD_ANGLE_PID_PRODUCTION_I, HOLD_ANGLE_PID_PRODUCTION_D); break;
 		case RobotMap.ROBOT_PRACTICE:  holdAnglePID.setPID(HOLD_ANGLE_PID_PRACTICE_P,   HOLD_ANGLE_PID_PRACTICE_I,   HOLD_ANGLE_PID_PRACTICE_D);   break;
-		case RobotMap.ROBOT_TEST:      holdAnglePID.setPID(HOLD_ANGLE_PID_TEST_P,       HOLD_ANGLE_PID_TEST_I,       HOLD_ANGLE_PID_TEST_D);       break;
 		default: break;	}
 
 		// Rotation PID
@@ -488,7 +459,6 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		switch (RobotMap.currentRobot) {
 		case RobotMap.ROBOT_PRODUCTION:rotationPID.setPID(ROTATION_PID_PRODUCTION_P, ROTATION_PID_PRODUCTION_I, ROTATION_PID_PRODUCTION_D); break;
 		case RobotMap.ROBOT_PRACTICE:  rotationPID.setPID(ROTATION_PID_PRACTICE_P,   ROTATION_PID_PRACTICE_I,   ROTATION_PID_PRACTICE_D);   break;
-		case RobotMap.ROBOT_TEST:      rotationPID.setPID(ROTATION_PID_TEST_P,       ROTATION_PID_TEST_I,       ROTATION_PID_TEST_D);       break;
 		default: break;	}
 
 		// Distance tolerance to determine if the PID is on target in encoder counts.
@@ -497,7 +467,6 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		switch (RobotMap.currentRobot) {
 		case RobotMap.ROBOT_PRODUCTION:distancePID.setPID(DISTANCE_PID_PRODUCTION_P, DISTANCE_PID_PRODUCTION_I, DISTANCE_PID_PRODUCTION_D); break;
 		case RobotMap.ROBOT_PRACTICE:  distancePID.setPID(DISTANCE_PID_PRACTICE_P,   DISTANCE_PID_PRACTICE_I,   DISTANCE_PID_PRACTICE_D);   break;
-		case RobotMap.ROBOT_TEST:      distancePID.setPID(DISTANCE_PID_TEST_P,       DISTANCE_PID_TEST_I,       DISTANCE_PID_TEST_D);       break;
 		default: break;	}
 
 		// WheelSpeedPID
@@ -507,7 +476,6 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 			switch (RobotMap.currentRobot) {
 			case RobotMap.ROBOT_PRODUCTION:wheelSpeedPIDArr[i].setPID(WHEEL_SPEED_PID_PRODUCTION_P, WHEEL_SPEED_PID_PRODUCTION_I, WHEEL_SPEED_PID_PRODUCTION_D, 1.0d); break;
 			case RobotMap.ROBOT_PRACTICE:  wheelSpeedPIDArr[i].setPID(WHEEL_SPEED_PID_PRACTICE_P,   WHEEL_SPEED_PID_PRACTICE_I,   WHEEL_SPEED_PID_PRACTICE_D,   1.0d); break;
-			case RobotMap.ROBOT_TEST:      wheelSpeedPIDArr[i].setPID(WHEEL_SPEED_PID_TEST_P,       WHEEL_SPEED_PID_TEST_I,       WHEEL_SPEED_PID_TEST_D,       1.0d); break;
 			default: break;	}
 		}
 
@@ -520,13 +488,6 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 					MOTOR_INVERTED,
 					MOTOR_INVERTED };
 			
-			break;
-		case RobotMap.ROBOT_TEST:
-			motorInversionArr = new boolean [] {
-					MOTOR_INVERTED,
-					MOTOR_INVERTED,
-					MOTOR_NOT_INVERTED,
-					MOTOR_NOT_INVERTED };
 			break;
 		default: break;
 		}
@@ -559,7 +520,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 
 		SmartDashboard.putData("DistancePID", distancePID);
 		SmartDashboard.putData("GyroAnglePID", anglePID);
-		SmartDashboard.putData("DriveAnglePID", holdAnglePID);
+		SmartDashboard.putData("HoldAnglePID", holdAnglePID);
 		SmartDashboard.putData("GyroRotationPID", rotationPID);
 
 		disableSubsystem();
@@ -646,7 +607,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		SmartDashboard.putNumber("Angle PID Output", anglePIDOutput.get());
 
 		holdAnglePID.updateTable();
-		SmartDashboard.putNumber("Drive Angle PID Output", holdAnglePIDOutput.get());
+		SmartDashboard.putNumber("Hold Angle PID Output", holdAnglePIDOutput.get());
 
 		rotationPID.updateTable();
 		SmartDashboard.putNumber("Rotation PID Output", rotationPIDOutput.get());
@@ -691,7 +652,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 
 		holdAnglePID.disable();
 		holdAngle = -1.0d;
-
+		holdAngleTimer.disable();
 	}
 
 	/**
@@ -724,7 +685,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	 * @param rotation - speed of rotation of the robot
 	 * @param motorPIDEnable - ENABLE to use motor PIDS for driving the motor speeds
 	 */
-	private void drivePolar(PolarCoordinate p, double rotation, 
+	private void drivePolar(PolarCoordinate p, double rotation, double angle,
 			PIDEnable rotationPIDEnable, PIDEnable motorPIDEnable) {
 
 		// Determine if the angle should be held constant during this move sequence.
@@ -735,34 +696,41 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 
 			// Wait 2 seconds after there is zero rotation input before enabling the
 			// driveHoldAnglePID.
-			if (holdAngleEnableTimerStart < 0) {
-				holdAngleEnableTimerStart = System.currentTimeMillis();
-			}
+			holdAngleTimer.start(2.0d);
 
 			// Enable the driveHoldPID after 2 seconds
-			if (System.currentTimeMillis() - holdAngleEnableTimerStart > 2000) {
+			if (holdAngleTimer.isExpired()) {
 				disableRotationPID();
 				rotationPIDEnable = PIDEnable.DISABLED;
 				if (holdAngle < 0) { 
-					
-					// The drive hold angle must equal the value of the drive to angle
-					// so that the PIDs do not fight eachother.
-					if(anglePID.isEnable()) {
-						holdAngle = (anglePID.getSetpoint());
+					// The angle should be set to the passed in angle unless that 
+					// angle is < 0, in which case use the last setpoint if the 
+					// user has not pressed the rotation stick, else use
+					// the current direction the robot is pointing.
+					if (angle >= 0) {
+						holdAngle = angle;
 					} else {
-						holdAngle = gyro.getAngle(); 
+						if (lastAngleSetpoint >= 0) {
+							holdAngle = lastAngleSetpoint;
+						} else {
+							holdAngle = gyro.getAngle();
+						}
 					}
 					holdAnglePID.reset();
 					holdAnglePID.enable();
 					holdAnglePID.setSetpoint(holdAngle);
 				}
 				angleRotation = holdAnglePIDOutput.get();
+				
 			} else {
+				// If the hold angle timer has not expired, then the 
+				// hold angle pid should not be running.
 				disableHoldAnglePID();
 			}
+			
 		} else {
 			disableHoldAnglePID();
-			holdAngleEnableTimerStart = -1;
+			holdAngleTimer.disable();
 		}
 
 		// Use a rotation PID if required.

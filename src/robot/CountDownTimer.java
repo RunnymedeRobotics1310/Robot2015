@@ -1,6 +1,6 @@
 package robot;
 
-public class Timer {
+public class CountDownTimer {
 	
 	private double  timerTime = 0.0;
 	private boolean isEnable = false;
@@ -13,7 +13,7 @@ public class Timer {
 	 * the timer was created, use the {@link #start(double)} method to start the timer.
 	 * @param seconds - the default number of seconds for this timer. 
 	 */
-	public Timer(double seconds) {
+	public CountDownTimer(double seconds) {
 		this.timerTime = seconds;
 	}
 	
@@ -23,7 +23,7 @@ public class Timer {
 	 * Use the method {@link #start(double)} to start the timer for a specified time and 
 	 * the method {@link #isExpired()} to check if the timer is expired.
 	 */
-	public Timer() {}
+	public CountDownTimer() {}
 	
 	/**
 	 * Disable the timer.

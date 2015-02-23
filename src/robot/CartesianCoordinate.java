@@ -1,5 +1,8 @@
 package robot;
 
+/*
+ * The Cartesian coordinate is an x,y pair describing a Cartesian Coordinates
+ */
 public class CartesianCoordinate {
 	
 	private double x;

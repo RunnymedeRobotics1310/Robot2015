@@ -17,11 +17,11 @@ public class SensorCommand extends Command {
 
 	@Override
 	protected void execute() {
-		if (Robot.sensorSubsystem.getToteSensor()
-				&& Robot.toteElevatorSubsystem.getLevel() == ToteElevatorLevel.ONE
-				&& Robot.toteElevatorSubsystem.getPrevLevel() != ToteElevatorLevel.FLOOR) {
-			Scheduler.getInstance().add(new ToteElevatorCommandGroup());
-		}
+//		if (Robot.sensorSubsystem.getToteSensor()
+//				&& Robot.toteElevatorSubsystem.getLevel() == ToteElevatorLevel.ONE
+//				&& Robot.toteElevatorSubsystem.getPrevLevel() != ToteElevatorLevel.FLOOR) {
+//			Scheduler.getInstance().add(new ToteElevatorCommandGroup());
+//		}
 	}
 
 	@Override

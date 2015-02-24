@@ -61,6 +61,10 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 	}
 
 	public boolean onTarget() {
+		if ((elevatorMotor.getState() == SafeTalon.TalonState.POSITIVE_LIMIT_SWITCH && level == ToteElevatorLevel.FLOOR) 
+			|| (elevatorMotor.getState() == SafeTalon.TalonState.NEGATIVE_LIMIT_SWITCH && level == ToteElevatorLevel.FOUR)) {
+			return true;
+		}
 		if (((level.encoderSetpoint - prevLevel.encoderSetpoint > 0 && difference > 0)
 				|| (level.encoderSetpoint - prevLevel.encoderSetpoint < 0 && difference < 0))) {
 			prevLevel = level;

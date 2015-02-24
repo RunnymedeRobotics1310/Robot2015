@@ -10,7 +10,6 @@ public class DriveToteElevatorCommand extends Command {
 	
 	public DriveToteElevatorCommand(ToteElevatorLevel level) {
 		requires(Robot.toteElevatorSubsystem);
-		requires(Robot.toteIntakeSubsystem);
 		this.level = level;
 	}
 	

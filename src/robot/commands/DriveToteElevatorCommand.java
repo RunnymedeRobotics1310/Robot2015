@@ -10,18 +10,18 @@ public class DriveToteElevatorCommand extends Command {
 	
 	public DriveToteElevatorCommand(ToteElevatorLevel level) {
 		requires(Robot.toteElevatorSubsystem);
-		requires(Robot.toteIntakeSubsystem);
 		this.level = level;
 	}
 	
 	@Override
 	protected void initialize() {
+		Robot.toteElevatorSubsystem.initDriveToLevel(level);
 	}
 
 	@Override
 	protected void execute() {
 		Robot.toteIntakeSubsystem.actuateEyebrows(false);
-		Robot.toteElevatorSubsystem.driveToLevel(level);
+		Robot.toteElevatorSubsystem.driveToLevel();
 	}
 
 	@Override

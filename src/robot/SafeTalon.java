@@ -179,7 +179,7 @@ public class SafeTalon extends Talon {
 	 * motor speeds will still be accepted.
 	 * 
 	 * @param positiveLimitSwitch - a digital input used for this limit switch.  Assumes the default
-	 * state for the switch is {@literal false} and a switch state of {@literal true} indicates the
+	 * state for the switch is {@literal true} and a switch state of {@literal false} indicates the
 	 * limit has been hit.
 	 */
 	public void setPositiveLimitSwitch(DigitalInput positiveLimitSwitch) {
@@ -314,26 +314,31 @@ public class SafeTalon extends Talon {
 		}
 		
 		// Check the talon is alive
-		talonState = (super.isAlive() ? TalonState.ENABLED : TalonState.DISABLED);
+		TalonState talonState = (super.isAlive() ? TalonState.ENABLED : TalonState.DISABLED);
 		
 		// If the talon is not alive, then set the speed to zero and return
-		if (talonState != TalonState.ENABLED) { return 0.0d; }
+		if (talonState != TalonState.ENABLED) { 
+			this.talonState = talonState;
+			return 0.0d; 
+		}
 		
 		if (checkEncoderFault(speed)) {
 			talonState = TalonState.NO_ENCODER;
+			this.talonState = talonState;
 			return 0.0d;
 		}
 		
 		// Check for over current
 		if (checkOverCurrent(speed)) { 
 			talonState = TalonState.OVER_CURRENT;
+			this.talonState = talonState;
 			return 0.0d;
 		}
 		
 		// Check for a negative speed limit switch
 		if (negativeLimitSwitch != null) {
 			if (negativeLimitSwitchCounter.get() > 0 || negativeLimitSwitch.get() != negativeLimitSwitchDefaultState) {
-				talonState = TalonState.NEGATIVE_LIMIT_SWITCH;
+				this.talonState = TalonState.NEGATIVE_LIMIT_SWITCH;
 				if (speed < 0) {
 					return 0.0d;
 				}
@@ -350,7 +355,7 @@ public class SafeTalon extends Talon {
 		// Check for a positive speed limit switch
 		if (positiveLimitSwitch != null) {
 			if (positiveLimitSwitchCounter.get() > 0 || positiveLimitSwitch.get() != positiveLimitSwitchDefaultState) {
-				talonState = TalonState.POSITIVE_LIMIT_SWITCH;
+				this.talonState = TalonState.POSITIVE_LIMIT_SWITCH;
 				if (speed > 0) {
 					return 0.0d;
 				}
@@ -368,18 +373,19 @@ public class SafeTalon extends Talon {
 		if (limitEncoder != null) {
 			if (upperLimitEncoderDistance != ENCODER_DISTANCE_NO_LIMIT) {
 				if (limitEncoder.getDistance() > upperLimitEncoderDistance) {
-					talonState = TalonState.UPPER_ENCODER_LIMIT;
+					this.talonState = TalonState.UPPER_ENCODER_LIMIT;
 					return 0.0d;
 				}
 			}
 			if (lowerLimitEncoderDistance != ENCODER_DISTANCE_NO_LIMIT) {
 				if (limitEncoder.getDistance() < lowerLimitEncoderDistance) {
-					talonState = TalonState.LOWER_ENCODER_LIMIT;
+					this.talonState = TalonState.LOWER_ENCODER_LIMIT;
 					return 0.0d;
 				}
 			}
 		}
 		
+		this.talonState = talonState;
 		return speed;
 	}
 }

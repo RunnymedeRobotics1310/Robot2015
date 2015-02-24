@@ -9,7 +9,7 @@ public class ToteElevatorCommandGroup extends CommandGroup {
 
 	public ToteElevatorCommandGroup() {
 		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.FLOOR));
-		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.THREE));
+		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.ONE));
 	}
 	
 }

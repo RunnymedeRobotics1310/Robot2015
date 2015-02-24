@@ -31,6 +31,7 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 	double difference = 0.0;
 	ToteElevatorLevel level = null;
 	ToteElevatorLevel prevLevel = ToteElevatorLevel.FLOOR;
+	double elevatorRatePIDSetpoint = 0.0d;
 
 	Encoder encoder = new Encoder(RobotMap.TOTE_ELEVATOR_ENCODER_ONE,
 			RobotMap.TOTE_ELEVATOR_ENCODER_TWO) {
@@ -61,11 +62,19 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 	}
 
 	public boolean onTarget() {
-		if (((level.encoderSetpoint - prevLevel.encoderSetpoint > 0 && difference > 0)
-				|| (level.encoderSetpoint - prevLevel.encoderSetpoint < 0 && difference < 0))) {
-			prevLevel = level;
+		
+		if ((elevatorMotor.getState() == SafeTalon.TalonState.POSITIVE_LIMIT_SWITCH && level == ToteElevatorLevel.FLOOR) 
+			|| (elevatorMotor.getState() == SafeTalon.TalonState.NEGATIVE_LIMIT_SWITCH && level == ToteElevatorLevel.FOUR)) {
 			return true;
 		}
+		
+		double difference = encoder.getDistance() - level.encoderSetpoint;
+
+		if (       (elevatorRatePIDSetpoint > 0 && difference > 0)
+				|| (elevatorRatePIDSetpoint < 0 && difference < 0)) {
+			return true;
+		}
+				
 		return false;
 	}
 
@@ -77,20 +86,25 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 		return prevLevel;
 	}
 
-	public void driveToLevel(ToteElevatorLevel level) {
-		
-		difference = encoder.getDistance() - level.encoderSetpoint;
+	public void driveToLevel() {
 
 		disengageBrake();
+		
+		elevatorRatePID.setSetpoint(elevatorRatePIDSetpoint);
+
+	}
+
+	public void initDriveToLevel(ToteElevatorLevel level) {
+		
+		double difference = encoder.getDistance() - level.encoderSetpoint;
 
 		if (difference > 0) {
-			elevatorRatePID.setSetpoint(-1.0);
+			elevatorRatePIDSetpoint = -1.0;
 		} else {
-			elevatorRatePID.setSetpoint(1.0);
+			elevatorRatePIDSetpoint = 1.0;
 		}
 
 		this.level = level;
-
 	}
 
 	private void disengageBrake() {

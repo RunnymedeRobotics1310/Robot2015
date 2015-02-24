@@ -15,6 +15,7 @@ import robot.subsystems.SensorSubsystem;
 import robot.subsystems.ToteElevatorSubsystem;
 import robot.subsystems.ToteIntakeSubsystem;
 import robot.subsystems.VisionSubsystem;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -47,10 +48,11 @@ public class Robot extends IterativeRobot {
 	SendableChooser autonomousChooser;
     Command autonomousCommand;
     
+    OldStyleCompressor compressor = new OldStyleCompressor(RobotMap.COMPRESSOR_SPIKE_PORT, RobotMap.PRESSURE_SWICH_PORT);
+    
     // Default constructor.
     
-    public Robot () { 
-    	
+    public Robot () {
     	subsystemLs.add(visionSubsystem);
     	subsystemLs.add(powerSubsystem);
     	subsystemLs.add(chassisSubsystem);
@@ -69,6 +71,7 @@ public class Robot extends IterativeRobot {
 			Scheduler.getInstance().add(autonomousCommand);
 		}
     	        
+		compressor.start();
         enableSubsystems();
     }
 	
@@ -79,6 +82,7 @@ public class Robot extends IterativeRobot {
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
         updateDashboard();
+        compressor.update();
     }
 
     /**
@@ -87,6 +91,7 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void disabledInit() {
+    	compressor.stop();
     	disableSubsystems();
     }
 
@@ -94,6 +99,7 @@ public class Robot extends IterativeRobot {
     public void disabledPeriodic() {
 		Scheduler.getInstance().run();
 		updateDashboard();
+		compressor.stop();
 	}
 
     /**
@@ -103,6 +109,8 @@ public class Robot extends IterativeRobot {
     @Override
     public void robotInit() {
 		oi = new OI();
+		
+		compressor.stop();
 		
 		autonomousChooser = new SendableChooser();
 		
@@ -135,6 +143,7 @@ public class Robot extends IterativeRobot {
         if (autonomousCommand != null) autonomousCommand.cancel();
         
         enableSubsystems();
+        compressor.start();
     }
 
     /**
@@ -145,6 +154,7 @@ public class Robot extends IterativeRobot {
         Scheduler.getInstance().run();
         oi.periodic();
         updateDashboard();
+        compressor.update();
     }
     
     @Override
@@ -153,6 +163,7 @@ public class Robot extends IterativeRobot {
     	// mode starts by disabling all subsystems
     	
         disableSubsystems();
+        compressor.start();
     }
 
     /**
@@ -161,6 +172,7 @@ public class Robot extends IterativeRobot {
     @Override
     public void testPeriodic() {
         LiveWindow.run();
+        compressor.update();
     }
     
     private void disableSubsystems() { 

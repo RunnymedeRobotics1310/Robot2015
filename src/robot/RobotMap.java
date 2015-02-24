@@ -64,6 +64,9 @@ public class RobotMap {
 	public static final int TOTE_ELEVATOR_UPPER_LIMIT_SWITCH = 11;
 	public static final int TOTE_ELEVATOR_LOWER_LIMIT_SWITCH = 10;
 	
+	public static final int COMPRESSOR_SPIKE_PORT = 0;
+	public static final int PRESSURE_SWICH_PORT = 19;
+	
 	// Pneumatic Ports
 	
 	public static final int DROP_DOWN_SOLENOID_ONE = 1;
@@ -93,12 +96,15 @@ public class RobotMap {
 	public static final long EYEBROW_RETRACT_PULSE_TIME = 2000;
 	
 	public static final double TOTE_ELEVATOR_MAX_ELEVATOR_ENCODER_RATE = 1500;
-	public static final double TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL = 1000;
-	public static final double TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL = 1400;
+	public static final double TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL = 850;
+	public static final double TOTE_ELEVATOR_MAX_DISTANCE = 3350;
+	public static final double TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL = 1300; //2200 3000
 	
 	public static final double CONTAINER_ELEVATOR_MAX_ELEVATOR_ENCODER_RATE = 100;
 	
 	public static final double MAX_DRIVE_ACCELERATION = .5; // change in motor speed control / sec
 	public static final double MAX_TELEOP_DRIVE_ACCELERATION = 1.0; // change in motor speed control / sec
+	
+	public static final double PICKUP_ROLLER_SPEED = 0.5;
 	
 }

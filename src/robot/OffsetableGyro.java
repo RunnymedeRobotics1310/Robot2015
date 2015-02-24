@@ -29,7 +29,7 @@ public class OffsetableGyro extends Gyro {
 
 		// Watch for gyro values that are messed up and 
 		// discard them.
-		double rawAngle = super.getAngle();
+		double rawAngle = -super.getAngle();
 
 		if (Math.abs(rawAngle - lastRawAngle) > 360) {
 			rawAngle = lastRawAngle;

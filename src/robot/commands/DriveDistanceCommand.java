@@ -36,7 +36,6 @@ public class DriveDistanceCommand extends Command {
 		//Robot.chassisSubsystem.drive(r * Math.cos(thetaRad), -r * Math.sin(thetaRad), rotation, true);
 		Robot.chassisSubsystem.driveDistance(p, targetAngle, distance, driveMode);
 		
-		
 	}
 
 	@Override
@@ -46,13 +45,11 @@ public class DriveDistanceCommand extends Command {
 
 	@Override
 	protected void end() {
-		Robot.chassisSubsystem.disablePIDs();
 		Robot.chassisSubsystem.driveJoystick(new PolarCoordinate(), 0.0, DriveMode.ROBOT_RELATIVE, PIDEnable.DISABLED, PIDEnable.DISABLED);
 	}
 
 	@Override
 	protected void interrupted() {
-		Robot.chassisSubsystem.disablePIDs();
 		Robot.chassisSubsystem.driveJoystick(new PolarCoordinate(), 0.0, DriveMode.ROBOT_RELATIVE, PIDEnable.DISABLED, PIDEnable.DISABLED);
 	}
 

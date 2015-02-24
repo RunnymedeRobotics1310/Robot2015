@@ -18,10 +18,7 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 					+ (1 * -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL)), 
 		THREE (-RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL
 					+ (2 * -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL)), 
-		FOUR  (-RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL
-					+ (3 * -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL)), 
-		FIVE  (-RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL
-					+ (4 * -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL));
+		FOUR  (-RobotMap.TOTE_ELEVATOR_MAX_DISTANCE);
 
 		public double encoderSetpoint;
 
@@ -32,7 +29,7 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 	}
 
 	double difference = 0.0;
-	ToteElevatorLevel level = ToteElevatorLevel.FLOOR;
+	ToteElevatorLevel level = null;
 	ToteElevatorLevel prevLevel = ToteElevatorLevel.FLOOR;
 
 	Encoder encoder = new Encoder(RobotMap.TOTE_ELEVATOR_ENCODER_ONE,

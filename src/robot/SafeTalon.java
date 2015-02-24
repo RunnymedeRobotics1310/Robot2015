@@ -46,12 +46,12 @@ public class SafeTalon extends Talon {
 	private double prevEncoderDistance = 0.0d;
 	private double lowerLimitEncoderDistance = ENCODER_DISTANCE_NO_LIMIT;
 	private double upperLimitEncoderDistance = ENCODER_DISTANCE_NO_LIMIT;
-	private CountDownTimer encoderTimer = new CountDownTimer(1.0d);
+	private Timer encoderTimer = new Timer(1.0d);
 	
 	private int powerDistributionPort = -1;
 	private double currentLimit = 0;
 	private double currentLimitFuseDelay = 0;
-	private CountDownTimer currentLimitTimer = null;
+	private Timer currentLimitTimer = null;
 	private double current = 0;
 	private double peakCurrent = 0;
 	
@@ -164,7 +164,7 @@ public class SafeTalon extends Talon {
 		this.currentLimit = currentLimit;
 		this.currentLimitFuseDelay = fuseDelay;
 		if (this.currentLimitFuseDelay > 0.0d) {
-			currentLimitTimer = new CountDownTimer(currentLimitFuseDelay);
+			currentLimitTimer = new Timer(currentLimitFuseDelay);
 		} else {
 			currentLimitTimer = null;
 		}

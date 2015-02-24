@@ -31,9 +31,9 @@ public class OI {
 	private Joystick_Extreme3DPro operatorJoystick = new Joystick_Extreme3DPro(1);
 	private NetworkTableOI networkTableOI = new NetworkTableOI();
 	private Toggle robotRelativeToggle = new Toggle(false);
-	Toggle containerPickupToggle = new Toggle(false);
-	Toggle containerDeployToggle = new Toggle(false);
-	Toggle accelerationOverride = new Toggle(true);
+	private Toggle containerPickupToggle = new Toggle(false);
+	private Toggle containerDeployToggle = new Toggle(false);
+	private Toggle accelerationOverride = new Toggle(true);
 	
 	private enum StickMap {
 		

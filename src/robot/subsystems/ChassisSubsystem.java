@@ -1,12 +1,13 @@
 package robot.subsystems;
 
-import robot.CountDownTimer;
+import robot.Timer;
 import robot.LinearRamp;
 import robot.MockSpeedController;
 import robot.OffsetableGyro;
 import robot.PolarCoordinate;
 import robot.RobotMap;
 import robot.RunnymedeMecanumDrive;
+import robot.Timer;
 import robot.commands.TeleopDriveCommand;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
@@ -121,7 +122,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 
 	private double holdAngle = -1.0d;
 	private double lastAngleSetpoint = -1.0d;
-	private CountDownTimer  holdAngleTimer = new CountDownTimer();
+	private Timer  holdAngleTimer = new Timer();
 
 	private static final double HOLD_ANGLE_PID_PRODUCTION_P = 0.04d;
 	private static final double HOLD_ANGLE_PID_PRODUCTION_I = 0.004d;
@@ -152,10 +153,11 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 
 	// Distance PID
 
-	private CountDownTimer distancePIDTimer = new CountDownTimer(5.0);
+	private Timer distancePIDTimer = new Timer(5.0);
 	private boolean        distanceOnTarget = false;
 	private LinearRamp     distanceSlowDownRamp = new LinearRamp();
-
+	private Timer      distancePIDOnTargetTimer = new Timer(0.2);
+	
 	private MockSpeedController distancePIDOutput = new MockSpeedController();
 
 	private PIDController distancePID = new PIDController(0.007, 0.0, -0.0005, 0.0, 
@@ -245,8 +247,17 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	 * @return true if on target, false otherwise
 	 */
 	public boolean distanceOnTarget() {
-		return distanceOnTarget;
-		//FIXME: return distancePID.onTarget() || distancePIDTimer.isExpired();
+		//return distanceOnTarget;
+		if (distancePID.onTarget()) {
+			distancePIDOnTargetTimer.start(0.2);
+			if (distancePIDOnTargetTimer.isExpired()) {
+				return true;
+			}
+		} else {
+			distancePIDOnTargetTimer.disable();
+		}
+		return false;
+//		return distancePID.onTarget();// || distancePIDTimer.isExpired();
 	}
 
 	/** theta is the direction to drive in, targetAngle is the angle to rotate to. theta[rad], targetAngle[deg]
@@ -257,71 +268,100 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	 */
 	public void driveDistance(PolarCoordinate p, double targetAngle, double distanceInches, DriveMode driveMode) {
 
-		// If the drive distance is past the target, then stop the robot.
-		// A new PolarCoordinate is set to stopped by default.
+		double pMin = 0.0015;
+		double pMax = 0.0025;
 		
-		if (getDistance(Units.INCHES) > distanceInches) { 
-			driveToAngle(new PolarCoordinate(), targetAngle, driveMode, PIDEnable.ENABLED, PIDEnable.ENABLED);
-			distanceOnTarget = true;
-			distanceSlowDownRamp.disable();
-			return;
-		}
+		double iMin = 0.0002;
+		double iMax = 0.0005;
 		
-		// Drive at the requested power until the distance is close, and then 
-		// turn on the deceleration.
-		// When decelerating linearly, we know the distance travelled will be 
-		// d = 1/2 a t^2
-		// The initial velocity in encoder counts is given by 
-		// v0 = getSpeed();
-		//
-		// The time to decelerate (given a constant speed) is given by
-		// tdec = (setpointVelocity / RobotMap.MAX_DRIVE_ACCELERATION) 
-		//
-		// The actual acceleration in encoder counts / sec^2
-		// a = V0 / tdec
-		//
-		// Given the acceleration, we need to start slowing down at some distance before we are stopped.
-		//
-		// The distance it will take to stop is
-		// d = 1/2 a t^2
-		// d = 1/2 (V0/tdec) tdec^2
-		// d = 1/2 V0 tdec
+		PolarCoordinate drivePolarCoordinate = getDrivePolarCoordinate(p, driveMode);
 		
-	
-		// If the robot has not yet got to the deceleration point, then continue driving.
-		if (!distanceSlowDownRamp.isEnable()) {
+		double pDrive = pMin + (Math.abs(Math.sin(Math.toRadians(drivePolarCoordinate.getTheta()))) * (pMax - pMin));
+		double iDrive = iMin + (Math.abs(Math.sin(Math.toRadians(drivePolarCoordinate.getTheta()))) * (iMax - iMin));
 		
-			// Deceleration time
-			double decelerationTime = p.getR() / RobotMap.MAX_DRIVE_ACCELERATION;
-
-			// d = 1/2 V0 tdec
-			double stoppingDistance = getSpeed() * decelerationTime / 2.0d; // in encoderCounts
-
-			if (getDistance(Units.ENCODER_COUNTS) + stoppingDistance < distanceInches*RobotMap.ENCODER_COUNTS_PER_INCH) {
-	
-				driveToAngle(p, targetAngle, driveMode, PIDEnable.ENABLED, PIDEnable.ENABLED);
-				
-				distanceOnTarget = false;
-	
-				return;
-			}
-			
-			// Initiate the distance slow down based on the current velocity and deceleration time
-			distanceSlowDownRamp.start(decelerationTime, p.getR(), 0.0);
-		}
-		
-		// The drive distance command determines the speed ramp down based on the current distance from the 
-		// target and the speed of the robot.
-
-		double r = distanceSlowDownRamp.getValue();
-
-		SmartDashboard.putNumber("R", r);
-
-		if (distanceSlowDownRamp.isComplete()) {
-			distanceOnTarget = true;
+		SmartDashboard.putNumber("DISTANCE P VALUE", pDrive * 1000);
+		SmartDashboard.putNumber("DISTANCE I VALUE", iDrive * 1000);
+		if(distanceInches - getDistance(Units.INCHES) > 2.0) {
+			distancePID.setPID(pDrive, 0.0, 0.0);
 		} else {
-			distanceOnTarget = false;
+			distancePID.setPID(pDrive, iDrive, 0.0);
 		}
+		
+//		// If the drive distance is past the target, then stop the robot.
+//		// A new PolarCoordinate is set to stopped by default.
+//		
+//		if (getDistance(Units.INCHES) > distanceInches) { 
+//			driveToAngle(new PolarCoordinate(), targetAngle, driveMode, PIDEnable.ENABLED, PIDEnable.ENABLED);
+//			distanceOnTarget = true;
+//			distanceSlowDownRamp.disable();
+//			return;
+//		}
+//		
+//		// Drive at the requested power until the distance is close, and then 
+//		// turn on the deceleration.
+//		// When decelerating linearly, we know the distance travelled will be 
+//		// d = 1/2 a t^2
+//		// The initial velocity in encoder counts is given by 
+//		// v0 = getSpeed();
+//		//
+//		// The time to decelerate (given a constant speed) is given by
+//		// tdec = (setpointVelocity / RobotMap.MAX_DRIVE_ACCELERATION) 
+//		//
+//		// The actual acceleration in encoder counts / sec^2
+//		// a = V0 / tdec
+//		//
+//		// Given the acceleration, we need to start slowing down at some distance before we are stopped.
+//		//
+//		// The distance it will take to stop is
+//		// d = 1/2 a t^2
+//		// d = 1/2 (V0/tdec) tdec^2
+//		// d = 1/2 V0 tdec
+//		
+//	
+//		// If the robot has not yet got to the deceleration point, then continue driving.
+//		if (!distanceSlowDownRamp.isEnable()) {
+//		
+//			// Deceleration time
+//			double decelerationTime = p.getR() / RobotMap.MAX_DRIVE_ACCELERATION;
+//
+//			// d = 1/2 V0 tdec
+//			double stoppingDistance = getSpeed() * decelerationTime / 2.0d; // in encoderCounts
+//
+//			if (getDistance(Units.ENCODER_COUNTS) + stoppingDistance < distanceInches*RobotMap.ENCODER_COUNTS_PER_INCH) {
+//	
+//				driveToAngle(p, targetAngle, driveMode, PIDEnable.ENABLED, PIDEnable.ENABLED);
+//				
+//				distanceOnTarget = false;
+//	
+//				return;
+//			}
+//			
+//			// Initiate the distance slow down based on the current velocity and deceleration time
+//			distanceSlowDownRamp.start(decelerationTime, p.getR(), 0.0);
+//		}
+//		
+//		// The drive distance command determines the speed ramp down based on the current distance from the 
+//		// target and the speed of the robot.
+//
+//		double r = distanceSlowDownRamp.getValue();
+//
+//		SmartDashboard.putNumber("R", r);
+//
+//		if (distanceSlowDownRamp.isComplete()) {
+//			distanceOnTarget = true;
+//		} else {
+//			distanceOnTarget = false;
+//		}
+		
+		if(!distancePID.isEnable()) {
+			distancePID.enable();
+		}
+		
+		distancePID.setSetpoint(distanceInches * RobotMap.ENCODER_COUNTS_PER_INCH);
+		
+		distancePID.setOutputRange(-p.getR(), p.getR());
+		
+		double r = distancePIDOutput.get();
 		
 		driveToAngle(new PolarCoordinate(r, p.getTheta()), targetAngle, driveMode, PIDEnable.ENABLED, PIDEnable.ENABLED);
 	}
@@ -429,7 +469,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		// Initialize Sensors
 		//gyro.setSensitivity(0.0125);
 		gyro.setSensitivity(0.00165);
-		gyro.initGyro();
+//		gyro.initGyro();
 
 		// Initialize PID parameters
 		// Angle tolerance to determine if the PID is on target in degrees.
@@ -462,7 +502,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		default: break;	}
 
 		// Distance tolerance to determine if the PID is on target in encoder counts.
-		distancePID.setAbsoluteTolerance(8d);
+		distancePID.setAbsoluteTolerance(18d);
 		distancePID.setOutputRange(-1.0, 1.0);
 		switch (RobotMap.currentRobot) {
 		case RobotMap.ROBOT_PRODUCTION:distancePID.setPID(DISTANCE_PID_PRODUCTION_P, DISTANCE_PID_PRODUCTION_I, DISTANCE_PID_PRODUCTION_D); break;

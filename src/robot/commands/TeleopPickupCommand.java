@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class TeleopPickupCommand extends Command {
 
-	private Toggle pickupToggle = new Toggle(false);
+	private Toggle pickupToggle = new Toggle(true);
 	
 	public TeleopPickupCommand() {
 		requires(Robot.toteIntakeSubsystem);

@@ -20,7 +20,8 @@ public class AutonomousThreeToteStackCommandGroup extends CommandGroup{
 		addSequential(new AutonomousDeployIntakeCommand());
 		
 		addSequential(new AutonomousPickupToteCommand());
-		addSequential(new ToteElevatorCommandGroup());
+		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.FLOOR));
+		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.THREE));
 		
 //		addSequential(new DriveDistanceCommand(1.0, 0.0, 270, 40, DriveMode.FIELD_RELATIVE));
 //		addSequential(new DriveDistanceCommand(1.0, 270, 270, 81 - 34, DriveMode.FIELD_RELATIVE));
@@ -32,7 +33,8 @@ public class AutonomousThreeToteStackCommandGroup extends CommandGroup{
 		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.ONE));
 		addSequential(new AutonomousPickupToteCommand());
 		
-		addSequential(new ToteElevatorCommandGroup());
+		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.FLOOR));
+		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.THREE));
 		
 //		addSequential(new DriveDistanceCommand(1.0, 0.0, 270, 40, DriveMode.FIELD_RELATIVE));
 //		addSequential(new DriveDistanceCommand(1.0, 270, 270, 81 - 34, DriveMode.FIELD_RELATIVE));

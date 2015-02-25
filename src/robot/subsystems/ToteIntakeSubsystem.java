@@ -95,6 +95,9 @@ public class ToteIntakeSubsystem extends RunnymedeSubsystem {
 			} else {
 				leftPickupMotor.set(0.0);
 				rightPickupMotor.set(0.0);
+				
+				eyebrowSolenoidLeft.set(false);
+				eyebrowSolenoidRight.set(false);
 			}
 		}
 

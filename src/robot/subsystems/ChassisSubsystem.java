@@ -612,7 +612,9 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	 */
 	public void resetGyro(int fieldAngle) {
 
+		disableHoldAnglePID();
 		gyro.setOffset(fieldAngle);
+		lastAngleSetpoint = fieldAngle;
 
 	}
 

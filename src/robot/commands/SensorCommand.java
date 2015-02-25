@@ -17,11 +17,15 @@ public class SensorCommand extends Command {
 
 	@Override
 	protected void execute() {
-//		if (Robot.sensorSubsystem.getToteSensor()
-//				&& Robot.toteElevatorSubsystem.getLevel() == ToteElevatorLevel.ONE
-//				&& Robot.toteElevatorSubsystem.getPrevLevel() != ToteElevatorLevel.FLOOR) {
-//			Scheduler.getInstance().add(new ToteElevatorCommandGroup());
-//		}
+		
+		// Execute a pickup if the eyebrows are down.
+		// Otherwise the operator is attempting to unload the totes.
+		if (Robot.toteIntakeSubsystem.isDeployed()) {
+			if (   Robot.sensorSubsystem.getToteSensor()
+				&& Robot.toteElevatorSubsystem.getLevel() == ToteElevatorLevel.ONE) {
+				Scheduler.getInstance().add(new ToteElevatorCommandGroup());
+			}
+		}
 	}
 
 	@Override

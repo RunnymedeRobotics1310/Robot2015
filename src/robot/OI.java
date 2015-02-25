@@ -208,7 +208,7 @@ public class OI {
 	public boolean getContainerPickupToggle() { return containerPickupToggle.getState(); }
 	public boolean getContainerDeployToggle() { return containerDeployToggle.getState(); }
 	
-	private ToteElevatorLevel getOperatorOverrideToteLevel() {
+	private ToteElevatorLevel getOperatorToteLevel() {
 		
 		if(getFloorLevelButton()) {
 			return Operator_ButtonMap.ELEVATOR_LEVEL_FLOOR.getToteLevel();
@@ -270,10 +270,10 @@ public class OI {
 			return;
 		}
 		
-		// Drives to operator selected level if they are overriding
-		ToteElevatorLevel toteLevel = getOperatorOverrideToteLevel();
-		if(/*getToteOverrideButton() &&*/ toteLevel != null &&
-				Robot.toteElevatorSubsystem.getLevel() != toteLevel) {
+		// Drives to operator selected level
+		ToteElevatorLevel toteLevel = getOperatorToteLevel();
+		if(toteLevel != null/* &&
+				Robot.toteElevatorSubsystem.getLevel() != toteLevel*/) {
 			Scheduler.getInstance().add(new DriveToteElevatorCommand(toteLevel));
 		}
 		

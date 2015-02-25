@@ -15,9 +15,58 @@ public class ToteIntakeSubsystem extends RunnymedeSubsystem {
 	Talon leftPickupMotor = new Talon(RobotMap.LEFT_PICKUP_MOTOR_PORT);
 	Talon rightPickupMotor = new Talon(RobotMap.RIGHT_PICKUP_MOTOR_PORT);
 	
+	/**
+	 * 
+	 * @param state False is open, true is closed
+	 */
+	public void actuateEyebrows(boolean state) {
+		eyebrowSolenoidLeft.set(state);
+		eyebrowSolenoidRight.set(state);
+	}
+
+	public void deploy() {
+		dropDownSolenoid.set(DoubleSolenoid.Value.kForward);
+	}
+	
 	@Override
-	protected void initDefaultCommand() {
-		setDefaultCommand(new TeleopPickupCommand());
+	public void disableSubsystem() {
+		leftPickupMotor.set(0.0);
+		rightPickupMotor.set(0.0);
+	}
+	
+	public void driveIntakeMotors(boolean direction) {
+		if(direction) {
+			leftPickupMotor.set(0.75);
+			rightPickupMotor.set(0.75);
+		} else {
+			leftPickupMotor.set(-0.75);
+			rightPickupMotor.set(-0.75);
+		}
+
+		eyebrowSolenoidLeft.set(true);
+		eyebrowSolenoidRight.set(true);
+	}
+	
+	@Override
+	public void enableSubsystem() {
+	}
+	
+	@Override
+	public void initSubsystem() {
+	}
+
+	public void intake() {
+		dropDownSolenoid.set(DoubleSolenoid.Value.kForward);
+		
+		leftPickupMotor.set(-RobotMap.PICKUP_ROLLER_SPEED);
+		rightPickupMotor.set(RobotMap.PICKUP_ROLLER_SPEED);
+		
+		eyebrowSolenoidLeft.set(true);
+		eyebrowSolenoidRight.set(true);
+	}
+
+	public boolean isDeployed() {
+		return (dropDownSolenoid.get() == DoubleSolenoid.Value.kForward);
 	}
 
 	public void update(boolean deploy, long lastDeployTime, boolean leftEyebrowState, boolean rightEyebrowState, boolean rollers) {
@@ -50,59 +99,14 @@ public class ToteIntakeSubsystem extends RunnymedeSubsystem {
 		}
 
 	}
-	
-	public void intake() {
-		dropDownSolenoid.set(DoubleSolenoid.Value.kForward);
-		
-		leftPickupMotor.set(-RobotMap.PICKUP_ROLLER_SPEED);
-		rightPickupMotor.set(RobotMap.PICKUP_ROLLER_SPEED);
-		
-		eyebrowSolenoidLeft.set(true);
-		eyebrowSolenoidRight.set(true);
-	}
-	
-	public void driveIntakeMotors(boolean direction) {
-		if(direction) {
-			leftPickupMotor.set(0.75);
-			rightPickupMotor.set(0.75);
-		} else {
-			leftPickupMotor.set(-0.75);
-			rightPickupMotor.set(-0.75);
-		}
-
-		eyebrowSolenoidLeft.set(true);
-		eyebrowSolenoidRight.set(true);
-	}
-	
-	/**
-	 * 
-	 * @param state False is open, true is closed
-	 */
-	public void actuateEyebrows(boolean state) {
-		eyebrowSolenoidLeft.set(state);
-		eyebrowSolenoidRight.set(state);
-	}
-
-	@Override
-	public void disableSubsystem() {
-		leftPickupMotor.set(0.0);
-		rightPickupMotor.set(0.0);
-	}
-
-	@Override
-	public void enableSubsystem() {
-	}
-
-	@Override
-	public void initSubsystem() {
-	}
 
 	@Override
 	public void updateDashboard() {
 	}
 
-	public void deploy() {
-		dropDownSolenoid.set(DoubleSolenoid.Value.kForward);
+	@Override
+	protected void initDefaultCommand() {
+		setDefaultCommand(new TeleopPickupCommand());
 	}
 	
 }

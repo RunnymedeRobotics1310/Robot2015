@@ -30,7 +30,6 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 
 	double difference = 0.0;
 	ToteElevatorLevel level = null;
-	ToteElevatorLevel prevLevel = ToteElevatorLevel.FLOOR;
 	double elevatorRatePIDSetpoint = 0.0d;
 
 	Encoder encoder = new Encoder(RobotMap.TOTE_ELEVATOR_ENCODER_ONE,
@@ -70,22 +69,23 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 		
 		double difference = encoder.getDistance() - level.encoderSetpoint;
 
-		if (       (elevatorRatePIDSetpoint > 0 && difference > 0)
+		if (level == ToteElevatorLevel.FLOOR) {
+			if (   (elevatorRatePIDSetpoint > 0 && difference > 0)
 				|| (elevatorRatePIDSetpoint < 0 && difference < 0)) {
-			return true;
+				return true;
+			}
+		}  else {
+			if (   (elevatorRatePIDSetpoint > 0 && difference > -100)
+				|| (elevatorRatePIDSetpoint < 0 && difference < 100)) {
+				return true;
+			}
 		}
-				
+					
 		return false;
 	}
 
-	public ToteElevatorLevel getLevel() {
-		return level;
-	}
-
-	public ToteElevatorLevel getPrevLevel() {
-		return prevLevel;
-	}
-
+	public ToteElevatorLevel getLevel() { return level; }
+	
 	public void driveToLevel() {
 
 		disengageBrake();

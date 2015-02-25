@@ -31,6 +31,7 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 	double difference = 0.0;
 	ToteElevatorLevel level = null;
 	double elevatorRatePIDSetpoint = 0.0d;
+	boolean enabled = false;
 
 	Encoder encoder = new Encoder(RobotMap.TOTE_ELEVATOR_ENCODER_ONE,
 			RobotMap.TOTE_ELEVATOR_ENCODER_TWO) {
@@ -105,6 +106,8 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 		}
 
 		this.level = level;
+		
+		enableSubsystem();
 	}
 
 	private void disengageBrake() {
@@ -119,12 +122,14 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 
 	@Override
 	public void disableSubsystem() {
+		enabled = false;
 		engageBrake();
 		elevatorRatePID.setSetpoint(0.0);
 	}
 
 	@Override
 	public void enableSubsystem() {
+		enabled = true;
 		elevatorRatePID.enable();
 		elevatorRatePID.setSetpoint(0.0);
 	}
@@ -146,6 +151,14 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 	
 	public void reset() {
 		encoder.reset();
+	}
+
+	public double getEncoderDistance() {
+		return encoder.getDistance();
+	}
+
+	public boolean isEnabled() {
+		return enabled;
 	}
 
 }

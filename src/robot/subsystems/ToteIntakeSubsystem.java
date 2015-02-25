@@ -1,5 +1,6 @@
 package robot.subsystems;
 
+import robot.Robot;
 import robot.RobotMap;
 import robot.commands.TeleopPickupCommand;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -14,7 +15,7 @@ public class ToteIntakeSubsystem extends RunnymedeSubsystem {
 
 	Talon leftPickupMotor = new Talon(RobotMap.LEFT_PICKUP_MOTOR_PORT);
 	Talon rightPickupMotor = new Talon(RobotMap.RIGHT_PICKUP_MOTOR_PORT);
-	
+
 	/**
 	 * 
 	 * @param state False is open, true is closed
@@ -27,13 +28,13 @@ public class ToteIntakeSubsystem extends RunnymedeSubsystem {
 	public void deploy() {
 		dropDownSolenoid.set(DoubleSolenoid.Value.kForward);
 	}
-	
+
 	@Override
 	public void disableSubsystem() {
 		leftPickupMotor.set(0.0);
 		rightPickupMotor.set(0.0);
 	}
-	
+
 	public void driveIntakeMotors(boolean direction) {
 		if(direction) {
 			leftPickupMotor.set(0.75);
@@ -46,21 +47,21 @@ public class ToteIntakeSubsystem extends RunnymedeSubsystem {
 		eyebrowSolenoidLeft.set(true);
 		eyebrowSolenoidRight.set(true);
 	}
-	
+
 	@Override
 	public void enableSubsystem() {
 	}
-	
+
 	@Override
 	public void initSubsystem() {
 	}
 
 	public void intake() {
 		dropDownSolenoid.set(DoubleSolenoid.Value.kForward);
-		
+
 		leftPickupMotor.set(-RobotMap.PICKUP_ROLLER_SPEED);
 		rightPickupMotor.set(RobotMap.PICKUP_ROLLER_SPEED);
-		
+
 		eyebrowSolenoidLeft.set(true);
 		eyebrowSolenoidRight.set(true);
 	}
@@ -69,27 +70,32 @@ public class ToteIntakeSubsystem extends RunnymedeSubsystem {
 		return (dropDownSolenoid.get() == DoubleSolenoid.Value.kForward);
 	}
 
-	public void update(boolean deploy, long lastDeployTime, boolean leftEyebrowState, boolean rightEyebrowState, boolean rollers) {
+	public void update(boolean deploy, long lastDeployTime, boolean rollers, boolean rollerDirection) {
 
-		// FIXME: Make these delays into a Command or a CommandGroup
-		if((System.currentTimeMillis() - lastDeployTime < RobotMap.EYEBROW_RETRACT_PULSE_TIME && !deploy) ||
-				(System.currentTimeMillis() - lastDeployTime < RobotMap.EYEBROW_DEPLOY_PULSE_TIME && deploy)) {
-			eyebrowSolenoidLeft.set(false);
-			eyebrowSolenoidRight.set(false);
-		} else if(!rollers) {
-			eyebrowSolenoidLeft.set(leftEyebrowState);
-			eyebrowSolenoidRight.set(rightEyebrowState);
-		}
-
-		if(rollers) {
-			leftPickupMotor.set(-RobotMap.PICKUP_ROLLER_SPEED);
-			rightPickupMotor.set(RobotMap.PICKUP_ROLLER_SPEED);
-			
-			eyebrowSolenoidLeft.set(true);
-			eyebrowSolenoidRight.set(true);
-		} else {
-			leftPickupMotor.set(0.0);
-			rightPickupMotor.set(0.0);
+		if(!Robot.toteElevatorSubsystem.isEnabled() && Robot.toteElevatorSubsystem.getEncoderDistance() < RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL
+				- RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL/2) {
+			// FIXME: Make these delays into a Command or a CommandGroup
+			if((System.currentTimeMillis() - lastDeployTime < RobotMap.EYEBROW_RETRACT_PULSE_TIME && !deploy) ||
+					(System.currentTimeMillis() - lastDeployTime < RobotMap.EYEBROW_DEPLOY_PULSE_TIME && deploy)) {
+				eyebrowSolenoidLeft.set(false);
+				eyebrowSolenoidRight.set(false);
+			}
+			if(rollers) {
+				if (rollerDirection) {
+					// Intake
+					leftPickupMotor.set(-RobotMap.PICKUP_ROLLER_SPEED);
+					rightPickupMotor.set(RobotMap.PICKUP_ROLLER_SPEED);
+				} else {
+					// Eject
+					leftPickupMotor.set(RobotMap.PICKUP_ROLLER_SPEED);
+					rightPickupMotor.set(-RobotMap.PICKUP_ROLLER_SPEED);
+				}
+				eyebrowSolenoidLeft.set(true);
+				eyebrowSolenoidRight.set(true);
+			} else {
+				leftPickupMotor.set(0.0);
+				rightPickupMotor.set(0.0);
+			}
 		}
 
 		if(deploy) {
@@ -108,5 +114,5 @@ public class ToteIntakeSubsystem extends RunnymedeSubsystem {
 	protected void initDefaultCommand() {
 		setDefaultCommand(new TeleopPickupCommand());
 	}
-	
+
 }

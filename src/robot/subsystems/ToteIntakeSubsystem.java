@@ -69,22 +69,25 @@ public class ToteIntakeSubsystem extends RunnymedeSubsystem {
 		return (dropDownSolenoid.get() == DoubleSolenoid.Value.kForward);
 	}
 
-	public void update(boolean deploy, long lastDeployTime, boolean leftEyebrowState, boolean rightEyebrowState, boolean rollers) {
+	public void update(boolean deploy, long lastDeployTime, boolean rollers, boolean rollerDirection) {
 
 		// FIXME: Make these delays into a Command or a CommandGroup
 		if((System.currentTimeMillis() - lastDeployTime < RobotMap.EYEBROW_RETRACT_PULSE_TIME && !deploy) ||
 				(System.currentTimeMillis() - lastDeployTime < RobotMap.EYEBROW_DEPLOY_PULSE_TIME && deploy)) {
 			eyebrowSolenoidLeft.set(false);
 			eyebrowSolenoidRight.set(false);
-		} else if(!rollers) {
-			eyebrowSolenoidLeft.set(leftEyebrowState);
-			eyebrowSolenoidRight.set(rightEyebrowState);
-		}
+		} 
 
 		if(rollers) {
-			leftPickupMotor.set(-RobotMap.PICKUP_ROLLER_SPEED);
-			rightPickupMotor.set(RobotMap.PICKUP_ROLLER_SPEED);
-			
+			if (rollerDirection) {
+				// Intake
+				leftPickupMotor.set(-RobotMap.PICKUP_ROLLER_SPEED);
+				rightPickupMotor.set(RobotMap.PICKUP_ROLLER_SPEED);
+			} else {
+				// Eject
+				leftPickupMotor.set(RobotMap.PICKUP_ROLLER_SPEED);
+				rightPickupMotor.set(-RobotMap.PICKUP_ROLLER_SPEED);
+			}
 			eyebrowSolenoidLeft.set(true);
 			eyebrowSolenoidRight.set(true);
 		} else {

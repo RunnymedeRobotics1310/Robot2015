@@ -20,7 +20,7 @@ public class TeleopPickupCommand extends Command {
 	protected void execute() {
 		pickupToggle.update(Robot.oi.getToteIntakeDeployButton());
 		Robot.toteIntakeSubsystem.update(pickupToggle.getState(), pickupToggle.lastStateChangeTime(),
-				Robot.oi.getLeftEyebrowButton(), Robot.oi.getRightEyebrowButton(), Robot.oi.getPickupRollerButton());
+				Robot.oi.getPickupRollerButton(), Robot.oi.getPickupRollerDirection());
 	}
 
 	@Override

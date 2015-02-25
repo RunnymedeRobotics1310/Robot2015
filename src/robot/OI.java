@@ -60,8 +60,7 @@ public class OI {
 		
 		PICKUP_MOTORS   (F310Button.LB),
 		DEPLOY_PICKUP   (F310Button.RB),
-		LEFT_EYEBROW    (F310Button.LT),
-		RIGHT_EYEBROW   (F310Button.RT),
+		REVERSE_PICKUP_MOTORS(F310Button.LT),
 		
 		RELAY_ON      (F310Button.Y),
 		RELAY_FORWARD (F310Button.B),
@@ -167,19 +166,17 @@ public class OI {
 	
 	public int getDriverPov() { return driverJoystick.getPOV(); }
 	
-	public boolean getLeftEyebrowButton() { return driverJoystick.getButton(Driver_ButtonMap.LEFT_EYEBROW.getButton()); }
-	
  	public PIDEnable getMotorPIDEnable() { return motorPIDEnable; }
  	
  	public CartesianCoordinate getMouseEvent() { return networkTableOI.getMouseEvent(); }
  	
 	public boolean getToteIntakeDeployButton() { return driverJoystick.getButton(Driver_ButtonMap.DEPLOY_PICKUP.getButton()); }
 	
-	public boolean getRightEyebrowButton() { return driverJoystick.getButton(Driver_ButtonMap.RIGHT_EYEBROW.getButton()); }
-	
 	public PIDEnable getRotationPIDEnable() { return rotationPIDEnable; }
 
 	public boolean getPickupRollerButton() { return driverJoystick.getButton(Driver_ButtonMap.PICKUP_MOTORS.getButton()); }
+	
+	public boolean getPickupRollerDirection() { return !driverJoystick.getButton(Driver_ButtonMap.REVERSE_PICKUP_MOTORS.getButton()); }
 
 	public boolean getAccelerationOverride() { return accelerationOverride.getState(); }
 

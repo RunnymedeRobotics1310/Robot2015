@@ -258,7 +258,7 @@ public class OI {
  		accelerationOverride.update(driverJoystick.getButton(Driver_ButtonMap.ACCELERATION_OVERRIDE.getButton()));
  		
  		if(getToteElevatorZeroButton()) {
- 			Robot.toteElevatorSubsystem.reset();
+ 			Robot.toteElevatorSubsystem.resetEncoders();
  		}
  		
  		// Rotate to the requested angle.

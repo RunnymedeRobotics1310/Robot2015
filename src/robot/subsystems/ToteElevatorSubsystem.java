@@ -44,6 +44,8 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 
 	SafeTalon elevatorMotor = new SafeTalon(RobotMap.TOTE_ELEVATOR_MOTOR);
 	Solenoid brake = new Solenoid(RobotMap.BRAKE_SOLENOID);
+	
+	DigitalInput floorSensor = new DigitalInput(RobotMap.TOTE_ELEVATOR_LOWER_LIMIT_SWITCH);
 
 	PIDController elevatorRatePID = new PIDController(0.2, 0.0, 0.0,
 			0.0004 * RobotMap.TOTE_ELEVATOR_MAX_ELEVATOR_ENCODER_RATE, encoder,
@@ -53,7 +55,7 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 		// Add the safety elements to the elevator talon
 		// Since negative power drives the motor up, the negative limit switch is the elevator upper limit switch
 		elevatorMotor.setNegativeLimitSwitch(new DigitalInput(RobotMap.TOTE_ELEVATOR_UPPER_LIMIT_SWITCH));
-		elevatorMotor.setPositiveLimitSwitch(new DigitalInput(RobotMap.TOTE_ELEVATOR_LOWER_LIMIT_SWITCH));
+		elevatorMotor.setPositiveLimitSwitch(floorSensor);
 		elevatorMotor.setOverCurrentFuse(RobotMap.TOTE_ELEVATOR_POWER_DISTRIBUTION_PORT, SafeTalon.CURRENT_NO_LIMIT, 0);
 	}
 	
@@ -69,12 +71,14 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 		}
 		
 		double difference = encoder.getDistance() - level.encoderSetpoint;
-
+		
+		// Drive down until the floor sensor is activated when floor is pressed
 		if (level == ToteElevatorLevel.FLOOR) {
-			if (   (elevatorRatePIDSetpoint > 0 && difference > 0)
-				|| (elevatorRatePIDSetpoint < 0 && difference < 0)) {
-				return true;
+			// The floor sensor is normally closed, so the elevator has hit the limit when the switch is open
+			if (!floorSensor.get()) {
+				resetEncoders();
 			}
+			return !floorSensor.get();
 		}  else {
 			if (   (elevatorRatePIDSetpoint > 0 && difference > -100)
 				|| (elevatorRatePIDSetpoint < 0 && difference < 100)) {
@@ -149,7 +153,7 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 		elevatorMotor.updateTable();
 	}
 	
-	public void reset() {
+	public void resetEncoders() {
 		encoder.reset();
 	}
 

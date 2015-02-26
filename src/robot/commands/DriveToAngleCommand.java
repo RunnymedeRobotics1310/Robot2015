@@ -43,7 +43,7 @@ public class DriveToAngleCommand extends Command {
 			angleDifference += 360;
 		}
 		
-		if (Math.abs(angleDifference) > 18) {
+		if (Math.abs(angleDifference) > 10) {
 			// Set the rotation value to .8 in the direction of the angle difference 
 			double rotation = .8 * Math.signum(angleDifference);
 			
@@ -66,24 +66,29 @@ public class DriveToAngleCommand extends Command {
 	protected boolean isFinished() {
 		
 		// If not within 18 degrees, then not finished.
-		if (startTime == 0) { return false; }
+//		if (startTime == 0) { return false; }
 		
 		// Wait at least 1.5 seconds after the timer starts to end the command.
-		long endTime = System.currentTimeMillis();
-		if (endTime - startTime < 1500) { return false; }
+//		long endTime = System.currentTimeMillis();
+//		if (endTime - startTime < 1500) { return false; }
 		
 		// Check if the angle is on target.
 		// The PID call to on target does not work for continuous targets like the angle where 360 = 0.
 		if (Math.abs(targetAngle - Robot.chassisSubsystem.getGyroAngle()) < ChassisSubsystem.ANGLE_PID_ABSOLUTE_TOLERANCE) {
+			startTime = 0;
 			return true; 
 		}
 
 		if (Math.abs(targetAngle - (Robot.chassisSubsystem.getGyroAngle()-360)) < ChassisSubsystem.ANGLE_PID_ABSOLUTE_TOLERANCE) {
+			startTime = 0;
 			return true; 
 		}
 		
 		// No matter what happens, always expire this command after 5 seconds of getting close to the angle.
-		if (endTime - startTime > 5000) { return true; }
+//		if (endTime - startTime > 5000) {
+//			startTime = 0;
+//			return true;
+//		}
 		
 		return false;
 	}

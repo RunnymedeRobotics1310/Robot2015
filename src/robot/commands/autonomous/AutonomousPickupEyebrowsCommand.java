@@ -1,27 +1,29 @@
 package robot.commands.autonomous;
 
 import robot.Robot;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class AutonomousContainerShiftCommand extends Command {
+public class AutonomousPickupEyebrowsCommand extends Command {
 
-	public AutonomousContainerShiftCommand() {
+	boolean state;
+	
+	public AutonomousPickupEyebrowsCommand(boolean state) {
 		requires(Robot.toteIntakeSubsystem);
+		this.state  = state;
 	}
 	
 	@Override
 	protected void initialize() {
+		Robot.toteIntakeSubsystem.actuateEyebrows(state);
 	}
 
 	@Override
 	protected void execute() {
-		Robot.toteIntakeSubsystem.driveIntakeMotors(true);
 	}
 
 	@Override
 	protected boolean isFinished() {
-		return !DriverStation.getInstance().isAutonomous();
+		return true;
 	}
 
 	@Override

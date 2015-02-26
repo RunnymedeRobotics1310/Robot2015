@@ -247,16 +247,16 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	 * @return true if on target, false otherwise
 	 */
 	public boolean distanceOnTarget() {
-		//return distanceOnTarget;
-		if (distancePID.onTarget()) {
-			distancePIDOnTargetTimer.start(0.2);
-			if (distancePIDOnTargetTimer.isExpired()) {
-				return true;
-			}
-		} else {
-			distancePIDOnTargetTimer.disable();
-		}
-		return false;
+		return distancePID.onTarget();
+//		if (distancePID.onTarget()) {
+//			distancePIDOnTargetTimer.start(0.2);
+//			if (distancePIDOnTargetTimer.isExpired()) {
+//				return true;
+//			}
+//		} else {
+//			distancePIDOnTargetTimer.disable();
+//		}
+//		return false;
 //		return distancePID.onTarget();// || distancePIDTimer.isExpired();
 	}
 
@@ -502,7 +502,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		default: break;	}
 
 		// Distance tolerance to determine if the PID is on target in encoder counts.
-		distancePID.setAbsoluteTolerance(18d);
+		distancePID.setAbsoluteTolerance(2*18d);
 		distancePID.setOutputRange(-1.0, 1.0);
 		switch (RobotMap.currentRobot) {
 		case RobotMap.ROBOT_PRODUCTION:distancePID.setPID(DISTANCE_PID_PRODUCTION_P, DISTANCE_PID_PRODUCTION_I, DISTANCE_PID_PRODUCTION_D); break;

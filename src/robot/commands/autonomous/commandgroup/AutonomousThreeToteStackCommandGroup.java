@@ -7,6 +7,7 @@ import robot.commands.ResetGyroCommand;
 import robot.commands.ToteElevatorCommandGroup;
 import robot.commands.autonomous.AutonomousContainerShiftCommand;
 import robot.commands.autonomous.AutonomousDeployIntakeCommand;
+import robot.commands.autonomous.AutonomousPickupEyebrowsCommand;
 import robot.commands.autonomous.AutonomousPickupToteCommand;
 import robot.subsystems.ChassisSubsystem.DriveMode;
 import robot.subsystems.ToteElevatorSubsystem.ToteElevatorLevel;
@@ -21,29 +22,33 @@ public class AutonomousThreeToteStackCommandGroup extends CommandGroup{
 		
 		addSequential(new AutonomousPickupToteCommand());
 		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.FLOOR));
-		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.THREE));
+		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.AUTONOMOUS_CONTAINER_LEVEL));
 		
 //		addSequential(new DriveDistanceCommand(1.0, 0.0, 270, 40, DriveMode.FIELD_RELATIVE));
 //		addSequential(new DriveDistanceCommand(1.0, 270, 270, 81 - 34, DriveMode.FIELD_RELATIVE));
 //		addSequential(new DriveDistanceCommand(1.0, 180, 270, 40, DriveMode.FIELD_RELATIVE));
 //		addParallel(new DriveDistanceCommand(0.5, 270, 270, 34, DriveMode.FIELD_RELATIVE));
 		addParallel(new AutonomousContainerShiftCommand());
-		addSequential(new DriveDistanceCommand(0.4, 270, 270-10, 81 - 34, DriveMode.FIELD_RELATIVE));
-		addParallel(new DriveDistanceCommand(0.5, 270, 270, 34, DriveMode.FIELD_RELATIVE));
-		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.ONE));
+		addSequential(new DriveDistanceCommand(0.5, 270+15, 270-10, 47, DriveMode.FIELD_RELATIVE));
+		addParallel(new DriveToteElevatorCommand(ToteElevatorLevel.ONE));
+		addSequential(new AutonomousPickupEyebrowsCommand(false));
+		addSequential(new DriveDistanceCommand(0.5, 270, 270, 22, DriveMode.FIELD_RELATIVE));
+		addParallel(new DriveDistanceCommand(0.2, 270, 270, 4, DriveMode.FIELD_RELATIVE));
 		addSequential(new AutonomousPickupToteCommand());
 		
 		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.FLOOR));
-		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.THREE));
+		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.AUTONOMOUS_CONTAINER_LEVEL));
 		
 //		addSequential(new DriveDistanceCommand(1.0, 0.0, 270, 40, DriveMode.FIELD_RELATIVE));
 //		addSequential(new DriveDistanceCommand(1.0, 270, 270, 81 - 34, DriveMode.FIELD_RELATIVE));
 //		addSequential(new DriveDistanceCommand(1.0, 180, 270, 40, DriveMode.FIELD_RELATIVE));
 //		addParallel(new DriveDistanceCommand(0.5, 270, 270, 34, DriveMode.FIELD_RELATIVE));
 		addParallel(new AutonomousContainerShiftCommand());
-		addSequential(new DriveDistanceCommand(0.4, 270, 270-10, 81 - 34, DriveMode.FIELD_RELATIVE));
-		addParallel(new DriveDistanceCommand(0.5, 270, 270, 34, DriveMode.FIELD_RELATIVE));
-		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.ONE));
+		addSequential(new DriveDistanceCommand(0.5, 270+15, 270-10, 47, DriveMode.FIELD_RELATIVE));
+		addParallel(new DriveToteElevatorCommand(ToteElevatorLevel.ONE));
+		addSequential(new AutonomousPickupEyebrowsCommand(false));
+		addSequential(new DriveDistanceCommand(0.5, 270, 270, 22, DriveMode.FIELD_RELATIVE));
+		addParallel(new DriveDistanceCommand(0.2, 270, 270, 4, DriveMode.FIELD_RELATIVE));
 		addSequential(new AutonomousPickupToteCommand());
 
 		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.FLOOR));

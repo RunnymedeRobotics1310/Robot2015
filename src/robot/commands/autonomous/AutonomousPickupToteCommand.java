@@ -2,6 +2,7 @@ package robot.commands.autonomous;
 
 import robot.Robot;
 import robot.commands.ToteElevatorCommandGroup;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
@@ -25,7 +26,7 @@ public class AutonomousPickupToteCommand extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return Robot.sensorSubsystem.getToteSensor();
+		return Robot.sensorSubsystem.getToteSensor() || !DriverStation.getInstance().isAutonomous();
 	}
 
 	@Override

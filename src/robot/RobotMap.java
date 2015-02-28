@@ -93,7 +93,7 @@ public class RobotMap {
 	
 	public static final double ENCODER_RESOLUTION_CORRECTION = 1.3;
 	public static final double MAX_ANUGLAR_VELOCITY = 120;
-	public static final double MAX_ENCODER_RATE = 1200;//900;
+	public static final double MAX_ENCODER_RATE = 2500;//900;
 	
 	public static final long EYEBROW_DEPLOY_PULSE_TIME = 1200;
 	public static final long EYEBROW_RETRACT_PULSE_TIME = 2000;

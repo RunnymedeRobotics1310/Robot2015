@@ -336,8 +336,10 @@ public class SafeTalon extends Talon {
 		}
 		
 		// Check for a negative speed limit switch
+		// The counters for the limit switch are not reliable.  
 		if (negativeLimitSwitch != null) {
-			if (negativeLimitSwitchCounter.get() > 0 || negativeLimitSwitch.get() != negativeLimitSwitchDefaultState) {
+//			if (negativeLimitSwitchCounter.get() > 0 || negativeLimitSwitch.get() != negativeLimitSwitchDefaultState) {
+			if (negativeLimitSwitch.get() != negativeLimitSwitchDefaultState) {
 				this.talonState = TalonState.NEGATIVE_LIMIT_SWITCH;
 				if (speed < 0) {
 					return 0.0d;
@@ -353,8 +355,10 @@ public class SafeTalon extends Talon {
 		}
 		
 		// Check for a positive speed limit switch
+		// The counters for the limit switch are not reliable.  
 		if (positiveLimitSwitch != null) {
-			if (positiveLimitSwitchCounter.get() > 0 || positiveLimitSwitch.get() != positiveLimitSwitchDefaultState) {
+//			if (positiveLimitSwitchCounter.get() > 0 || positiveLimitSwitch.get() != positiveLimitSwitchDefaultState) {
+			if (positiveLimitSwitch.get() != positiveLimitSwitchDefaultState) {
 				this.talonState = TalonState.POSITIVE_LIMIT_SWITCH;
 				if (speed > 0) {
 					return 0.0d;

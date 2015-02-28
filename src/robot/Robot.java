@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import robot.commands.autonomous.commandgroup.AutonomousTestCommandGroup;
-import robot.commands.autonomous.commandgroup.AutonomousThreeToteAngledCommandGroup;
 import robot.commands.autonomous.commandgroup.AutonomousThreeToteStackCommandGroup;
+import robot.commands.autonomous.commandgroup.AutonomousThreeToteTwoContainerCommandGroup;
 import robot.subsystems.ChassisSubsystem;
 import robot.subsystems.ContainerElevatorSubsystem;
 import robot.subsystems.PowerSubsystem;
@@ -15,7 +15,6 @@ import robot.subsystems.SensorSubsystem;
 import robot.subsystems.ToteElevatorSubsystem;
 import robot.subsystems.ToteIntakeSubsystem;
 import robot.subsystems.VisionSubsystem;
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -116,10 +115,10 @@ public class Robot extends IterativeRobot {
 		
 		autonomousChooser.addDefault("TestCommandGroup",
 				new AutonomousTestCommandGroup());
+		autonomousChooser.addObject("Three Tote Two Container",
+				new AutonomousThreeToteTwoContainerCommandGroup());
 		autonomousChooser.addObject("ThreeTote",
 				new AutonomousThreeToteStackCommandGroup());
-		autonomousChooser.addObject("ThreeToteAngled",
-				new AutonomousThreeToteAngledCommandGroup());
 		autonomousChooser.addObject("Nothing", null);
 		
 		SmartDashboard.putData("Autonomous Mode", autonomousChooser);

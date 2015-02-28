@@ -93,7 +93,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 
 	private MockSpeedController anglePIDOutput    = new MockSpeedController();
 
-	private PIDController anglePID = new PIDController(0.02, 0.0, -0.001, 0.0,
+	private PIDController anglePID = new PIDController(0.03, 0.0, -0.001, 0.0,
 			new PIDSource() {
 		public double pidGet() {
 			return gyro.getAngle();

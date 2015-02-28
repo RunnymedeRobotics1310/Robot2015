@@ -38,14 +38,9 @@ public class ToteIntakeSubsystem extends RunnymedeSubsystem {
 		eyebrowSolenoidRight.set(false);
 	}
 
-	public void driveIntakeMotors(boolean direction) {
-		if(direction) {
-			leftPickupMotor.set(0.75);
-			rightPickupMotor.set(0.75);
-		} else {
-			leftPickupMotor.set(-0.75);
-			rightPickupMotor.set(-0.75);
-		}
+	public void driveIntakeMotors(double speed) {
+		leftPickupMotor.set(-speed);
+		rightPickupMotor.set(-speed);
 
 		eyebrowSolenoidLeft.set(true);
 		eyebrowSolenoidRight.set(true);

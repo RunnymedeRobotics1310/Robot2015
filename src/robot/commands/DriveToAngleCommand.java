@@ -1,9 +1,11 @@
 package robot.commands;
 
+import robot.PolarCoordinate;
 import robot.Robot;
 import robot.Timer;
 import robot.subsystems.ChassisSubsystem;
 import robot.subsystems.ChassisSubsystem.DriveMode;
+import robot.subsystems.ChassisSubsystem.PIDEnable;
 import edu.wpi.first.wpilibj.command.Command;
 
 
@@ -43,7 +45,7 @@ public class DriveToAngleCommand extends Command {
 			angleDifference += 360;
 		}
 		
-		if (Math.abs(angleDifference) > 10) {
+		if (Math.abs(angleDifference) > 15) {
 			// Set the rotation value to .8 in the direction of the angle difference 
 			double rotation = .8 * Math.signum(angleDifference);
 			
@@ -95,9 +97,11 @@ public class DriveToAngleCommand extends Command {
 
 	@Override
 	protected void end() {
+		Robot.chassisSubsystem.driveJoystick(new PolarCoordinate(), 0.0, DriveMode.ROBOT_RELATIVE, PIDEnable.DISABLED, PIDEnable.DISABLED);
 	}
 
 	@Override
 	protected void interrupted() {
+		Robot.chassisSubsystem.driveJoystick(new PolarCoordinate(), 0.0, DriveMode.ROBOT_RELATIVE, PIDEnable.DISABLED, PIDEnable.DISABLED);
 	}
 }

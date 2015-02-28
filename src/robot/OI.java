@@ -34,7 +34,8 @@ public class OI {
 	private Toggle containerPickupToggle = new Toggle(false);
 	private Toggle containerDeployToggle = new Toggle(false);
 	private Toggle accelerationOverride = new Toggle(true);
-	
+	private Toggle toggleHalfInput = new Toggle(false);
+
 	private enum StickMap {
 		
 		// Driver Joystick stick mapping
@@ -70,7 +71,7 @@ public class OI {
 		TOTE_FIX_BUTTON (F310Button.START),
 		
 		DRIVE_MODE    (F310Button.R_STICK),
-		ACCELERATION_OVERRIDE (F310Button.L_STICK);
+		HALF_INPUTS (F310Button.L_STICK);
 
 		F310Button button;
 		
@@ -156,12 +157,20 @@ public class OI {
 	
 	public PolarCoordinate getDriverPolarCoordinate() { 
 		// Square the coordinates to reduce joystick sensitivity.
-		return driverJoystick.getPolarCoordinate(StickMap.DRIVE_STICK.getStick()).square(); 
+		PolarCoordinate p = driverJoystick.getPolarCoordinate(StickMap.DRIVE_STICK.getStick()).square();
+		if(toggleHalfInput.getState()) {
+			return new PolarCoordinate(p.getR()/2, p.getTheta());
+		}
+		return p;
 	}
 	
 	public double getDriverRotation() { 
 		// Square the coordinates to reduce joystick sensitivity.
-		return driverJoystick.getCartesianCoordinate(StickMap.ROTATION_STICK.getStick()).square().getX(); 
+		double rotation = driverJoystick.getCartesianCoordinate(StickMap.ROTATION_STICK.getStick()).square().getX();
+		if(toggleHalfInput.getState()) {
+			return rotation / 2;
+		}
+		return rotation;
 	}
 	
 	public int getDriverPov() { return driverJoystick.getPOV(); }
@@ -255,7 +264,7 @@ public class OI {
  		robotRelativeToggle.update(driverJoystick.getButton(Driver_ButtonMap.DRIVE_MODE.getButton()));
  		containerPickupToggle.update(operatorJoystick.getButton(Operator_ButtonMap.CONTAINER_PICKUP_BUTTON.getButton()));
  		containerDeployToggle.update(operatorJoystick.getButton(Operator_ButtonMap.CONTAINER_DEPLOY_BUTTON.getButton()));
- 		accelerationOverride.update(driverJoystick.getButton(Driver_ButtonMap.ACCELERATION_OVERRIDE.getButton()));
+ 		toggleHalfInput.update(driverJoystick.getButton(Driver_ButtonMap.HALF_INPUTS.getButton()));
  		
  		if(getToteElevatorZeroButton()) {
  			Robot.toteElevatorSubsystem.resetEncoders();

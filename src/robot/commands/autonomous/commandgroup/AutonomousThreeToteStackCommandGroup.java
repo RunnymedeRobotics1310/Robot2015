@@ -16,45 +16,29 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class AutonomousThreeToteStackCommandGroup extends CommandGroup{
 
 	public AutonomousThreeToteStackCommandGroup() {
-		addSequential(new ResetGyroCommand(270));
-		
-		addSequential(new AutonomousDeployIntakeCommand());
-		
-		addSequential(new AutonomousPickupToteCommand());
-		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.FLOOR));
-		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.AUTONOMOUS_CONTAINER_LEVEL));
-		
-//		addSequential(new DriveDistanceCommand(1.0, 0.0, 270, 40, DriveMode.FIELD_RELATIVE));
-//		addSequential(new DriveDistanceCommand(1.0, 270, 270, 81 - 34, DriveMode.FIELD_RELATIVE));
-//		addSequential(new DriveDistanceCommand(1.0, 180, 270, 40, DriveMode.FIELD_RELATIVE));
-//		addParallel(new DriveDistanceCommand(0.5, 270, 270, 34, DriveMode.FIELD_RELATIVE));
-		addParallel(new AutonomousContainerShiftCommand());
-		addSequential(new DriveDistanceCommand(0.5, 270+15, 270-10, 47, DriveMode.FIELD_RELATIVE));
-		addParallel(new DriveToteElevatorCommand(ToteElevatorLevel.ONE));
-		addSequential(new AutonomousPickupEyebrowsCommand(false));
-		addSequential(new DriveDistanceCommand(0.5, 270, 270, 22, DriveMode.FIELD_RELATIVE));
-		addParallel(new DriveDistanceCommand(0.2, 270, 270, 4, DriveMode.FIELD_RELATIVE));
-		addSequential(new AutonomousPickupToteCommand());
-		
-		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.FLOOR));
-		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.AUTONOMOUS_CONTAINER_LEVEL));
-		
-//		addSequential(new DriveDistanceCommand(1.0, 0.0, 270, 40, DriveMode.FIELD_RELATIVE));
-//		addSequential(new DriveDistanceCommand(1.0, 270, 270, 81 - 34, DriveMode.FIELD_RELATIVE));
-//		addSequential(new DriveDistanceCommand(1.0, 180, 270, 40, DriveMode.FIELD_RELATIVE));
-//		addParallel(new DriveDistanceCommand(0.5, 270, 270, 34, DriveMode.FIELD_RELATIVE));
-		addParallel(new AutonomousContainerShiftCommand());
-		addSequential(new DriveDistanceCommand(0.5, 270+15, 270-10, 47, DriveMode.FIELD_RELATIVE));
-		addParallel(new DriveToteElevatorCommand(ToteElevatorLevel.ONE));
-		addSequential(new AutonomousPickupEyebrowsCommand(false));
-		addSequential(new DriveDistanceCommand(0.5, 270, 270, 22, DriveMode.FIELD_RELATIVE));
-		addParallel(new DriveDistanceCommand(0.2, 270, 270, 4, DriveMode.FIELD_RELATIVE));
-		addSequential(new AutonomousPickupToteCommand());
 
-		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.FLOOR));
-		addParallel(new DriveToteElevatorCommand(ToteElevatorLevel.HALF));
+		addSequential(new ResetGyroCommand(245));
+
+		for(int i = 0; i < 2; i++) {
+			addParallel(new DriveToteElevatorCommand(ToteElevatorLevel.HALF));
+			addSequential(new DriveToAngleCommand(315, DriveMode.FIELD_RELATIVE));
+			addSequential(new DriveDistanceCommand(1.0, 270+30, 315, 12, DriveMode.FIELD_RELATIVE));
+
+			addParallel(new DriveToteElevatorCommand(ToteElevatorLevel.ONE));
+			addSequential(new DriveDistanceCommand(1.0, 270-32, 270, 48, DriveMode.FIELD_RELATIVE));
+
+			addParallel(new DriveDistanceCommand(1.0, 270, 270, 18, DriveMode.FIELD_RELATIVE));
+			addSequential(new AutonomousPickupToteCommand());
+
+			addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.FLOOR));
+		}
 		
-		addSequential(new DriveDistanceCommand(1.0, 0.0, 0.0, 42, DriveMode.FIELD_RELATIVE));
+		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.HALF));
+		addSequential(new DriveDistanceCommand(1.0, 0.0, 270, 42*3 - 8, DriveMode.FIELD_RELATIVE));
+		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.FLOOR));
+		
+		addSequential(new DriveDistanceCommand(1.0, 90, 270, 24, DriveMode.FIELD_RELATIVE));
+
 	}
 	
 }

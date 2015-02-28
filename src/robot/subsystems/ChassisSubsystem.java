@@ -9,6 +9,7 @@ import robot.RobotMap;
 import robot.RunnymedeMecanumDrive;
 import robot.Timer;
 import robot.commands.TeleopDriveCommand;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -281,7 +282,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		
 		SmartDashboard.putNumber("DISTANCE P VALUE", pDrive * 1000);
 		SmartDashboard.putNumber("DISTANCE I VALUE", iDrive * 1000);
-		if(distanceInches - getDistance(Units.INCHES) > 2.0) {
+		if(distanceInches - getDistance(Units.INCHES) > 5.0) {
 			distancePID.setPID(pDrive, 0.0, 0.0);
 		} else {
 			distancePID.setPID(pDrive, iDrive, 0.0);
@@ -502,7 +503,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		default: break;	}
 
 		// Distance tolerance to determine if the PID is on target in encoder counts.
-		distancePID.setAbsoluteTolerance(2*18d);
+		distancePID.setAbsoluteTolerance(48d);
 		distancePID.setOutputRange(-1.0, 1.0);
 		switch (RobotMap.currentRobot) {
 		case RobotMap.ROBOT_PRODUCTION:distancePID.setPID(DISTANCE_PID_PRODUCTION_P, DISTANCE_PID_PRODUCTION_I, DISTANCE_PID_PRODUCTION_D); break;
@@ -729,7 +730,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	 */
 	private void drivePolar(PolarCoordinate p, double rotation, double angle,
 			PIDEnable rotationPIDEnable, PIDEnable motorPIDEnable) {
-
+		
 		// Determine if the angle should be held constant during this move sequence.
 		// if there is no rotational input then try to hold the rotation constant.
 		// Override the rotation PID to disabled.

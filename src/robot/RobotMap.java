@@ -59,13 +59,16 @@ public class RobotMap {
 	
 	public static final int TOTE_SENSOR_PORT = 15;
 	
-	public static final int CONTAINER_SENSOR_PORT = 12;
+	public static final int CONTAINER_SENSOR_PORT = 14;
 	
 	public static final int TOTE_ELEVATOR_UPPER_LIMIT_SWITCH = 11;
 	public static final int TOTE_ELEVATOR_LOWER_LIMIT_SWITCH = 10;
 	
 	public static final int COMPRESSOR_SPIKE_PORT = 0;
 	public static final int PRESSURE_SWICH_PORT = 19;
+	
+	public static final int DISTANCE_SENSOR_LEFT = 12;
+	public static final int DISTANCE_SENSOR_RIGHT = 13;
 	
 	// Pneumatic Ports
 	
@@ -90,7 +93,7 @@ public class RobotMap {
 	
 	public static final double ENCODER_RESOLUTION_CORRECTION = 1.3;
 	public static final double MAX_ANUGLAR_VELOCITY = 120;
-	public static final double MAX_ENCODER_RATE = 900;
+	public static final double MAX_ENCODER_RATE = 1200;//900;
 	
 	public static final long EYEBROW_DEPLOY_PULSE_TIME = 1200;
 	public static final long EYEBROW_RETRACT_PULSE_TIME = 2000;

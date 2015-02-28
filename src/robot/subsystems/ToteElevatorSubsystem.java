@@ -3,6 +3,7 @@ package robot.subsystems;
 import robot.RobotMap;
 import robot.SafeTalon;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -67,11 +68,7 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 
 	public boolean onTarget() {
 
-		if (   (elevatorMotor.getState() == SafeTalon.TalonState.POSITIVE_LIMIT_SWITCH && level == ToteElevatorLevel.FLOOR) 
-			|| (elevatorMotor.getState() == SafeTalon.TalonState.NEGATIVE_LIMIT_SWITCH && level == ToteElevatorLevel.FOUR)) {
-			return true;
-		}
-		
+
 		double difference = encoder.getDistance() - level.encoderSetpoint;
 		
 		// Drive down until the floor sensor is activated when floor is pressed
@@ -86,6 +83,11 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 				|| (elevatorRatePIDSetpoint < 0 && difference < 100)) {
 				return true;
 			}
+		}
+		
+		if (   (elevatorMotor.getState() == SafeTalon.TalonState.POSITIVE_LIMIT_SWITCH && level == ToteElevatorLevel.FLOOR) 
+			|| (elevatorMotor.getState() == SafeTalon.TalonState.NEGATIVE_LIMIT_SWITCH && level == ToteElevatorLevel.FOUR)) {
+			return true;
 		}
 					
 		return false;
@@ -104,11 +106,19 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 	public void initDriveToLevel(ToteElevatorLevel level) {
 		
 		double difference = encoder.getDistance() - level.encoderSetpoint;
-
+		
+		double driveSpeed = 0;
+		
+		if(DriverStation.getInstance().isAutonomous()) {
+			driveSpeed = 1.0;
+		} else if(DriverStation.getInstance().isOperatorControl()) {
+			driveSpeed = 0.75;
+		}
+		
 		if (difference > 0) {
-			elevatorRatePIDSetpoint = -1.0;
+			elevatorRatePIDSetpoint = -driveSpeed;
 		} else {
-			elevatorRatePIDSetpoint = 1.0;
+			elevatorRatePIDSetpoint = driveSpeed;
 		}
 
 		this.level = level;

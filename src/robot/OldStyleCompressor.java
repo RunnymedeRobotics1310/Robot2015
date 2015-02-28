@@ -17,7 +17,7 @@ public class OldStyleCompressor {
 
 	public void update() {
 		if(!pressureSwitch.get() && enabled) {
-			spike.set(Relay.Value.kOn);
+			spike.set(Relay.Value.kForward);
 		} else {
 			spike.set(Relay.Value.kOff);
 		}

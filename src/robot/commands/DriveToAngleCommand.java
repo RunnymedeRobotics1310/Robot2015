@@ -45,7 +45,7 @@ public class DriveToAngleCommand extends Command {
 			angleDifference += 360;
 		}
 		
-		if (Math.abs(angleDifference) > 10) {
+		if (Math.abs(angleDifference) > 20) {
 			// Set the rotation value to .8 in the direction of the angle difference 
 			double rotation = .8 * Math.signum(angleDifference);
 			

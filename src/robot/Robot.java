@@ -7,6 +7,7 @@ import java.util.List;
 import robot.commands.autonomous.commandgroup.AutonomousTestCommandGroup;
 import robot.commands.autonomous.commandgroup.AutonomousThreeToteStackCommandGroup;
 import robot.commands.autonomous.commandgroup.AutonomousThreeToteTwoContainerCommandGroup;
+import robot.commands.autonomous.commandgroup.AutonomousThreeToteWithContainerGone;
 import robot.subsystems.ChassisSubsystem;
 import robot.subsystems.ContainerElevatorSubsystem;
 import robot.subsystems.PowerSubsystem;
@@ -47,7 +48,7 @@ public class Robot extends IterativeRobot {
 	SendableChooser autonomousChooser;
     Command autonomousCommand;
     
-    OldStyleCompressor compressor = new OldStyleCompressor(RobotMap.COMPRESSOR_SPIKE_PORT, RobotMap.PRESSURE_SWICH_PORT);
+    OldStyleCompressor compressor = new OldStyleCompressor(RobotMap.COMPRESSOR_SPIKE_PORT, RobotMap.PRESSURE_SWITCH_PORT);
     
     // Default constructor.
     
@@ -117,6 +118,8 @@ public class Robot extends IterativeRobot {
 				new AutonomousTestCommandGroup());
 		autonomousChooser.addObject("Three Tote Two Container",
 				new AutonomousThreeToteTwoContainerCommandGroup());
+		autonomousChooser.addObject("Three Tote Ignore Container",
+				new AutonomousThreeToteWithContainerGone());
 		autonomousChooser.addObject("ThreeTote",
 				new AutonomousThreeToteStackCommandGroup());
 		autonomousChooser.addObject("Nothing", null);

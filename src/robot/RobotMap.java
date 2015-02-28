@@ -65,7 +65,7 @@ public class RobotMap {
 	public static final int TOTE_ELEVATOR_LOWER_LIMIT_SWITCH = 10;
 	
 	public static final int COMPRESSOR_SPIKE_PORT = 0;
-	public static final int PRESSURE_SWICH_PORT = 19;
+	public static final int PRESSURE_SWITCH_PORT = 19;
 	
 	public static final int DISTANCE_SENSOR_LEFT = 12;
 	public static final int DISTANCE_SENSOR_RIGHT = 13;

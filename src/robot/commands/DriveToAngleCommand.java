@@ -13,15 +13,20 @@ public class DriveToAngleCommand extends Command {
 
 	private final int targetAngle;
 	private final DriveMode driveMode;
-	Timer settlingTimer = new Timer();
-	long startTime = 0;
+	private double timeout = -1.0;
+	private Timer timeoutTimer = new Timer();
 	
 	public DriveToAngleCommand(int targetAngle, DriveMode driveMode) {
+		this(targetAngle, -1.0d, driveMode);
+	}
+
+	public DriveToAngleCommand(int targetAngle, double timeout, DriveMode driveMode) {
+		requires(Robot.chassisSubsystem);
 		this.targetAngle = targetAngle;
 		this.driveMode = driveMode;
-		requires(Robot.chassisSubsystem);
 		this.setInterruptible(true);
-		startTime = 0;
+		this.timeout = timeout;
+		timeoutTimer.disable();
 	}
 
 	@Override
@@ -31,7 +36,11 @@ public class DriveToAngleCommand extends Command {
 	@Override
 	protected void execute() {
 		
-		// Until the angle is within 18 degrees, use a rotation drive, and then switch to the 
+		if (timeout >= 0) {
+			timeoutTimer.start(timeout);
+		}
+		
+		// Until the angle is within 20 degrees, use a rotation drive, and then switch to the 
 		// driveToAngle command to finish off when within 18 degrees.
 
 		// Get the difference in angle
@@ -55,9 +64,6 @@ public class DriveToAngleCommand extends Command {
 			// Wait for a timer to expire in the targeting before looking
 			// for the isFinished.  This is done because the angle is controlled by
 			// a PID controller and the PID may need time to settle.
-			if (startTime == 0) {
-				startTime = System.currentTimeMillis();
-			}
 			Robot.chassisSubsystem.driveToAngle(Robot.oi.getDriverPolarCoordinate(),
 					targetAngle, driveMode, Robot.oi.getRotationPIDEnable(), Robot.oi.getMotorPIDEnable());
 		}
@@ -66,31 +72,20 @@ public class DriveToAngleCommand extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		
-		// If not within 18 degrees, then not finished.
-//		if (startTime == 0) { return false; }
-		
-		// Wait at least 1.5 seconds after the timer starts to end the command.
-//		long endTime = System.currentTimeMillis();
-//		if (endTime - startTime < 1500) { return false; }
+
+		if (timeout >= 0) {
+			if (timeoutTimer.isExpired()) { return true; }
+		}
 		
 		// Check if the angle is on target.
 		// The PID call to on target does not work for continuous targets like the angle where 360 = 0.
 		if (Math.abs(targetAngle - Robot.chassisSubsystem.getGyroAngle()) < ChassisSubsystem.ANGLE_PID_ABSOLUTE_TOLERANCE) {
-			startTime = 0;
 			return true; 
 		}
 
 		if (Math.abs(targetAngle - (Robot.chassisSubsystem.getGyroAngle()-360)) < ChassisSubsystem.ANGLE_PID_ABSOLUTE_TOLERANCE) {
-			startTime = 0;
 			return true; 
 		}
-		
-		// No matter what happens, always expire this command after 5 seconds of getting close to the angle.
-//		if (endTime - startTime > 5000) {
-//			startTime = 0;
-//			return true;
-//		}
 		
 		return false;
 	}

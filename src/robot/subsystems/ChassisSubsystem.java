@@ -93,7 +93,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 
 	private MockSpeedController anglePIDOutput    = new MockSpeedController();
 
-	private PIDController anglePID = new PIDController(0.02, 0.0, -0.001, 0.0,
+	private PIDController anglePID = new PIDController(0.08, 0.0, -0.001, 0.0,
 			new PIDSource() {
 		public double pidGet() {
 			return gyro.getAngle();
@@ -503,7 +503,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		default: break;	}
 
 		// Distance tolerance to determine if the PID is on target in encoder counts.
-		distancePID.setAbsoluteTolerance(60);
+		distancePID.setAbsoluteTolerance(90);
 		distancePID.setOutputRange(-1.0, 1.0);
 		switch (RobotMap.currentRobot) {
 		case RobotMap.ROBOT_PRODUCTION:distancePID.setPID(DISTANCE_PID_PRODUCTION_P, DISTANCE_PID_PRODUCTION_I, DISTANCE_PID_PRODUCTION_D); break;

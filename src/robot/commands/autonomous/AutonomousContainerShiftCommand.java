@@ -8,14 +8,16 @@ import edu.wpi.first.wpilibj.command.Command;
 public class AutonomousContainerShiftCommand extends Command {
 
 	Timer timeout = new Timer(0.5);
+	double time;
 	
-	public AutonomousContainerShiftCommand() {
+	public AutonomousContainerShiftCommand(double time) {
 		requires(Robot.toteIntakeSubsystem);
+		this.time = time;
 	}
 	
 	@Override
 	protected void initialize() {
-		timeout.start();
+		timeout.start(time);
 	}
 
 	@Override

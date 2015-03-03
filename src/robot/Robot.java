@@ -71,8 +71,8 @@ public class Robot extends IterativeRobot {
 			Scheduler.getInstance().add(autonomousCommand);
 		}
     	        
-		compressor.start();
-        enableSubsystems();
+		compressor.stop();
+		enableSubsystems();
     }
 	
 	/**
@@ -146,6 +146,7 @@ public class Robot extends IterativeRobot {
         
         enableSubsystems();
         compressor.start();
+        toteIntakeSubsystem.setContainerDragState(false);
     }
 
     /**

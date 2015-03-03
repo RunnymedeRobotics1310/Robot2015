@@ -39,7 +39,7 @@ public class ContainerElevatorSubsystem extends RunnymedeSubsystem {
 	Talon intakeMotorLeft = new Talon(RobotMap.LEFT_CONTAINER_MOTOR_PORT);
 	Talon intakeMotorRight = new Talon(RobotMap.RIGHT_CONTAINER_MOTOR_PORT);
 	Solenoid containerClamp = new Solenoid(RobotMap.CONTAINER_PINCHER_PORT);
-	DoubleSolenoid containerDeploy = new DoubleSolenoid(RobotMap.CONTAINER_DEPLOY_PORT_ONE, RobotMap.CONTAINER_DEPLOY_PORT_TWO);
+//	DoubleSolenoid containerDeploy = new DoubleSolenoid(RobotMap.CONTAINER_DEPLOY_PORT_ONE, RobotMap.CONTAINER_DEPLOY_PORT_TWO);
 	MockSpeedController holdLevelPIDOutput = new MockSpeedController();
 	
 	Encoder encoder = new Encoder(RobotMap.CONTAINER_ELEVATOR_ENCODER_ONE,
@@ -129,10 +129,10 @@ public class ContainerElevatorSubsystem extends RunnymedeSubsystem {
 			if(level != ContainerElevatorLevel.TWO) {
 				Scheduler.getInstance().add(new DriveContainerElevatorCommand(ContainerElevatorLevel.TWO));
 			} else {
-				containerDeploy.set(DoubleSolenoid.Value.kForward);
+//				containerDeploy.set(DoubleSolenoid.Value.kForward);
 			}
 			} else {
-			containerDeploy.set(DoubleSolenoid.Value.kReverse);
+//			containerDeploy.set(DoubleSolenoid.Value.kReverse);
 		}
 		
 		containerClamp.set(!clampState);

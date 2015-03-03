@@ -12,6 +12,8 @@ public class ToteIntakeSubsystem extends RunnymedeSubsystem {
 	DoubleSolenoid dropDownSolenoid = new DoubleSolenoid(RobotMap.DROP_DOWN_SOLENOID_ONE, RobotMap.DROP_DOWN_SOLENOID_TWO);
 	Solenoid eyebrowSolenoidLeft = new Solenoid(RobotMap.EYEBROW_SOLENOID_LEFT);
 	Solenoid eyebrowSolenoidRight = new Solenoid(RobotMap.EYEBROW_SOLENOID_RIGHT);
+	
+	DoubleSolenoid containerDrag = new DoubleSolenoid(RobotMap.CONTAINER_DRAG_PORT_ONE, RobotMap.CONTAINER_DRAG_PORT_TWO);
 
 	Talon leftPickupMotor = new Talon(RobotMap.LEFT_PICKUP_MOTOR_PORT);
 	Talon rightPickupMotor = new Talon(RobotMap.RIGHT_PICKUP_MOTOR_PORT);
@@ -27,6 +29,14 @@ public class ToteIntakeSubsystem extends RunnymedeSubsystem {
 
 	public void deploy() {
 		dropDownSolenoid.set(DoubleSolenoid.Value.kForward);
+	}
+	
+	public void setContainerDragState(boolean deployed) {
+		if(deployed) {
+			containerDrag.set(DoubleSolenoid.Value.kForward);
+		} else {
+			containerDrag.set(DoubleSolenoid.Value.kReverse);
+		}
 	}
 
 	@Override

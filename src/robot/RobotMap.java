@@ -78,11 +78,14 @@ public class RobotMap {
 	public static final int EYEBROW_SOLENOID_LEFT = 3;
 	public static final int EYEBROW_SOLENOID_RIGHT = 4;
 	
+	public static final int CONTAINER_DRAG_PORT_ONE = 6;
+	public static final int CONTAINER_DRAG_PORT_TWO = 7;
+	
 	public static final int BRAKE_SOLENOID = 0;
 	
 	public static final int CONTAINER_PINCHER_PORT = 5;
-	public static final int CONTAINER_DEPLOY_PORT_ONE = 6;
-	public static final int CONTAINER_DEPLOY_PORT_TWO = 7;
+//	public static final int CONTAINER_DEPLOY_PORT_ONE = 6;
+//	public static final int CONTAINER_DEPLOY_PORT_TWO = 7;
 	
 	// Power Distribution Ports
 	public static final int TOTE_ELEVATOR_POWER_DISTRIBUTION_PORT = 13;

@@ -93,14 +93,14 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 
 	private MockSpeedController anglePIDOutput    = new MockSpeedController();
 
-	private PIDController anglePID = new PIDController(0.08, 0.0, -0.001, 0.0,
+	private PIDController anglePID = new PIDController(0.02, 0.0, 0.0, 0.0,
 			new PIDSource() {
 		public double pidGet() {
 			return gyro.getAngle();
 		}
 	}, anglePIDOutput);
 
-	public static final double ANGLE_PID_ABSOLUTE_TOLERANCE = 2.7d;
+	public static final double ANGLE_PID_ABSOLUTE_TOLERANCE = 5.0d;
 
 	private static final double ANGLE_PID_PRODUCTION_P = 0.02d;
 	private static final double ANGLE_PID_PRODUCTION_I = 0.0d;
@@ -381,7 +381,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 			PIDEnable rotationPIDEnable, PIDEnable motorPIDEnable) {
 
 		// Disable unused PIDs
-		disableAnglePID();
+//		disableAnglePID();
 		disableDistancePID();
 
 		// Calculate the direction of travel relative to the robot heading.
@@ -469,7 +469,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 
 		// Initialize Sensors
 		//gyro.setSensitivity(0.0125);
-		gyro.setSensitivity(0.00165);
+		gyro.setSensitivity(0.00165 * (745.0 / 720.0));
 //		gyro.initGyro();
 
 		// Initialize PID parameters
@@ -823,7 +823,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	 * 
 	 * If already enabled, this routine does nothing.
 	 */
-	private void enableAnglePID() {
+	public void enableAnglePID() {
 
 		if (!anglePID.isEnable()) {
 			anglePID.reset();

@@ -54,10 +54,11 @@ public class DriveToAngleCommand extends Command {
 			angleDifference += 360;
 		}
 		
-		if (Math.abs(angleDifference) > 20) {
+		if (Math.abs(angleDifference) > 25) {
 			// Set the rotation value to .8 in the direction of the angle difference 
 			double rotation = .8 * Math.signum(angleDifference);
 			
+			Robot.chassisSubsystem.enableAnglePID();
 			Robot.chassisSubsystem.driveJoystick(Robot.oi.getDriverPolarCoordinate(),
 					rotation, driveMode, Robot.oi.getRotationPIDEnable(), Robot.oi.getMotorPIDEnable());
 		} else {
@@ -92,11 +93,11 @@ public class DriveToAngleCommand extends Command {
 
 	@Override
 	protected void end() {
-		Robot.chassisSubsystem.driveJoystick(new PolarCoordinate(), 0.0, DriveMode.ROBOT_RELATIVE, PIDEnable.DISABLED, PIDEnable.DISABLED);
+		Robot.chassisSubsystem.driveJoystick(new PolarCoordinate(), 0.0, DriveMode.ROBOT_RELATIVE, PIDEnable.ENABLED, PIDEnable.ENABLED);
 	}
 
 	@Override
 	protected void interrupted() {
-		Robot.chassisSubsystem.driveJoystick(new PolarCoordinate(), 0.0, DriveMode.ROBOT_RELATIVE, PIDEnable.DISABLED, PIDEnable.DISABLED);
+		Robot.chassisSubsystem.driveJoystick(new PolarCoordinate(), 0.0, DriveMode.ROBOT_RELATIVE, PIDEnable.ENABLED, PIDEnable.ENABLED);
 	}
 }

@@ -52,7 +52,7 @@ public class AutonomousTestCommandGroup extends CommandGroup {
 		addSequential(new DriveToAngleCommand(235, 0.5, DriveMode.FIELD_RELATIVE));
 		addParallel(new AutonomousContainerShiftCommand(4.0));
 
-		addSequential(new DriveDistanceCommand(1.0, 270-30, 230, 10, DriveMode.FIELD_RELATIVE));
+		addSequential(new DriveDistanceCommand(1.0, 270-30, 230, 12, DriveMode.FIELD_RELATIVE));
 				
 		addSequential(new DriveDistanceCommand(1.0, 270+30, 270-10, 55, DriveMode.FIELD_RELATIVE));
 		

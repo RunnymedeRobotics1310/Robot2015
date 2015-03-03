@@ -19,7 +19,7 @@ public class AutonomousThreeToteTwoContainerCommandGroup extends CommandGroup {
 		{
 			addParallel(new DriveToteElevatorCommand(ToteElevatorLevel.HALF));
 			addParallel(new AutonomousContainerShiftCommand(0.5));
-			addSequential(new DriveToAngleCommand(235, DriveMode.FIELD_RELATIVE));
+			addSequential(new DriveToAngleCommand(235, 0.5, DriveMode.FIELD_RELATIVE));
 			addSequential(new DriveDistanceCommand(0.6, 270-30, 230, 12, DriveMode.FIELD_RELATIVE));
 
 			addParallel(new DriveToteElevatorCommand(ToteElevatorLevel.ONE));
@@ -34,7 +34,7 @@ public class AutonomousThreeToteTwoContainerCommandGroup extends CommandGroup {
 		{
 			addParallel(new DriveToteElevatorCommand(ToteElevatorLevel.HALF));
 			addParallel(new AutonomousContainerShiftCommand(0.5));
-			addSequential(new DriveToAngleCommand(235, DriveMode.FIELD_RELATIVE));
+			addSequential(new DriveToAngleCommand(235, 0.5, DriveMode.FIELD_RELATIVE));
 			addSequential(new DriveDistanceCommand(0.6, 270-30, 230, 16, DriveMode.FIELD_RELATIVE));
 
 			addParallel(new DriveToteElevatorCommand(ToteElevatorLevel.ONE));

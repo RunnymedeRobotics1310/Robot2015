@@ -248,7 +248,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	 * @return true if on target, false otherwise
 	 */
 	public boolean distanceOnTarget() {
-		return distancePID.onTarget();
+		return distancePID.onTarget() || (getDistance(Units.ENCODER_COUNTS) > distancePID.getSetpoint());
 //		if (distancePID.onTarget()) {
 //			distancePIDOnTargetTimer.start(0.2);
 //			if (distancePIDOnTargetTimer.isExpired()) {

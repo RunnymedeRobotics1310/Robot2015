@@ -248,7 +248,11 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	 * @return true if on target, false otherwise
 	 */
 	public boolean distanceOnTarget() {
-		return distancePID.onTarget() || (getDistance(Units.ENCODER_COUNTS) > distancePID.getSetpoint());
+		if(distancePID.onTarget() || (getDistance(Units.ENCODER_COUNTS) > distancePID.getSetpoint())) {
+			disableDistancePID();
+			return true;
+		}
+		return false;
 //		if (distancePID.onTarget()) {
 //			distancePIDOnTargetTimer.start(0.2);
 //			if (distancePIDOnTargetTimer.isExpired()) {
@@ -381,7 +385,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 			PIDEnable rotationPIDEnable, PIDEnable motorPIDEnable) {
 
 		// Disable unused PIDs
-//		disableAnglePID();
+		disableAnglePID();
 		disableDistancePID();
 
 		// Calculate the direction of travel relative to the robot heading.

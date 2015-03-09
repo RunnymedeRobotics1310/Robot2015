@@ -7,13 +7,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SensorSubsystem extends RunnymedeSubsystem {
 
-	DigitalInput toteSensor = new DigitalInput(RobotMap.TOTE_SENSOR_PORT);
+	DigitalInput toteSensorOne = new DigitalInput(RobotMap.TOTE_SENSOR_PORT_ONE);
+	DigitalInput toteSensorTwo = new DigitalInput(RobotMap.TOTE_SENSOR_PORT_TWO);
 	
 	DigitalInput distanceSensorLeft  = new DigitalInput(RobotMap.DISTANCE_SENSOR_LEFT);
 	DigitalInput distanceSensorRight = new DigitalInput(RobotMap.DISTANCE_SENSOR_RIGHT);
 	
 	public boolean getToteSensor() {
-		return !toteSensor.get();
+		return !toteSensorOne.get() && !toteSensorTwo.get();
 	}
 	
 	// The distance sensors are normally true, and go false when the 

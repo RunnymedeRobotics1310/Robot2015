@@ -11,6 +11,7 @@ import robot.commands.ToteElevatorCommandGroup;
 import robot.subsystems.ChassisSubsystem.DriveMode;
 import robot.subsystems.ChassisSubsystem.PIDEnable;
 import robot.subsystems.ContainerElevatorSubsystem.ContainerElevatorLevel;
+import robot.subsystems.ToteElevatorSubsystem.ElevatorMode;
 import robot.subsystems.ToteElevatorSubsystem.ToteElevatorLevel;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -36,7 +37,7 @@ public class OI {
 	private Toggle accelerationOverride = new Toggle(true);
 	private Toggle toggleHalfInput = new Toggle(false);
 
-	private enum StickMap {
+	private enum Driver_StickMap {
 		
 		// Driver Joystick stick mapping
 		DRIVE_STICK    (F310Stick.LEFT),
@@ -44,7 +45,7 @@ public class OI {
 		
 		F310Stick stick;
 		
-		StickMap(F310Stick stick) {
+		Driver_StickMap(F310Stick stick) {
 			this.stick = stick;
 		}
 		
@@ -98,7 +99,9 @@ public class OI {
 		ELEVATOR_LEVEL_SIX     (Extreme3DProButton.BUTTON_8, ToteElevatorLevel.FLOOR, ContainerElevatorLevel.SIX),
 		
 		CONTAINER_PICKUP_BUTTON (Extreme3DProButton.THUMB),
-		CONTAINER_DEPLOY_BUTTON (Extreme3DProButton.BUTTON_5);
+		CONTAINER_DEPLOY_BUTTON (Extreme3DProButton.BUTTON_5),
+		
+		ELEVATOR_MANUAL_OVERRIDE(Extreme3DProButton.BUTTON_6);
 		
 		Extreme3DProButton button;
 		ToteElevatorLevel toteLevel;
@@ -157,7 +160,7 @@ public class OI {
 	
 	public PolarCoordinate getDriverPolarCoordinate() { 
 		// Square the coordinates to reduce joystick sensitivity.
-		PolarCoordinate p = driverJoystick.getPolarCoordinate(StickMap.DRIVE_STICK.getStick()).square();
+		PolarCoordinate p = driverJoystick.getPolarCoordinate(Driver_StickMap.DRIVE_STICK.getStick()).square();
 		if(toggleHalfInput.getState()) {
 			return new PolarCoordinate(p.getR()/2, p.getTheta());
 		}
@@ -166,7 +169,7 @@ public class OI {
 	
 	public double getDriverRotation() { 
 		// Square the coordinates to reduce joystick sensitivity.
-		double rotation = driverJoystick.getCartesianCoordinate(StickMap.ROTATION_STICK.getStick()).square().getX();
+		double rotation = driverJoystick.getCartesianCoordinate(Driver_StickMap.ROTATION_STICK.getStick()).square().getX();
 		if(toggleHalfInput.getState()) {
 			return rotation / 2;
 		}
@@ -258,6 +261,10 @@ public class OI {
 		return null;
 	}
 	
+	private boolean getElevatorOverrideButton() {
+		return operatorJoystick.getButton(Operator_ButtonMap.ELEVATOR_MANUAL_OVERRIDE.getButton());
+	}
+	
  	public void periodic() {
 		
  		// Update all toggles
@@ -265,6 +272,12 @@ public class OI {
  		containerPickupToggle.update(operatorJoystick.getButton(Operator_ButtonMap.CONTAINER_PICKUP_BUTTON.getButton()));
  		containerDeployToggle.update(operatorJoystick.getButton(Operator_ButtonMap.CONTAINER_DEPLOY_BUTTON.getButton()));
  		toggleHalfInput.update(driverJoystick.getButton(Driver_ButtonMap.HALF_INPUTS.getButton()));
+ 		
+ 		if(!getElevatorOverrideButton() && Robot.toteElevatorSubsystem.getElevatorMode() == ElevatorMode.MANUAL) {
+ 			Robot.toteElevatorSubsystem.override(0.0);
+ 		} else if(getElevatorOverrideButton()) {
+ 			Robot.toteElevatorSubsystem.override(operatorJoystick.getRawJoystick().getRawAxis(1));
+ 		}
  		
  		if(getToteElevatorZeroButton()) {
  			Robot.toteElevatorSubsystem.resetEncoders();
@@ -313,8 +326,8 @@ public class OI {
  		SmartDashboard.putString("DriveMode", getDriveMode().toString());
  		
 		SmartDashboard.putString("Driver Joystick Buttons", 
-				driverJoystick.getPolarCoordinate    (StickMap.DRIVE_STICK.getStick())   .square().toString() + " " +
-				driverJoystick.getCartesianCoordinate(StickMap.ROTATION_STICK.getStick()).square().toString() + " " +
+				driverJoystick.getPolarCoordinate    (Driver_StickMap.DRIVE_STICK.getStick())   .square().toString() + " " +
+				driverJoystick.getCartesianCoordinate(Driver_StickMap.ROTATION_STICK.getStick()).square().toString() + " " +
 				driverJoystick.getButtonsPressedString()
 				+ ((getDirectionPointer() >= 0) ? " D(" + getDirectionPointer() + ")" : "") );
 	}

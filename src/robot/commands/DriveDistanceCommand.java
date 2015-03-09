@@ -45,12 +45,12 @@ public class DriveDistanceCommand extends Command {
 
 	@Override
 	protected void end() {
-		Robot.chassisSubsystem.driveJoystick(new PolarCoordinate(), 0.0, DriveMode.ROBOT_RELATIVE, PIDEnable.DISABLED, PIDEnable.DISABLED);
+		Robot.chassisSubsystem.driveJoystick(new PolarCoordinate(), 0.0, DriveMode.ROBOT_RELATIVE, PIDEnable.ENABLED, PIDEnable.ENABLED);
 	}
 
 	@Override
 	protected void interrupted() {
-		Robot.chassisSubsystem.driveJoystick(new PolarCoordinate(), 0.0, DriveMode.ROBOT_RELATIVE, PIDEnable.DISABLED, PIDEnable.DISABLED);
+		Robot.chassisSubsystem.driveJoystick(new PolarCoordinate(), 0.0, DriveMode.ROBOT_RELATIVE, PIDEnable.ENABLED, PIDEnable.ENABLED);
 	}
 
 }

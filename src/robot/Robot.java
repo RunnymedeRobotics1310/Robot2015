@@ -4,8 +4,10 @@ package robot;
 import java.util.ArrayList;
 import java.util.List;
 
+import robot.commands.autonomous.commandgroup.AutoWithoutContainer;
 import robot.commands.autonomous.commandgroup.AutonomousTestCommandGroup;
 import robot.commands.autonomous.commandgroup.AutonomousThreeToteStackCommandGroup;
+import robot.commands.autonomous.commandgroup.AutonomousThreeToteThreeContainerCommandGroup;
 import robot.commands.autonomous.commandgroup.AutonomousThreeToteTwoContainerCommandGroup;
 import robot.commands.autonomous.commandgroup.AutonomousThreeToteWithContainerGone;
 import robot.subsystems.ChassisSubsystem;
@@ -114,8 +116,11 @@ public class Robot extends IterativeRobot {
 		
 		autonomousChooser = new SendableChooser();
 		
-		autonomousChooser.addDefault("TestCommandGroup",
-				new AutonomousTestCommandGroup());
+		autonomousChooser.addObject("test", new AutonomousTestCommandGroup());
+		autonomousChooser.addObject("Three Tote Three Container",
+				new AutonomousThreeToteThreeContainerCommandGroup());
+		autonomousChooser.addDefault("Three Tote Without Containers",
+				new AutoWithoutContainer());
 		autonomousChooser.addObject("Three Tote Two Container",
 				new AutonomousThreeToteTwoContainerCommandGroup());
 		autonomousChooser.addObject("Three Tote Ignore Container",

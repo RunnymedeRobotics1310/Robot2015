@@ -2,6 +2,7 @@ package robot;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class OldStyleCompressor {
 	
@@ -21,6 +22,8 @@ public class OldStyleCompressor {
 		} else {
 			spike.set(Relay.Value.kOff);
 		}
+		SmartDashboard.putBoolean("Pressure Input Switch" , pressureSwitch.get());
+		SmartDashboard.putBoolean("Enabled" , enabled);
 	}
 	
 	public void stop() {

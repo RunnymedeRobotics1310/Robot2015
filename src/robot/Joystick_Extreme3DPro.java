@@ -40,4 +40,8 @@ public class Joystick_Extreme3DPro {
 		return joystick.getRawButton(button.buttonNumber);
 	}
 	
+	public Joystick getRawJoystick() {
+		return joystick;
+	}
+	
 }

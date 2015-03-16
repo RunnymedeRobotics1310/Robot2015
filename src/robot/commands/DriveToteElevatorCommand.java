@@ -11,6 +11,7 @@ public class DriveToteElevatorCommand extends Command {
 	
 	public DriveToteElevatorCommand(ToteElevatorLevel level) {
 		requires(Robot.toteElevatorSubsystem);
+		requires(Robot.toteIntakeSubsystem);
 		this.level = level;
 	}
 	
@@ -21,7 +22,9 @@ public class DriveToteElevatorCommand extends Command {
 
 	@Override
 	protected void execute() {
-		Robot.toteIntakeSubsystem.actuateEyebrows(false);
+		if(Robot.toteElevatorSubsystem.getEncoderDistance() > -350) {
+			Robot.toteIntakeSubsystem.disableSubsystem();
+		}
 		Robot.toteElevatorSubsystem.driveToLevel();
 	}
 

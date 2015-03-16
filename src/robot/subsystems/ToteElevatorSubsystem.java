@@ -17,11 +17,14 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 		ONE   (-RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL), 
 		TWO   (-RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL
 				+ (1 * -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL)),
-				AUTONOMOUS_CONTAINER_LEVEL((-RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL
-						+ (1 * -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL)) - 200),
-						THREE (-RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL
-								+ (2 * -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL)), 
-								FOUR  (-RobotMap.TOTE_ELEVATOR_MAX_DISTANCE);
+		AUTONOMOUS_CONTAINER_LEVEL((-RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL
+				+ (1 * -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL)) - 200),
+		THREE (-RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL
+				+ (2 * -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL)), 
+		FOUR  ( -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL
+				+ 3 * -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL),
+		FIVE  ( -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL
+				+ 4 * -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL);
 
 		public double encoderSetpoint;
 
@@ -56,7 +59,7 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 
 	DigitalInput floorSensor = new DigitalInput(RobotMap.TOTE_ELEVATOR_LOWER_LIMIT_SWITCH);
 
-	PIDController elevatorRatePID = new PIDController(0.2, 0.0, 0.0,
+	PIDController elevatorRatePID = new PIDController(0.4, 0.0, 0.0,
 			0.0004 * RobotMap.TOTE_ELEVATOR_MAX_ELEVATOR_ENCODER_RATE, encoder,
 			elevatorMotor);
 
@@ -85,14 +88,14 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 			}
 			return !floorSensor.get();
 		}  else {
-			if (   (elevatorRatePIDSetpoint > 0 && difference > -100)
-					|| (elevatorRatePIDSetpoint < 0 && difference < 100)) {
+			if (   (elevatorRatePIDSetpoint > 0 && difference > -65)
+					|| (elevatorRatePIDSetpoint < 0 && difference < 65)) {
 				return true;
 			}
 		}
 
 		if (   (elevatorMotor.getState() == SafeTalon.TalonState.POSITIVE_LIMIT_SWITCH && level == ToteElevatorLevel.FLOOR) 
-				|| (elevatorMotor.getState() == SafeTalon.TalonState.NEGATIVE_LIMIT_SWITCH && level == ToteElevatorLevel.FOUR)) {
+				|| (elevatorMotor.getState() == SafeTalon.TalonState.NEGATIVE_LIMIT_SWITCH && level == ToteElevatorLevel.FIVE)) {
 			return true;
 		}
 
@@ -125,7 +128,7 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 		if (difference > 0) {
 			elevatorRatePIDSetpoint = -driveSpeed;
 		} else {
-			elevatorRatePIDSetpoint = driveSpeed;
+			elevatorRatePIDSetpoint = driveSpeed*0.75;
 		}
 
 		this.level = level;
@@ -168,6 +171,8 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 		SmartDashboard.putData("Tote Elevator Encoder", encoder);
 		SmartDashboard.putData("Tote Elevator PID", elevatorRatePID);
 		SmartDashboard.putData("Tote Elevator Talon", elevatorMotor);
+		
+		SmartDashboard.putNumber("Tote Elevator PIDGet()", encoder.pidGet());
 
 		elevatorMotor.updateTable();
 	}

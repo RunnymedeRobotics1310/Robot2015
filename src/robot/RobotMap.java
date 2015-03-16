@@ -103,9 +103,9 @@ public class RobotMap {
 	public static final long EYEBROW_RETRACT_PULSE_TIME = 2000;
 	
 	public static final double TOTE_ELEVATOR_MAX_ELEVATOR_ENCODER_RATE = 2000;
-	public static final double TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL = 850;
+	public static final double TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL = 525; // 1300
 	public static final double TOTE_ELEVATOR_MAX_DISTANCE = 3350;
-	public static final double TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL = 1300; //2200 3000
+	public static final double TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL = 800; //2200 3000
 	
 	public static final double CONTAINER_ELEVATOR_MAX_ELEVATOR_ENCODER_RATE = 100;
 	

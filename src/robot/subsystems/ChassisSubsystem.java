@@ -413,12 +413,12 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 
 		double angleRelativeSetpoint = angleSetpoint;
 		
-		if (driveMode == DriveMode.ROBOT_RELATIVE) {
-			angleRelativeSetpoint = gyro.getAngle() + angleSetpoint;
-			if (angleRelativeSetpoint > 360.0) {
-				angleRelativeSetpoint -= 360.0d;
-			}
-		}
+//		if (driveMode == DriveMode.ROBOT_RELATIVE) {
+//			angleRelativeSetpoint = gyro.getAngle() + angleSetpoint;
+//			if (angleRelativeSetpoint > 360.0) {
+//				angleRelativeSetpoint -= 360.0d;
+//			}
+//		}
 
 		enableAnglePID();
 

@@ -1,6 +1,5 @@
 package robot.subsystems;
 
-import robot.MockSpeedController;
 import robot.RobotMap;
 import robot.SafeTalon;
 import robot.commands.DefaultToteElevatorCommand;
@@ -8,17 +7,15 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class ToteElevatorSubsystem extends RunnymedeSubsystem {
+public class CopyOfToteElevatorSubsystem extends RunnymedeSubsystem {
 
 	public enum ToteElevatorLevel {
 		FLOOR (0),
-		AUTO_PICKUP_LEVEL(0),
 		ARM_LEVEL(-RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL/3),
-		HALF (-RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL/3),
+		HALF (-RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL/2),
 		ONE   (-RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL), 
 		TWO   (-RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL
 				+ (1 * -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL)),
@@ -28,7 +25,8 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 				+ (2 * -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL)), 
 		FOUR  ( -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL
 				+ 3 * -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL),
-		FIVE  ( -2750);
+		FIVE  ( -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL
+				+ 4 * -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL);
 
 		public double encoderSetpoint;
 
@@ -37,9 +35,6 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 		}
 
 	}
-	
-	int direction = -1;
-	double driveSpeed = 0;
 
 	public enum ElevatorMode {
 		AUTOMATIC,
@@ -50,7 +45,7 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 
 	ElevatorMode mode = ElevatorMode.AUTOMATIC;
 	double difference = 0.0;
-	ToteElevatorLevel level = ToteElevatorLevel.FLOOR;
+	ToteElevatorLevel level = null;
 	double elevatorRatePIDSetpoint = 0.0d;
 	boolean enabled = false;
 
@@ -68,31 +63,15 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 	Solenoid arm = new Solenoid(RobotMap.ELEVATOR_ARM_SOLENOID_PORT);
 
 	DigitalInput floorSensor = new DigitalInput(RobotMap.TOTE_ELEVATOR_LOWER_LIMIT_SWITCH);
-	DigitalInput upperSensor = new DigitalInput(RobotMap.TOTE_ELEVATOR_UPPER_LIMIT_SWITCH);
 
 	PIDController elevatorRatePID = new PIDController(0.8, 0.0, 0.0,
 			0.0004 * RobotMap.TOTE_ELEVATOR_MAX_ELEVATOR_ENCODER_RATE, encoder,
 			elevatorMotor);
-	
-	MockSpeedController distancePIDOutput = new MockSpeedController();
-	
-	PIDController elevatorDistanceRampDownPID = new PIDController(0.002, 0.0, 0.0, 0.0, new PIDSource() {
-		@Override
-		public double pidGet() {
-			return encoder.getDistance();
-		}
-	}, distancePIDOutput);
-	PIDController elevatorDistanceRampUpPID = new PIDController(0.002, 0.0, 0.0, 0.0, new PIDSource() {
-		@Override
-		public double pidGet() {
-			return encoder.getDistance();
-		}
-	}, distancePIDOutput);
 
-	public ToteElevatorSubsystem() {
+	public CopyOfToteElevatorSubsystem() {
 		// Add the safety elements to the elevator talon
 		// Since negative power drives the motor up, the negative limit switch is the elevator upper limit switch
-		elevatorMotor.setNegativeLimitSwitch(upperSensor);
+		elevatorMotor.setNegativeLimitSwitch(new DigitalInput(RobotMap.TOTE_ELEVATOR_UPPER_LIMIT_SWITCH));
 		elevatorMotor.setPositiveLimitSwitch(floorSensor);
 		elevatorMotor.setOverCurrentFuse(RobotMap.TOTE_ELEVATOR_POWER_DISTRIBUTION_PORT, SafeTalon.CURRENT_NO_LIMIT, 0);
 	}
@@ -114,14 +93,14 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 			}
 			return !floorSensor.get();
 		}  else {
-			if (   (direction == 1 && difference > -65)
-					|| (direction == -1 && difference < 65)) {
+			if (   (elevatorRatePIDSetpoint > 0 && difference > -65)
+					|| (elevatorRatePIDSetpoint < 0 && difference < 65)) {
 				return true;
 			}
 		}
 
-		if (   (elevatorMotor.getState() == SafeTalon.TalonState.POSITIVE_LIMIT_SWITCH) 
-				|| (elevatorMotor.getState() == SafeTalon.TalonState.NEGATIVE_LIMIT_SWITCH)) {
+		if (   (elevatorMotor.getState() == SafeTalon.TalonState.POSITIVE_LIMIT_SWITCH && level == ToteElevatorLevel.FLOOR) 
+				|| (elevatorMotor.getState() == SafeTalon.TalonState.NEGATIVE_LIMIT_SWITCH && level == ToteElevatorLevel.FIVE)) {
 			return true;
 		}
 
@@ -133,21 +112,7 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 	public void driveToLevel() {
 		if(mode == ElevatorMode.AUTOMATIC) {
 			disengageBrake();
-			elevatorRatePIDSetpoint = Math.sqrt(Math.abs(elevatorDistanceRampDownPID.get()) * Math.abs(elevatorDistanceRampUpPID.get()));
-			
-			if(Math.abs(elevatorRatePIDSetpoint) < 0.4) {
-				elevatorRatePIDSetpoint = 0.4;
-			}
-			
-			if(direction == 1) {
-				elevatorDistanceRampDownPID.setPID(0.002, 0.0, 0.0);
-				elevatorDistanceRampUpPID.setPID(0.002, 0.0, 0.0);
-				elevatorRatePID.setSetpoint(direction * elevatorRatePIDSetpoint * driveSpeed);
-			} else {
-				elevatorDistanceRampDownPID.setPID(0.002, 0.0, 0.0);
-				elevatorDistanceRampUpPID.setPID(0.00225, 0.0, 0.0);
-				elevatorRatePID.setSetpoint(direction * elevatorRatePIDSetpoint * driveSpeed);
-			}
+			elevatorRatePID.setSetpoint(elevatorRatePIDSetpoint);
 		}
 	}
 
@@ -157,21 +122,21 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 
 		double difference = encoder.getDistance() - level.encoderSetpoint;
 
-		driveSpeed = 0;
+		double driveSpeed = 0;
 
 		if(DriverStation.getInstance().isAutonomous()) {
 			driveSpeed = 1.0;
 		} else if(DriverStation.getInstance().isOperatorControl()) {
-			driveSpeed = 1.0;
+			driveSpeed = 0.75;
 		}
 
 		if (difference > 0) {
-			direction = -1;
+			elevatorRatePIDSetpoint = -driveSpeed;
 		} else {
-			direction = 1;
+			elevatorRatePIDSetpoint = driveSpeed*0.75;
 		}
+
 		this.level = level;
-		elevatorDistanceRampDownPID.setSetpoint(level.encoderSetpoint);
 
 		enableSubsystem();
 	}
@@ -191,8 +156,6 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 		enabled = false;
 		engageBrake();
 		elevatorRatePID.setSetpoint(0.0);
-		elevatorDistanceRampDownPID.setSetpoint(encoder.getDistance());
-		elevatorDistanceRampUpPID.setSetpoint(encoder.getDistance());
 	}
 
 	@Override
@@ -200,18 +163,12 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 		enabled = true;
 		elevatorRatePID.enable();
 		elevatorRatePID.setSetpoint(0.0);
-		
-		elevatorDistanceRampDownPID.enable();
-		elevatorDistanceRampUpPID.enable();
 	}
 
 	@Override
 	public void initSubsystem() {
 		elevatorRatePID.setInputRange(-1.0, 1.0);
 		elevatorRatePID.setOutputRange(-1.0, 1.0);
-
-		elevatorDistanceRampDownPID.setOutputRange(-1.0, 1.0);
-		elevatorDistanceRampUpPID.setOutputRange(-1.0, 1.0);
 	}
 
 	@Override
@@ -219,12 +176,6 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 		SmartDashboard.putData("Tote Elevator Encoder", encoder);
 		SmartDashboard.putData("Tote Elevator PID", elevatorRatePID);
 		SmartDashboard.putData("Tote Elevator Talon", elevatorMotor);
-		
-		SmartDashboard.putData("Tote Elevator Distance Ramp Down PID", elevatorDistanceRampDownPID);
-		SmartDashboard.putData("Tote Elevator Distance Ramp Up PID", elevatorDistanceRampUpPID);
-		
-		SmartDashboard.putNumber("DistanceRampDownPID Output", elevatorDistanceRampDownPID.get());
-		SmartDashboard.putNumber("DistanceRampUpPID Output", elevatorDistanceRampUpPID.get());
 		
 		SmartDashboard.putNumber("Tote Elevator PIDGet()", encoder.pidGet());
 
@@ -274,10 +225,6 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 		} else {
 			return true;
 		}
-	}
-
-	public boolean getUpperLimit() {
-		return upperSensor.get();
 	}
 
 }

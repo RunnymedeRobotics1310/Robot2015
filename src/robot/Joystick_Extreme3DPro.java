@@ -44,4 +44,16 @@ public class Joystick_Extreme3DPro {
 		return joystick;
 	}
 	
+	public boolean getSlider() {
+		if(joystick.getRawAxis(3) < 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public int getPOV() {
+		return joystick.getPOV();
+	}
+	
 }

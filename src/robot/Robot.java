@@ -5,13 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import robot.commands.autonomous.commandgroup.AutoWithoutContainer;
+import robot.commands.autonomous.commandgroup.AutoWithoutContainerUsingSensor;
 import robot.commands.autonomous.commandgroup.AutonomousTestCommandGroup;
 import robot.commands.autonomous.commandgroup.AutonomousThreeToteStackCommandGroup;
 import robot.commands.autonomous.commandgroup.AutonomousThreeToteThreeContainerCommandGroup;
 import robot.commands.autonomous.commandgroup.AutonomousThreeToteTwoContainerCommandGroup;
 import robot.commands.autonomous.commandgroup.AutonomousThreeToteWithContainerGone;
 import robot.subsystems.ChassisSubsystem;
-import robot.subsystems.ContainerElevatorSubsystem;
+import robot.subsystems.PassiveContainerArmSubsystem;
 import robot.subsystems.PowerSubsystem;
 import robot.subsystems.RunnymedeSubsystem;
 import robot.subsystems.SensorSubsystem;
@@ -45,7 +46,7 @@ public class Robot extends IterativeRobot {
 	public static final ToteIntakeSubsystem  toteIntakeSubsystem  = new ToteIntakeSubsystem();
 	public static final SensorSubsystem  sensorSubsystem  = new SensorSubsystem();
 	public static final ToteElevatorSubsystem  toteElevatorSubsystem  = new ToteElevatorSubsystem();
-	public static final ContainerElevatorSubsystem  containerElevatorSubsystem  = new ContainerElevatorSubsystem();
+	public static final PassiveContainerArmSubsystem  passiveContainerArmSubsystem  = new PassiveContainerArmSubsystem();
 	
 	SendableChooser autonomousChooser;
     Command autonomousCommand;
@@ -59,8 +60,8 @@ public class Robot extends IterativeRobot {
     	subsystemLs.add(powerSubsystem);
     	subsystemLs.add(chassisSubsystem);
     	subsystemLs.add(sensorSubsystem); 
-    	subsystemLs.add(toteElevatorSubsystem); 
-    	subsystemLs.add(containerElevatorSubsystem);
+    	subsystemLs.add(toteElevatorSubsystem);
+    	subsystemLs.add(passiveContainerArmSubsystem);
     }
 
     @Override
@@ -117,16 +118,25 @@ public class Robot extends IterativeRobot {
 		autonomousChooser = new SendableChooser();
 		
 		autonomousChooser.addObject("test", new AutonomousTestCommandGroup());
+		
 		autonomousChooser.addObject("Three Tote Three Container",
 				new AutonomousThreeToteThreeContainerCommandGroup());
+		
 		autonomousChooser.addDefault("Three Tote Without Containers",
 				new AutoWithoutContainer());
+		
+		autonomousChooser.addObject("Three Tote Without Containers Using Sensor",
+				new AutoWithoutContainerUsingSensor());
+		
 		autonomousChooser.addObject("Three Tote Two Container",
 				new AutonomousThreeToteTwoContainerCommandGroup());
+		
 		autonomousChooser.addObject("Three Tote Ignore Container",
 				new AutonomousThreeToteWithContainerGone());
+		
 		autonomousChooser.addObject("ThreeTote",
 				new AutonomousThreeToteStackCommandGroup());
+		
 		autonomousChooser.addObject("Nothing", null);
 		
 		SmartDashboard.putData("Autonomous Mode", autonomousChooser);

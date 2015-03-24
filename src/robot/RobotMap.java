@@ -25,12 +25,15 @@ public class RobotMap {
 	public static int REAR_RIGHT_MOTOR  = 5;
 	
 	public static final int TOTE_ELEVATOR_MOTOR = 4;
-	public static final int CONTAINER_ELEVATOR_MOTOR = 8;
+//	public static final int CONTAINER_ELEVATOR_MOTOR = 8;
 	
 	public static final int LEFT_PICKUP_MOTOR_PORT = 9;
 	public static final int RIGHT_PICKUP_MOTOR_PORT = 0;
 	
-	public static final int LEFT_CONTAINER_MOTOR_PORT = 1;
+	public static final int LEFT_SECONDARY_PICKUP_MOTOR = 8;
+	public static final int RIGHT_SECONDARY_PICKUP_MOTOR = 1;
+	
+//	public static final int LEFT_CONTAINER_MOTOR_PORT = 1;
 	public static final int RIGHT_CONTAINER_MOTOR_PORT = 2;
 	
 	// Analog I/O
@@ -41,9 +44,6 @@ public class RobotMap {
 	
 	public static final int TOTE_ELEVATOR_ENCODER_ONE = 0;
 	public static final int TOTE_ELEVATOR_ENCODER_TWO = 1;
-	
-	public static final int CONTAINER_ELEVATOR_ENCODER_ONE = 23;
-	public static final int CONTAINER_ELEVATOR_ENCODER_TWO = 22;
 	
 	public static final int FRONT_LEFT_ENCODER_ONE = 6;
 	public static final int FRONT_LEFT_ENCODER_TWO = 7;
@@ -71,22 +71,26 @@ public class RobotMap {
 	public static final int DISTANCE_SENSOR_LEFT = 12;
 	public static final int DISTANCE_SENSOR_RIGHT = 13;
 	
+	public static final int PASSIVE_CONTAINER_ARM_TOTE_SENSOR = 16;
+	
 	// Pneumatic Ports
+	
+	public static final int HOLDER_SOLENOID_PORT_ONE = 6;
+	public static final int HOLDER_SOLENOID_PORT_TWO = 7;
+	
+	public static final int ARM_SOLENOID_PORT = 4;
 	
 	public static final int DROP_DOWN_SOLENOID_ONE = 1;
 	public static final int DROP_DOWN_SOLENOID_TWO = 2;
 	
-	public static final int EYEBROW_SOLENOID_LEFT = 3;
-	public static final int EYEBROW_SOLENOID_RIGHT = 4;
+	public static final int EYEBROW_SOLENOID = 3;
 	
-	public static final int CONTAINER_DRAG_PORT_ONE = 6;
-	public static final int CONTAINER_DRAG_PORT_TWO = 7;
+	//public static final int CONTAINER_DRAG_PORT_ONE = 6;
+	//public static final int CONTAINER_DRAG_PORT_TWO = 7;
 	
 	public static final int BRAKE_SOLENOID = 0;
 	
-	public static final int CONTAINER_PINCHER_PORT = 5;
-//	public static final int CONTAINER_DEPLOY_PORT_ONE = 6;
-//	public static final int CONTAINER_DEPLOY_PORT_TWO = 7;
+	public static final int ELEVATOR_ARM_SOLENOID_PORT = 5;
 	
 	// Power Distribution Ports
 	public static final int TOTE_ELEVATOR_POWER_DISTRIBUTION_PORT = 13;
@@ -105,7 +109,7 @@ public class RobotMap {
 	public static final double TOTE_ELEVATOR_MAX_ELEVATOR_ENCODER_RATE = 2000;
 	public static final double TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL = 525; // 1300
 	public static final double TOTE_ELEVATOR_MAX_DISTANCE = 3350;
-	public static final double TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL = 800; //2200 3000
+	public static final double TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL = 850; //2200 3000
 	
 	public static final double CONTAINER_ELEVATOR_MAX_ELEVATOR_ENCODER_RATE = 100;
 	

@@ -23,7 +23,7 @@ public class SensorCommand extends Command {
 		if (Robot.toteIntakeSubsystem.isDeployed()) {
 			if (   Robot.sensorSubsystem.getToteSensor()
 				&& Robot.toteElevatorSubsystem.getLevel() == ToteElevatorLevel.ONE) {
-				Scheduler.getInstance().add(new ToteElevatorCommandGroup());
+				Scheduler.getInstance().add(new ToteElevatorWithoutIntakeCommandGroup());
 			}
 		}
 	}

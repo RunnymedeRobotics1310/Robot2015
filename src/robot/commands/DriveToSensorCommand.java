@@ -19,6 +19,7 @@ public class DriveToSensorCommand extends Command {
 	
 	public DriveToSensorCommand(PolarCoordinate p, double targetAngle, DriveMode driveMode) {
 		requires(Robot.chassisSubsystem);
+		requires(Robot.sensorSubsystem);
 		this.p = p;
 		this.targetAngle = targetAngle;
 		this.driveMode = driveMode;
@@ -43,12 +44,12 @@ public class DriveToSensorCommand extends Command {
 
 	@Override
 	protected void end() {
-		Robot.chassisSubsystem.driveJoystick(new PolarCoordinate(), 0.0, DriveMode.ROBOT_RELATIVE, PIDEnable.DISABLED, PIDEnable.DISABLED);
+		Robot.chassisSubsystem.driveJoystick(new PolarCoordinate(), 0.0, DriveMode.ROBOT_RELATIVE, PIDEnable.ENABLED, PIDEnable.ENABLED);
 	}
 
 	@Override
 	protected void interrupted() {
-		Robot.chassisSubsystem.driveJoystick(new PolarCoordinate(), 0.0, DriveMode.ROBOT_RELATIVE, PIDEnable.DISABLED, PIDEnable.DISABLED);
+		Robot.chassisSubsystem.driveJoystick(new PolarCoordinate(), 0.0, DriveMode.ROBOT_RELATIVE, PIDEnable.ENABLED, PIDEnable.ENABLED);
 	}
 
 }

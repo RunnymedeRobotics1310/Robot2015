@@ -22,7 +22,7 @@ public class AutonomousContainerShiftCommand extends Command {
 
 	@Override
 	protected void execute() {
-		Robot.toteIntakeSubsystem.driveIntakeMotors(0.75);
+		Robot.toteIntakeSubsystem.driveIntakeMotors(0.75, true);
 	}
 
 	@Override
@@ -32,14 +32,14 @@ public class AutonomousContainerShiftCommand extends Command {
 
 	@Override
 	protected void end() {
-		Robot.toteIntakeSubsystem.driveIntakeMotors(0.0);
+		Robot.toteIntakeSubsystem.driveIntakeMotors(0.0, false);
 		Robot.toteIntakeSubsystem.actuateEyebrows(false);
 		timeout.disable();
 	}
 
 	@Override
 	protected void interrupted() {
-		Robot.toteIntakeSubsystem.driveIntakeMotors(0.0);
+		Robot.toteIntakeSubsystem.driveIntakeMotors(0.0, false);
 		Robot.toteIntakeSubsystem.actuateEyebrows(false);
 		timeout.disable();
 	}

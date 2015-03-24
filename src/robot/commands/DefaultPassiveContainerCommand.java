@@ -1,13 +1,12 @@
 package robot.commands;
 
 import robot.Robot;
-import robot.Toggle;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class TeleopContainerElevatorCommand extends Command {
-	
-	public TeleopContainerElevatorCommand() {
-		requires(Robot.containerElevatorSubsystem);
+public class DefaultPassiveContainerCommand extends Command {
+
+	public DefaultPassiveContainerCommand() {
+		requires(Robot.passiveContainerArmSubsystem);
 	}
 	
 	@Override
@@ -16,8 +15,8 @@ public class TeleopContainerElevatorCommand extends Command {
 
 	@Override
 	protected void execute() {
-		Robot.containerElevatorSubsystem.updatePickup(Robot.oi.getContainerPickupToggle(), Robot.oi.getContainerDeployToggle());
-		Robot.containerElevatorSubsystem.holdLevel();
+		Robot.passiveContainerArmSubsystem.update(Robot.oi.getContainerArmToggle(), Robot.oi.getElevatorArmButton(),
+				Robot.oi.getContainerHolderDeployRequest());
 	}
 
 	@Override

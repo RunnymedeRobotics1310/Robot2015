@@ -8,16 +8,25 @@ import edu.wpi.first.wpilibj.command.Command;
 public class DriveToteElevatorCommand extends Command {
 	
 	ToteElevatorLevel level;
+	boolean actuateEyebrows;
 	
-	public DriveToteElevatorCommand(ToteElevatorLevel level) {
+	public DriveToteElevatorCommand(ToteElevatorLevel level, boolean actuateEyebrows) {
 		requires(Robot.toteElevatorSubsystem);
 		requires(Robot.toteIntakeSubsystem);
 		this.level = level;
+		this.actuateEyebrows = actuateEyebrows;
 	}
 	
 	@Override
 	protected void initialize() {
-		Robot.toteElevatorSubsystem.initDriveToLevel(level);
+		Robot.toteElevatorSubsystem.setArm(false);
+		Robot.toteIntakeSubsystem.driveIntakeMotors(0.0, false);
+		Robot.toteIntakeSubsystem.actuateEyebrows(actuateEyebrows);
+		if(Robot.oi.getOperatorPOV() != -1 && level == ToteElevatorLevel.ONE) {
+			Robot.toteElevatorSubsystem.initDriveToLevel(ToteElevatorLevel.HALF);
+		} else {
+			Robot.toteElevatorSubsystem.initDriveToLevel(level);
+		}
 	}
 
 	@Override

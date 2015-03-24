@@ -20,7 +20,7 @@ public class SensorSubsystem extends RunnymedeSubsystem {
 	// The distance sensors are normally true, and go false when the 
 	// distance is reached.
 	public boolean getDistanceSensor() {
-		return !distanceSensorLeft.get();
+		return (!distanceSensorLeft.get()) || (!distanceSensorRight.get());
 	}
 	
 	@Override
@@ -37,6 +37,8 @@ public class SensorSubsystem extends RunnymedeSubsystem {
 
 	@Override
 	public void updateDashboard() {
+		SmartDashboard.putBoolean("DistanceSensorLeft", distanceSensorLeft.get());
+		SmartDashboard.putBoolean("DistanceSensorRight", distanceSensorRight.get());
 	}
 
 	@Override

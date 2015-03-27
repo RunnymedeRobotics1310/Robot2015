@@ -251,9 +251,9 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 		mode = ElevatorMode.MANUAL;
 		if(Math.abs(rawAxis) > 0.05) {
 			disengageBrake();
-			elevatorMotor.set(rawAxis);
+			elevatorRatePID.setSetpoint(rawAxis);
 		} else {
-			elevatorMotor.set(0.0);
+			elevatorRatePID.setSetpoint(0.0);
 			engageBrake();
 		}
 	}

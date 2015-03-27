@@ -214,6 +214,8 @@ public class OI {
 	public boolean getElevatorArmReleaseButton() { return operatorJoystick.getButton(Operator_ButtonMap.ELEVATOR_ARM_RELEASE.getButton()); }
 	public boolean getElevatorDecrementButton() { return operatorJoystick.getButton(Operator_ButtonMap.ELEVATOR_DECREMENT.getButton()); }
 	
+	public void overrideContainerArmToggle(boolean state) { containerArmToggle.setState(state); }
+	
 	public int getOperatorPOV() { return operatorJoystick.getPOV(); }
 	
 	private ToteElevatorLevel getOperatorToteLevel() {

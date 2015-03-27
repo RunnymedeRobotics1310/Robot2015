@@ -15,13 +15,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class PassiveContainerArmSubsystem extends RunnymedeSubsystem {
 
 	DoubleSolenoid holderSolenoid = new DoubleSolenoid(RobotMap.HOLDER_SOLENOID_PORT_ONE, RobotMap.HOLDER_SOLENOID_PORT_TWO);
-	Solenoid armSolenoid = new Solenoid(RobotMap.ARM_SOLENOID_PORT);
+	Solenoid armSolenoid = new Solenoid(RobotMap.CONTAINER_ARM_SOLENOID_PORT);
 	
 	DigitalInput lightSensor = new DigitalInput(RobotMap.PASSIVE_CONTAINER_ARM_TOTE_SENSOR);
 	Toggle lightSensorLatch = new Toggle(false);
 	Timer pulseTimer = new Timer(0.5);
 	
-	int numTotes = 2;
+	int numTotes = 0;
 	
 	public void update(boolean actuateArm, boolean pickupContainer, boolean deployHolder) {
 		
@@ -36,6 +36,7 @@ public class PassiveContainerArmSubsystem extends RunnymedeSubsystem {
 		}
 		
 		if(pickupContainer) {
+			Robot.oi.overrideContainerArmToggle(true);
 			numTotes = 0;
 		}
 		
@@ -56,7 +57,7 @@ public class PassiveContainerArmSubsystem extends RunnymedeSubsystem {
 		SmartDashboard.putBoolean("light sensor latch", lightSensorLatch.getState());
 		
 		if(pulseTimer.isExpired() && Robot.toteElevatorSubsystem.getLevel() != ToteElevatorLevel.FLOOR) {
-			armSolenoid.set(Robot.toteIntakeSubsystem.getPassiveContainerSaftey() || (actuateArm));
+			armSolenoid.set(Robot.toteIntakeSubsystem.getPassiveContainerSaftey() || (!pickupContainer && actuateArm));
 		} else if(pulseTimer.isExpired() && lightSensor.get()) {
 			armSolenoid.set(false);
 		}
@@ -82,7 +83,7 @@ public class PassiveContainerArmSubsystem extends RunnymedeSubsystem {
 
 	@Override
 	protected void initDefaultCommand() {
-		setDefaultCommand(new DefaultPassiveContainerCommand());
+		setDefaultCommand(null);//new DefaultPassiveContainerCommand());
 	}
 
 }

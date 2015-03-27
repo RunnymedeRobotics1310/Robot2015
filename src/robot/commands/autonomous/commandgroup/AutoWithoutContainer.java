@@ -10,7 +10,7 @@ import robot.commands.autonomous.AutonomousContainerDragCommand;
 import robot.commands.autonomous.AutonomousDelayCommand;
 import robot.commands.autonomous.AutonomousPickupEyebrowsCommand;
 import robot.commands.autonomous.AutonomousPickupToteCommand;
-import robot.commands.autonomous.SecondaryIntakeCommand;
+import robot.commands.autonomous.PassiveIntakeCommand;
 import robot.subsystems.ChassisSubsystem.DriveMode;
 import robot.subsystems.ToteElevatorSubsystem.ToteElevatorLevel;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -27,9 +27,10 @@ public class AutoWithoutContainer extends CommandGroup {
 				addSequential(new DriveDistanceCommand(0.70, 270+30, 310, 16, DriveMode.FIELD_RELATIVE));
 
 				addParallel(new DriveToteElevatorCommand(ToteElevatorLevel.ONE, false));
-				addSequential(new DriveDistanceCommand(0.70, 270-34, 270, 45, DriveMode.FIELD_RELATIVE));
-
-				addParallel(new SecondaryIntakeCommand(0.75));
+				addSequential(new DriveDistanceCommand(0.70, 270-36, 270, 45, DriveMode.FIELD_RELATIVE));
+				
+				addParallel(new PassiveIntakeCommand(0.75));
+				
 				addSequential(new DriveToSensorCommand(0.2, 270, 270, DriveMode.FIELD_RELATIVE));
 //				addParallel(new DriveDistanceCommand(0.60, 270, 270, 10, DriveMode.FIELD_RELATIVE));
 				addParallel(new TeleopDriveCommand());
@@ -46,9 +47,12 @@ public class AutoWithoutContainer extends CommandGroup {
 				addSequential(new DriveDistanceCommand(0.70, 270+30, 310, 16, DriveMode.FIELD_RELATIVE));
 
 				addParallel(new DriveToteElevatorCommand(ToteElevatorLevel.ONE, false));
-				addSequential(new DriveDistanceCommand(0.70, 270-34, 270, 45, DriveMode.FIELD_RELATIVE));
+				addSequential(new DriveDistanceCommand(0.70, 270-36, 270, 45, DriveMode.FIELD_RELATIVE));
 
-				addParallel(new SecondaryIntakeCommand(0.75));
+				addSequential(new DriveDistanceCommand(0.2, 270, 270, 6, DriveMode.FIELD_RELATIVE));
+
+				addParallel(new PassiveIntakeCommand(0.75));
+				
 				addSequential(new DriveToSensorCommand(0.2, 270, 270, DriveMode.FIELD_RELATIVE));
 //				addParallel(new DriveDistanceCommand(0.60, 270, 270, 14, DriveMode.FIELD_RELATIVE));
 				addParallel(new TeleopDriveCommand());
@@ -66,7 +70,7 @@ public class AutoWithoutContainer extends CommandGroup {
 
 		addSequential(new DriveDistanceCommand(1.0, 90, 270, 36, DriveMode.FIELD_RELATIVE));
 		addParallel(new TeleopDriveCommand());
-		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.FIVE, false));
+		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.HALF, false));
 		
 		addSequential(new AutonomousContainerDragCommand(false));
 		

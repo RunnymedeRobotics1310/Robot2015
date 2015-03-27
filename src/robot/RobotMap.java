@@ -30,11 +30,11 @@ public class RobotMap {
 	public static final int LEFT_PICKUP_MOTOR_PORT = 9;
 	public static final int RIGHT_PICKUP_MOTOR_PORT = 0;
 	
-	public static final int LEFT_SECONDARY_PICKUP_MOTOR = 8;
-	public static final int RIGHT_SECONDARY_PICKUP_MOTOR = 1;
+	public static final int LEFT_SECONDARY_PICKUP_MOTOR = 1;
+	public static final int RIGHT_SECONDARY_PICKUP_MOTOR = 2;
 	
 //	public static final int LEFT_CONTAINER_MOTOR_PORT = 1;
-	public static final int RIGHT_CONTAINER_MOTOR_PORT = 2;
+//	public static final int RIGHT_CONTAINER_MOTOR_PORT = 2;
 	
 	// Analog I/O
 
@@ -60,7 +60,7 @@ public class RobotMap {
 	public static final int TOTE_SENSOR_PORT_ONE = 21;
 	public static final int TOTE_SENSOR_PORT_TWO = 20;
 	
-	public static final int CONTAINER_SENSOR_PORT = 14;
+//	public static final int CONTAINER_SENSOR_PORT = 14;
 	
 	public static final int TOTE_ELEVATOR_UPPER_LIMIT_SWITCH = 11;
 	public static final int TOTE_ELEVATOR_LOWER_LIMIT_SWITCH = 10;
@@ -68,17 +68,17 @@ public class RobotMap {
 	public static final int COMPRESSOR_SPIKE_PORT = 0;
 	public static final int PRESSURE_SWITCH_PORT = 18;
 	
-	public static final int DISTANCE_SENSOR_LEFT = 12;
-	public static final int DISTANCE_SENSOR_RIGHT = 13;
+	public static final int DISTANCE_SENSOR_LEFT = 17;
+	public static final int DISTANCE_SENSOR_RIGHT = 14;
 	
-	public static final int PASSIVE_CONTAINER_ARM_TOTE_SENSOR = 16;
+	public static final int PASSIVE_CONTAINER_ARM_TOTE_SENSOR = 15;
 	
 	// Pneumatic Ports
 	
 	public static final int HOLDER_SOLENOID_PORT_ONE = 6;
 	public static final int HOLDER_SOLENOID_PORT_TWO = 7;
 	
-	public static final int ARM_SOLENOID_PORT = 4;
+	public static final int CONTAINER_ARM_SOLENOID_PORT = 4;
 	
 	public static final int DROP_DOWN_SOLENOID_ONE = 1;
 	public static final int DROP_DOWN_SOLENOID_TWO = 2;

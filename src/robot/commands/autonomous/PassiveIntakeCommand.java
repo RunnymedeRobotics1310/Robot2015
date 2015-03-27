@@ -4,11 +4,11 @@ import robot.Robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class SecondaryIntakeCommand extends Command {
+public class PassiveIntakeCommand extends Command {
 
 	double speed;
 	
-	public SecondaryIntakeCommand(double speed) {
+	public PassiveIntakeCommand(double speed) {
 		requires(Robot.toteIntakeSubsystem);
 		this.speed = speed;
 	}
@@ -20,6 +20,7 @@ public class SecondaryIntakeCommand extends Command {
 	@Override
 	protected void execute() {
 		Robot.toteIntakeSubsystem.rollInnerWheels(speed);
+		Robot.toteIntakeSubsystem.rollOuterWheels(speed);
 	}
 
 	@Override

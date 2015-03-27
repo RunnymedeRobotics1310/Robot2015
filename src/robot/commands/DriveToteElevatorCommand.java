@@ -23,7 +23,7 @@ public class DriveToteElevatorCommand extends Command {
 		Robot.toteIntakeSubsystem.driveIntakeMotors(0.0, false);
 		Robot.toteIntakeSubsystem.actuateEyebrows(actuateEyebrows);
 		if(Robot.oi.getOperatorPOV() != -1 && level == ToteElevatorLevel.ONE) {
-			Robot.toteElevatorSubsystem.initDriveToLevel(ToteElevatorLevel.HALF);
+			Robot.toteElevatorSubsystem.initDriveToLevel(ToteElevatorLevel.FIVE);
 		} else {
 			Robot.toteElevatorSubsystem.initDriveToLevel(level);
 		}

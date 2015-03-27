@@ -66,6 +66,11 @@ public class ToteIntakeSubsystem extends RunnymedeSubsystem {
 		eyebrowSolenoid.set(eyebrows);
 	}
 	
+	public void rollOuterWheels(double speed) {
+		leftIntakeMotor.set(-speed);
+		rightIntakeMotor.set(speed);
+	}
+	
 	public void rollInnerWheels(double speed) {
 		
 		leftSecondaryIntakeMotor.set(speed);

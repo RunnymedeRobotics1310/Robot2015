@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import robot.commands.autonomous.commandgroup.AutoWithoutContainer;
-import robot.commands.autonomous.commandgroup.AutoWithoutContainerUsingSensor;
 import robot.commands.autonomous.commandgroup.AutonomousTestCommandGroup;
 import robot.commands.autonomous.commandgroup.AutonomousThreeToteStackCommandGroup;
 import robot.commands.autonomous.commandgroup.AutonomousThreeToteThreeContainerCommandGroup;
 import robot.commands.autonomous.commandgroup.AutonomousThreeToteTwoContainerCommandGroup;
 import robot.commands.autonomous.commandgroup.AutonomousThreeToteWithContainerGone;
+import robot.commands.autonomous.commandgroup.SingleContainerCommandGroup;
 import robot.subsystems.ChassisSubsystem;
 import robot.subsystems.PassiveContainerArmSubsystem;
 import robot.subsystems.PowerSubsystem;
@@ -122,11 +122,11 @@ public class Robot extends IterativeRobot {
 		autonomousChooser.addObject("Three Tote Three Container",
 				new AutonomousThreeToteThreeContainerCommandGroup());
 		
-		autonomousChooser.addDefault("Three Tote Without Containers",
+		autonomousChooser.addObject("Three Tote Without Containers",
 				new AutoWithoutContainer());
 		
-		autonomousChooser.addObject("Three Tote Without Containers Using Sensor",
-				new AutoWithoutContainerUsingSensor());
+		autonomousChooser.addDefault("Single Container",
+				new SingleContainerCommandGroup());
 		
 		autonomousChooser.addObject("Three Tote Two Container",
 				new AutonomousThreeToteTwoContainerCommandGroup());

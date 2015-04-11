@@ -51,6 +51,7 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 	ElevatorMode mode = ElevatorMode.AUTOMATIC;
 	double difference = 0.0;
 	ToteElevatorLevel level = ToteElevatorLevel.FLOOR;
+	ToteElevatorLevel prevLevel = ToteElevatorLevel.FLOOR;
 	double elevatorRatePIDSetpoint = 0.0d;
 	boolean enabled = false;
 
@@ -170,6 +171,7 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 		} else {
 			direction = 1;
 		}
+		this.prevLevel = this.level;
 		this.level = level;
 		elevatorDistanceRampDownPID.setSetpoint(level.encoderSetpoint);
 
@@ -227,7 +229,7 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 		SmartDashboard.putNumber("DistanceRampUpPID Output", elevatorDistanceRampUpPID.get());
 		
 		SmartDashboard.putNumber("Tote Elevator PIDGet()", encoder.pidGet());
-
+		
 		elevatorMotor.updateTable();
 	}
 
@@ -266,6 +268,10 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 			arm.set(false);
 			armState = false;
 		}
+	}
+	
+	public ToteElevatorLevel getPrevLevel() {
+		return prevLevel;
 	}
 	
 	public boolean isMoving() {

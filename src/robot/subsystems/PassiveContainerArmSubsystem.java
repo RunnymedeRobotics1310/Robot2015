@@ -58,7 +58,7 @@ public class PassiveContainerArmSubsystem extends RunnymedeSubsystem {
 
 			if(pulseTimer.isExpired() && (Robot.toteElevatorSubsystem.getLevel() != ToteElevatorLevel.FLOOR)) {
 				armSolenoid.set(Robot.toteIntakeSubsystem.getPassiveContainerSaftey() || (!pickupContainer && actuateArm));
-			} else if(pulseTimer.isExpired() && lightSensor.get() && !Robot.toteElevatorSubsystem.isMoving()) {
+			} else if(pulseTimer.isExpired() && lightSensor.get()){
 				armSolenoid.set(false);
 			}
 		}

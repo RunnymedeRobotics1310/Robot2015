@@ -4,24 +4,22 @@ import robot.Robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class AutoContainerIntakeCommand extends Command {
+public class ActuateElevatorArmCommand extends Command {
 
 	boolean state;
 	
-	public AutoContainerIntakeCommand(boolean state) {
-		requires(Robot.passiveContainerArmSubsystem);
+	public ActuateElevatorArmCommand(boolean state) {
 		requires(Robot.toteElevatorSubsystem);
-		this.state = state;
+		this.state = !state;
 	}
 	
 	@Override
 	protected void initialize() {
+		Robot.toteElevatorSubsystem.setArm(state);
 	}
 
 	@Override
 	protected void execute() {
-		Robot.toteElevatorSubsystem.setArm(state);
-		Robot.passiveContainerArmSubsystem.update(state, false, false);
 	}
 
 	@Override

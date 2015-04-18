@@ -40,7 +40,11 @@ public class DriveDistanceCommand extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return Robot.chassisSubsystem.distanceOnTarget() && Robot.chassisSubsystem.angleOnTarget();//(Robot.chassisSubsystem.getEncoderCounts() - distance) >= 0;
+		if(driveMode == DriveMode.FIELD_RELATIVE) {
+			return Robot.chassisSubsystem.distanceOnTarget() && Robot.chassisSubsystem.angleOnTarget();//(Robot.chassisSubsystem.getEncoderCounts() - distance) >= 0;
+		} else {
+			return Robot.chassisSubsystem.distanceOnTarget();
+		}
 	}
 
 	@Override

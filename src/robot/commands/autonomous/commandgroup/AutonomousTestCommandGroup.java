@@ -1,19 +1,21 @@
 package robot.commands.autonomous.commandgroup;
 
-import robot.commands.DriveDistanceCommand;
-import robot.commands.DriveToAngleCommand;
 import robot.commands.DriveToteElevatorCommand;
-import robot.commands.ResetGyroCommand;
-import robot.commands.autonomous.AutonomousContainerDragCommand;
-import robot.commands.autonomous.AutonomousContainerShiftCommand;
-import robot.commands.autonomous.AutonomousPickupToteCommand;
-import robot.subsystems.ChassisSubsystem.DriveMode;
+import robot.commands.autonomous.ActuateElevatorArmCommand;
+import robot.commands.autonomous.AutonomousDelayCommand;
 import robot.subsystems.ToteElevatorSubsystem.ToteElevatorLevel;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class AutonomousTestCommandGroup extends CommandGroup {
 
 	public AutonomousTestCommandGroup() {
+		
+		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.TWO, false));
+		addSequential(new ActuateElevatorArmCommand(true));
+		
+	}
+}
+		/*
 		addSequential(new ResetGyroCommand(270));
 		addSequential(new AutonomousContainerDragCommand(true));
 
@@ -64,7 +66,7 @@ public class AutonomousTestCommandGroup extends CommandGroup {
 		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.THREE, false));
 
 	}
-}
+}*/
 
 
 

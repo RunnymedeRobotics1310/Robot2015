@@ -1,30 +1,30 @@
-package robot.commands;
+package robot.commands.autonomous;
 
 import robot.Robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class DefaultPassiveContainerCommand extends Command {
+public class ActuateContainerArmCommand extends Command {
 
-	public DefaultPassiveContainerCommand() {
+	boolean state;
+	
+	public ActuateContainerArmCommand(boolean state) {
 		requires(Robot.passiveContainerArmSubsystem);
+		this.state = state;
 	}
 	
 	@Override
 	protected void initialize() {
+		Robot.passiveContainerArmSubsystem.actuateArmSolenoid(state);
 	}
 
 	@Override
 	protected void execute() {
-		if(!DriverStation.getInstance().isAutonomous()) {
-			Robot.passiveContainerArmSubsystem.update(Robot.oi.getContainerArmToggle(), Robot.oi.getElevatorArmButton(),
-				Robot.oi.getContainerHolderDeployRequest());
-		}
 	}
 
 	@Override
 	protected boolean isFinished() {
-		return false;
+		return true;
 	}
 
 	@Override

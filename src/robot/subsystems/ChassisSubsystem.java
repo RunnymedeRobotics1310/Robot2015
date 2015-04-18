@@ -93,7 +93,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 
 	private MockSpeedController anglePIDOutput    = new MockSpeedController();
 
-	private PIDController anglePID = new PIDController(0.02, 0.0, 0.0, 0.0,
+	private PIDController anglePID = new PIDController(0.02, 0.75, 0.0, 0.0,
 			new PIDSource() {
 		public double pidGet() {
 			return gyro.getAngle();
@@ -663,6 +663,8 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		SmartDashboard.putNumber("Gyro rate",      getGyroRotation());
 
 		SmartDashboard.putBoolean("Chassis Subsystem Enabled" , subsystemEnabled);
+		
+		SmartDashboard.putString("Chassis Commad", this.getCurrentCommand().toString());
 
 		// SmartDashboard.putNumber("X pos", xpos);
 	}

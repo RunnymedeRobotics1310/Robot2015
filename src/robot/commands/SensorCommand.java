@@ -1,12 +1,15 @@
 package robot.commands;
 
 import robot.Robot;
+import robot.Toggle;
 import robot.subsystems.ToteElevatorSubsystem.ToteElevatorLevel;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
 public class SensorCommand extends Command {
 
+	Toggle autoPickupToggle = new Toggle(true);
+	
 	public SensorCommand() {
 		requires(Robot.sensorSubsystem);
 	}
@@ -17,7 +20,7 @@ public class SensorCommand extends Command {
 
 	@Override
 	protected void execute() {
-		
+		//autoPickupToggle.update();
 		// Execute a pickup if the eyebrows are down.
 		// Otherwise the operator is attempting to unload the totes.
 		if (Robot.toteIntakeSubsystem.isDeployed()) {

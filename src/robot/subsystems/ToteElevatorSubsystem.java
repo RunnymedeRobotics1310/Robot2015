@@ -230,6 +230,8 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 		
 		SmartDashboard.putNumber("Tote Elevator PIDGet()", encoder.pidGet());
 		
+		SmartDashboard.putString("TOTE ELEVATOR COMMAND", this.getCurrentCommand().toString());
+				
 		elevatorMotor.updateTable();
 	}
 

@@ -15,6 +15,7 @@ public class DriveToAngleCommand extends Command {
 	private final DriveMode driveMode;
 	private double timeout = -1.0;
 	private Timer timeoutTimer = new Timer();
+	private int direction = 0;
 	
 	public DriveToAngleCommand(int targetAngle, DriveMode driveMode) {
 		this(targetAngle, -1.0d, driveMode);
@@ -27,6 +28,21 @@ public class DriveToAngleCommand extends Command {
 		this.setInterruptible(true);
 		this.timeout = timeout;
 		timeoutTimer.disable();
+	}
+	
+	public DriveToAngleCommand(int targetAngle, DriveMode driveMode, int direction) {
+		this(targetAngle, -1.0d, driveMode);
+		this.direction = direction;
+	}
+
+	public DriveToAngleCommand(int targetAngle, double timeout, DriveMode driveMode, int direction) {
+		requires(Robot.chassisSubsystem);
+		this.targetAngle = targetAngle;
+		this.driveMode = driveMode;
+		this.setInterruptible(true);
+		this.timeout = timeout;
+		timeoutTimer.disable();
+		this.direction = direction;
 	}
 
 	@Override
@@ -56,7 +72,14 @@ public class DriveToAngleCommand extends Command {
 		
 		if (Math.abs(angleDifference) > 25) {
 			// Set the rotation value to .8 in the direction of the angle difference 
-			double rotation = .8 * Math.signum(angleDifference);
+			double rotation = 0;
+			if(direction == 0) {
+				rotation = .8 * Math.signum(angleDifference);
+			} else if(direction == 1) {
+				rotation = .8;
+			} else if(direction == -1) {
+				rotation = -.8;
+			}
 			
 			Robot.chassisSubsystem.enableAnglePID();
 			Robot.chassisSubsystem.driveJoystick(Robot.oi.getDriverPolarCoordinate(),

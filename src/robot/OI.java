@@ -7,7 +7,7 @@ import robot.commands.DriveToAngleCommand;
 import robot.commands.DriveToClickCommand;
 import robot.commands.DriveToteElevatorCommand;
 import robot.commands.ResetGyroCommand;
-import robot.commands.ToteElevatorCommandGroup;
+import robot.commands.RightContainerCommandGroup;
 import robot.subsystems.ChassisSubsystem.DriveMode;
 import robot.subsystems.ChassisSubsystem.PIDEnable;
 import robot.subsystems.ToteElevatorSubsystem.ElevatorMode;
@@ -68,7 +68,7 @@ public class OI {
 		RELAY_REVERSE (F310Button.X),
 		
 		TOTE_ELEVATOR_ZERO_BUTTON (F310Button.BACK),
-		TOTE_FIX_BUTTON (F310Button.START),
+		RIGHT_CONTAINER_BUTTON (F310Button.START),
 		
 		DRIVE_MODE    (F310Button.R_STICK),
 		HALF_INPUTS (F310Button.L_STICK);
@@ -190,7 +190,7 @@ public class OI {
 
 	public boolean isNewMouseEvent() { return networkTableOI.isNewMouseEvent();	}
 	
-	public boolean getToteFixButton() { return driverJoystick.getButton(Driver_ButtonMap.TOTE_FIX_BUTTON.getButton()); }
+	public boolean getContainerFixButton() { return driverJoystick.getButton(Driver_ButtonMap.RIGHT_CONTAINER_BUTTON.getButton()); }
 	
 	public boolean getToteElevatorZeroButton() { return driverJoystick.getButton(Driver_ButtonMap.TOTE_ELEVATOR_ZERO_BUTTON.getButton()); }
 
@@ -281,8 +281,8 @@ public class OI {
 			Scheduler.getInstance().add(new DriveToteElevatorCommand(toteLevel, false));
 		}
 		
-		if(getToteFixButton()) {
-			Scheduler.getInstance().add(new ToteElevatorCommandGroup());
+		if(getContainerFixButton()) {
+			Scheduler.getInstance().add(new RightContainerCommandGroup());
 		}
 				
 //		ContainerElevatorLevel containerLevel = getOperatorOverrideContainerLevel();

@@ -3,6 +3,7 @@ package robot.commands;
 import robot.Robot;
 import robot.Toggle;
 import robot.subsystems.ToteElevatorSubsystem.ToteElevatorLevel;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
@@ -55,9 +56,9 @@ public class DefaultToteElevatorCommand extends Command {
 				((TeleopPickupCommand)Robot.toteIntakeSubsystem.getCurrentCommand()).overrideDeploy();
 			}
 			Scheduler.getInstance().add(new DriveToteElevatorCommand(ToteElevatorLevel.ARM_LEVEL, false));
-		} else if(releaseToggle.getState()) { 
+		} else if(releaseToggle.getState() && !DriverStation.getInstance().isAutonomous()) { 
 			Robot.toteElevatorSubsystem.setArm(true);
-		} else {
+		} else if(!DriverStation.getInstance().isAutonomous()) {
 			Robot.toteElevatorSubsystem.setArm(false);
 		}
 	}

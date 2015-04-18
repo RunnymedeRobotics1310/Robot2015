@@ -3,6 +3,7 @@ package robot.commands;
 import robot.Robot;
 import robot.subsystems.ToteElevatorSubsystem.ElevatorMode;
 import robot.subsystems.ToteElevatorSubsystem.ToteElevatorLevel;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveToteElevatorCommand extends Command {
@@ -19,7 +20,9 @@ public class DriveToteElevatorCommand extends Command {
 	
 	@Override
 	protected void initialize() {
-		Robot.toteElevatorSubsystem.setArm(false);
+		if(!DriverStation.getInstance().isAutonomous()) {
+			Robot.toteElevatorSubsystem.setArm(false);
+		}
 		Robot.toteIntakeSubsystem.driveIntakeMotors(0.0, false);
 		Robot.toteIntakeSubsystem.actuateEyebrows(actuateEyebrows);
 		if(Robot.oi.getOperatorPOV() != -1 && level == ToteElevatorLevel.ONE) {

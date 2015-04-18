@@ -4,7 +4,7 @@ import robot.commands.DriveDistanceCommand;
 import robot.commands.DriveToteElevatorCommand;
 import robot.commands.ResetGyroCommand;
 import robot.commands.TeleopDriveCommand;
-import robot.commands.autonomous.AutoContainerIntakeCommand;
+import robot.commands.autonomous.ActuateContainerArmCommand;
 import robot.commands.autonomous.AutoIntakeTimeoutCommand;
 import robot.commands.autonomous.AutonomousDelayCommand;
 import robot.subsystems.ChassisSubsystem.DriveMode;
@@ -20,12 +20,12 @@ public class SingleContainerCommandGroup extends CommandGroup {
 		
 		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.HALF, false));
 		
-		addParallel(new AutoContainerIntakeCommand(true));
+		addParallel(new ActuateContainerArmCommand(true));
 		addParallel(new DriveDistanceCommand(0.3, 180, 180, 22, DriveMode.FIELD_RELATIVE));
 		addSequential(new AutoIntakeTimeoutCommand(2.0));
 		addParallel(new TeleopDriveCommand());
 
-		addParallel(new AutoContainerIntakeCommand(false));
+		addParallel(new ActuateContainerArmCommand(false));
 		addSequential(new AutonomousDelayCommand(250));
 		
 		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.TWO, false));

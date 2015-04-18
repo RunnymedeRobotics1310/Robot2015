@@ -10,6 +10,7 @@ public class ToteElevatorCommandGroup extends CommandGroup {
 		requires(Robot.sensorSubsystem);
 		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.AUTO_PICKUP_LEVEL, true));
 		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.ONE, true));
+		Robot.passiveContainerArmSubsystem.requestPulse();
 	}
 	
 }

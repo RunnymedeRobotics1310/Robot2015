@@ -10,12 +10,21 @@ public class DriveToteElevatorCommand extends Command {
 	
 	ToteElevatorLevel level;
 	boolean actuateEyebrows;
+	boolean requenstPulse = false;
 	
 	public DriveToteElevatorCommand(ToteElevatorLevel level, boolean actuateEyebrows) {
 		requires(Robot.toteElevatorSubsystem);
 		requires(Robot.toteIntakeSubsystem);
 		this.level = level;
 		this.actuateEyebrows = actuateEyebrows;
+	}
+
+	public DriveToteElevatorCommand(ToteElevatorLevel level, boolean actuateEyebrows, boolean requestPulse) {
+		requires(Robot.toteElevatorSubsystem);
+		requires(Robot.toteIntakeSubsystem);
+		this.level = level;
+		this.actuateEyebrows = actuateEyebrows;
+		this.requenstPulse = requestPulse;
 	}
 	
 	@Override
@@ -34,7 +43,7 @@ public class DriveToteElevatorCommand extends Command {
 
 	@Override
 	protected void execute() {
-		if(Robot.toteElevatorSubsystem.getEncoderDistance() > -350) {
+		if(Robot.toteElevatorSubsystem.getEncoderDistance() > -700) {
 			Robot.toteIntakeSubsystem.disableSubsystem();
 		}
 		Robot.toteElevatorSubsystem.driveToLevel();
@@ -47,6 +56,9 @@ public class DriveToteElevatorCommand extends Command {
 
 	@Override
 	protected void end() {
+		if(requenstPulse) {
+			Robot.passiveContainerArmSubsystem.requestPulse();
+		}
 		Robot.toteElevatorSubsystem.disableSubsystem();
 	}
 

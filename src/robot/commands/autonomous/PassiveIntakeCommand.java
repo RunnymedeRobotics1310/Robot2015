@@ -7,10 +7,12 @@ import edu.wpi.first.wpilibj.command.Command;
 public class PassiveIntakeCommand extends Command {
 
 	double speed;
+	boolean actuateEyebrows;
 	
-	public PassiveIntakeCommand(double speed) {
+	public PassiveIntakeCommand(double speed, boolean actuateEyebrows) {
 		requires(Robot.toteIntakeSubsystem);
 		this.speed = speed;
+		this.actuateEyebrows = actuateEyebrows;
 	}
 	
 	@Override
@@ -19,6 +21,7 @@ public class PassiveIntakeCommand extends Command {
 
 	@Override
 	protected void execute() {
+		Robot.toteIntakeSubsystem.actuateEyebrows(actuateEyebrows);
 		Robot.toteIntakeSubsystem.rollInnerWheels(speed);
 		Robot.toteIntakeSubsystem.rollOuterWheels(speed);
 	}

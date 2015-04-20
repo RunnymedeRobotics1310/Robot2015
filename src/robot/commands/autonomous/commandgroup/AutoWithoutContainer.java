@@ -6,6 +6,7 @@ import robot.commands.DriveToSensorCommand;
 import robot.commands.DriveToteElevatorCommand;
 import robot.commands.ResetGyroCommand;
 import robot.commands.TeleopDriveCommand;
+import robot.commands.autonomous.ActuateElevatorArmCommand;
 import robot.commands.autonomous.AutonomousContainerDragCommand;
 import robot.commands.autonomous.AutonomousDelayCommand;
 import robot.commands.autonomous.AutonomousPickupEyebrowsCommand;
@@ -27,17 +28,20 @@ public class AutoWithoutContainer extends CommandGroup {
 				addSequential(new DriveDistanceCommand(0.70, 270+30, 310, 16, DriveMode.FIELD_RELATIVE));
 
 				addParallel(new DriveToteElevatorCommand(ToteElevatorLevel.ONE, false));
-				addSequential(new DriveDistanceCommand(0.70, 270-36, 270, 45, DriveMode.FIELD_RELATIVE));
+				addSequential(new DriveDistanceCommand(0.70, 270-36, 270, 50, DriveMode.FIELD_RELATIVE));
 				
-				addParallel(new PassiveIntakeCommand(0.75));
+				addSequential(new DriveDistanceCommand(0.3, 270, 270, 20, DriveMode.FIELD_RELATIVE));
+
+				addParallel(new PassiveIntakeCommand(0.75, false));
 				
 				addSequential(new DriveToSensorCommand(0.2, 270, 270, DriveMode.FIELD_RELATIVE));
 //				addParallel(new DriveDistanceCommand(0.60, 270, 270, 10, DriveMode.FIELD_RELATIVE));
 				addParallel(new TeleopDriveCommand());
 				addSequential(new AutonomousPickupToteCommand());
 //				addParallel(new TeleopDriveCommand());
-
-				addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.FLOOR, true));
+				addParallel(new PassiveIntakeCommand(0.25, false));
+				addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.FLOOR, false));
+				addParallel(new PassiveIntakeCommand(0.0, false));
 			}
 
 			{
@@ -47,11 +51,11 @@ public class AutoWithoutContainer extends CommandGroup {
 				addSequential(new DriveDistanceCommand(0.70, 270+30, 310, 16, DriveMode.FIELD_RELATIVE));
 
 				addParallel(new DriveToteElevatorCommand(ToteElevatorLevel.ONE, false));
-				addSequential(new DriveDistanceCommand(0.70, 270-36, 270, 45, DriveMode.FIELD_RELATIVE));
+				addSequential(new DriveDistanceCommand(0.70, 270-36, 270, 50, DriveMode.FIELD_RELATIVE));
 
-				addSequential(new DriveDistanceCommand(0.2, 270, 270, 6, DriveMode.FIELD_RELATIVE));
+				addSequential(new DriveDistanceCommand(0.3, 270, 270, 20, DriveMode.FIELD_RELATIVE));
 
-				addParallel(new PassiveIntakeCommand(0.75));
+				addParallel(new PassiveIntakeCommand(0.75, false));
 				
 				addSequential(new DriveToSensorCommand(0.2, 270, 270, DriveMode.FIELD_RELATIVE));
 //				addParallel(new DriveDistanceCommand(0.60, 270, 270, 14, DriveMode.FIELD_RELATIVE));
@@ -59,6 +63,32 @@ public class AutoWithoutContainer extends CommandGroup {
 				addSequential(new AutonomousPickupToteCommand());
 //				addParallel(new TeleopDriveCommand());
 
+				addParallel(new DriveToteElevatorCommand(ToteElevatorLevel.ONE, false));
+
+			}
+			
+			addParallel(new PassiveIntakeCommand(0.25, false));
+			
+			addSequential(new DriveToAngleCommand(330, 0.4, DriveMode.FIELD_RELATIVE));
+			addSequential(new DriveDistanceCommand(1.0, 330, 330, 75, DriveMode.FIELD_RELATIVE));
+			addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.HALF, false));
+			addParallel(new ActuateElevatorArmCommand(false));
+
+			addSequential(new AutonomousDelayCommand(250));
+
+			addParallel(new PassiveIntakeCommand(-0.20, false));
+			addSequential(new DriveDistanceCommand(1.0, 150, 330, 36, DriveMode.FIELD_RELATIVE));
+			addParallel(new PassiveIntakeCommand(0.0, false));
+			
+			addParallel(new ActuateElevatorArmCommand(true));
+			addSequential(new AutonomousDelayCommand(50));
+
+			addParallel(new DriveToteElevatorCommand(ToteElevatorLevel.FLOOR, false));
+			addSequential(new DriveToAngleCommand(180, DriveMode.FIELD_RELATIVE));
+		
+	}
+}
+				/*
 				addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.FLOOR, true));
 			}
 		
@@ -77,7 +107,7 @@ public class AutoWithoutContainer extends CommandGroup {
 
 	}
 	
-}
+}*/
 	/*public AutoWithoutContainer() {
 		addSequential(new ResetGyroCommand(270));
 		addSequential(new AutonomousContainerDragCommand(false));

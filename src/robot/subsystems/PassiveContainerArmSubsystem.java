@@ -19,7 +19,9 @@ public class PassiveContainerArmSubsystem extends RunnymedeSubsystem {
 	
 	DigitalInput lightSensor = new DigitalInput(RobotMap.PASSIVE_CONTAINER_ARM_TOTE_SENSOR);
 	Toggle lightSensorLatch = new Toggle(false);
-	Timer pulseTimer = new Timer(1.0);
+	Timer pulseTimer = new Timer(0.4);
+	
+	Timer lightSensorTimer = new Timer(0.25);
 	
 	int numTotes = 0;
 	
@@ -58,32 +60,6 @@ public class PassiveContainerArmSubsystem extends RunnymedeSubsystem {
 			pulseTimer.start();
 		}
 	}
-		
-		/*
-			lightSensorLatch.update(!lightSensor.get());
-
-			if(numTotes < 2 && lightSensorLatch.getState()) {// &&
-				//				!(Robot.toteElevatorSubsystem.getLevel() == ToteElevatorLevel.HALF &&
-				//				Robot.toteElevatorSubsystem.getUpperLimit())) {
-				numTotes++;
-				armSolenoid.set(false);
-				pulseTimer.disable();
-				pulseTimer.start();
-				lightSensorLatch.setState(false);
-			}
-
-			SmartDashboard.putNumber("number of totes", numTotes);
-			SmartDashboard.putBoolean("puse timer isExpired", pulseTimer.isExpired());
-			SmartDashboard.putBoolean("light sensor latch", lightSensorLatch.getState());
-
-			if(pulseTimer.isExpired() && (Robot.toteElevatorSubsystem.getLevel() != ToteElevatorLevel.FLOOR)) {
-				armSolenoid.set(Robot.toteIntakeSubsystem.getPassiveContainerSaftey() || (!pickupContainer && actuateArm));
-			} else if(pulseTimer.isExpired() && lightSensor.get()){
-				armSolenoid.set(false);
-			}
-		}
-	}
-*/
 	
 	public void actuateArmSolenoid(boolean state) {
 		armSolenoid.set(state);
@@ -115,6 +91,8 @@ public class PassiveContainerArmSubsystem extends RunnymedeSubsystem {
 
 	@Override
 	public void updateDashboard() {
+		
+		SmartDashboard.putBoolean("ContainerLightSensor", lightSensor.get());
 	}
 
 	@Override

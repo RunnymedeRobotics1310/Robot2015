@@ -42,7 +42,7 @@ public class Autonomous2056CommandGroup extends CommandGroup {
 		// COPY PASTED CODE STARTS HERE
 		
 		{
-			addParallel(new PassiveIntakeCommand(0.75));
+			addParallel(new PassiveIntakeCommand(0.75, false));
 
 			addSequential(new DriveToSensorCommand(0.3, 270, 270, DriveMode.FIELD_RELATIVE));
 			// addParallel(new DriveDistanceCommand(0.60, 270, 270, 10, DriveMode.FIELD_RELATIVE));
@@ -63,9 +63,9 @@ public class Autonomous2056CommandGroup extends CommandGroup {
 
 			addSequential(new DriveDistanceCommand(0.70, 270-36, 270, 45, DriveMode.FIELD_RELATIVE));
 
-			addSequential(new DriveDistanceCommand(0.2, 270, 270, 6, DriveMode.FIELD_RELATIVE));
+			addSequential(new DriveDistanceCommand(0.5, 270, 270, 20, DriveMode.FIELD_RELATIVE));
 
-			addParallel(new PassiveIntakeCommand(0.75));
+			addParallel(new PassiveIntakeCommand(0.75, false));
 
 			addSequential(new DriveToSensorCommand(0.2, 270, 270, DriveMode.FIELD_RELATIVE));
 			// addParallel(new DriveDistanceCommand(0.60, 270, 270, 14, DriveMode.FIELD_RELATIVE));
@@ -77,22 +77,24 @@ public class Autonomous2056CommandGroup extends CommandGroup {
 
 		}
 		
-		addSequential(new DriveDistanceCommand(0.40, 360-15, 0, 60, DriveMode.FIELD_RELATIVE));
+		addParallel(new PassiveIntakeCommand(0.25, false));
+		
+		addSequential(new DriveToAngleCommand(330, 0.4, DriveMode.FIELD_RELATIVE));
+		addSequential(new DriveDistanceCommand(1.0, 330, 330, 75, DriveMode.FIELD_RELATIVE));
 		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.HALF, false));
 		addParallel(new ActuateElevatorArmCommand(false));
 
 		addSequential(new AutonomousDelayCommand(250));
 
-		addSequential(new DriveDistanceCommand(1.0, 180, 0, 36, DriveMode.FIELD_RELATIVE));
-		addParallel(new TeleopDriveCommand());
+		addParallel(new PassiveIntakeCommand(-0.20, false));
+		addSequential(new DriveDistanceCommand(1.0, 150, 330, 36, DriveMode.FIELD_RELATIVE));
+		addParallel(new PassiveIntakeCommand(0.0, false));
 		
-		addParallel(new ActuateElevatorArmCommand(false));
-		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.FIVE, false));
-				
-		addParallel(new AutonomousHoldCommand(false));
+		addParallel(new ActuateElevatorArmCommand(true));
+		addSequential(new AutonomousDelayCommand(50));
 
-		addSequential(new AutonomousContainerDragCommand(false));
-
+		addParallel(new DriveToteElevatorCommand(ToteElevatorLevel.FLOOR, false));
+		addSequential(new DriveToAngleCommand(180, DriveMode.FIELD_RELATIVE));
 	}
 }
 	

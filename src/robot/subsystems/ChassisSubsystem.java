@@ -249,7 +249,8 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 	 */
 	public boolean distanceOnTarget() {
 		if(distancePID.onTarget() || (getDistance(Units.ENCODER_COUNTS) > distancePID.getSetpoint())) {
-			disableDistancePID();
+			
+//			disableDistancePID();
 			return true;
 		}
 		return false;
@@ -286,6 +287,7 @@ public class ChassisSubsystem extends RunnymedeSubsystem {
 		
 		SmartDashboard.putNumber("DISTANCE P VALUE", pDrive * 1000);
 		SmartDashboard.putNumber("DISTANCE I VALUE", iDrive * 1000);
+		
 		if(distanceInches - getDistance(Units.INCHES) > 4.0) {
 			distancePID.setPID(pDrive, 0.0, 0.0);
 		} else {

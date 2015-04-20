@@ -253,6 +253,9 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 
 	public void override(double rawAxis) {
 		mode = ElevatorMode.MANUAL;
+		if(!elevatorRatePID.isEnable()) {
+			elevatorRatePID.enable();
+		}
 		if(Math.abs(rawAxis) > 0.05) {
 			disengageBrake();
 			elevatorRatePID.setSetpoint(rawAxis);

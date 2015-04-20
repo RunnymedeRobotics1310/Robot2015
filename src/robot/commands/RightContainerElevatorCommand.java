@@ -7,7 +7,8 @@ import edu.wpi.first.wpilibj.command.Command;
 public class RightContainerElevatorCommand extends Command {
 	
 	public RightContainerElevatorCommand() {
-//		requires(Robot.toteElevatorSubsystem);
+		requires(Robot.toteElevatorSubsystem);
+		this.setInterruptible(false);
 	}
 	
 	@Override
@@ -26,12 +27,14 @@ public class RightContainerElevatorCommand extends Command {
 
 	@Override
 	protected void end() {
+		Robot.toteElevatorSubsystem.disableSubsystem();
 		Robot.toteElevatorSubsystem.override(0.0);
 
 	}
 
 	@Override
 	protected void interrupted() {
+		Robot.toteElevatorSubsystem.disableSubsystem();
 		Robot.toteElevatorSubsystem.override(0.0);
 	}
 

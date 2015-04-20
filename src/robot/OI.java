@@ -32,7 +32,7 @@ public class OI {
 	private NetworkTableOI networkTableOI = new NetworkTableOI();
 	private Toggle robotRelativeToggle = new Toggle(true);
 	private Toggle accelerationOverride = new Toggle(true);
-	private Toggle toggleHalfInput = new Toggle(false);
+	private Toggle toggleHalfInput = new Toggle(true);
 	
 	private Toggle containerArmToggle = new Toggle(true);
 
@@ -257,7 +257,8 @@ public class OI {
  		toggleHalfInput.update(driverJoystick.getButton(Driver_ButtonMap.HALF_INPUTS.getButton()));
  		containerArmToggle.update(getContainerArmButton());
  		
- 		if(!getElevatorOverrideButton() && Robot.toteElevatorSubsystem.getElevatorMode() == ElevatorMode.MANUAL) {
+ 		if(!getElevatorOverrideButton() && Robot.toteElevatorSubsystem.getElevatorMode() == ElevatorMode.MANUAL
+ 				&& !(Robot.toteElevatorSubsystem.getCurrentCommand() instanceof RightContainerCommandGroup)) {
  			Robot.toteElevatorSubsystem.override(0.0);
  		} else if(getElevatorOverrideButton()) {
  			Robot.toteElevatorSubsystem.setArm(false);

@@ -8,9 +8,8 @@ public class ToteElevatorWithoutIntakeCommandGroup extends CommandGroup {
 
 	public ToteElevatorWithoutIntakeCommandGroup() {
 		requires(Robot.sensorSubsystem);
-		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.AUTO_PICKUP_LEVEL, false));
+		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.AUTO_PICKUP_LEVEL, false, true));
 		addSequential(new DriveToteElevatorCommand(ToteElevatorLevel.ONE, false));
-		Robot.passiveContainerArmSubsystem.requestPulse();
 	}
 	
 }

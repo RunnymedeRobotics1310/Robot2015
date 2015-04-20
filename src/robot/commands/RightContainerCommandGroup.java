@@ -10,7 +10,7 @@ public class RightContainerCommandGroup extends CommandGroup{
 		
 		addParallel(new RightContainerElevatorCommand());
 		addSequential(new DriveDistanceCommand(0.175, Robot.chassisSubsystem.getGyroAngle(), Robot.chassisSubsystem.getGyroAngle(), 25, DriveMode.FIELD_RELATIVE));
-		
+		addParallel(new TeleopDriveCommand());
 	}
 	
 }

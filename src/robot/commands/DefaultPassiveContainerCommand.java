@@ -17,8 +17,9 @@ public class DefaultPassiveContainerCommand extends Command {
 	@Override
 	protected void execute() {
 		if(!DriverStation.getInstance().isAutonomous()) {
-			Robot.passiveContainerArmSubsystem.update(Robot.oi.getContainerArmToggle(), Robot.oi.getElevatorArmButton(),
-				Robot.oi.getContainerHolderDeployRequest());
+			Robot.passiveContainerArmSubsystem.update(Robot.oi.getContainerArmToggle(),
+					Robot.oi.getElevatorArmButton(),
+						Robot.oi.getContainerHolderDeployRequest());
 		}
 	}
 

@@ -119,27 +119,27 @@ public class Robot extends IterativeRobot {
 		autonomousChooser = new SendableChooser();
 		
 		autonomousChooser.addObject("test", new RightContainerCommandGroup());
-		
-		autonomousChooser.addObject("Three Tote Three Container",
-				new AutonomousThreeToteThreeContainerCommandGroup());
-		
+//		
+//		autonomousChooser.addObject("Three Tote Three Container",
+//				new AutonomousThreeToteThreeContainerCommandGroup());
+//		
 		autonomousChooser.addObject("Three Tote Without Containers",
 				new AutoWithoutContainer());
 
-		autonomousChooser.addObject("2056",
-				new Autonomous2056CommandGroup());
+//		autonomousChooser.addObject("2056",
+//				new Autonomous2056CommandGroup());
 		
 		autonomousChooser.addDefault("Single Container",
 				new SingleContainerCommandGroup());
 		
-		autonomousChooser.addObject("Three Tote Two Container",
-				new AutonomousThreeToteTwoContainerCommandGroup());
-		
-		autonomousChooser.addObject("Three Tote Ignore Container",
-				new AutonomousThreeToteWithContainerGone());
-		
-		autonomousChooser.addObject("ThreeTote",
-				new AutonomousThreeToteStackCommandGroup());
+//		autonomousChooser.addObject("Three Tote Two Container",
+//				new AutonomousThreeToteTwoContainerCommandGroup());
+//		
+//		autonomousChooser.addObject("Three Tote Ignore Container",
+//				new AutonomousThreeToteWithContainerGone());
+//		
+//		autonomousChooser.addObject("ThreeTote",
+//				new AutonomousThreeToteStackCommandGroup());
 		
 		autonomousChooser.addObject("Nothing", null);
 		

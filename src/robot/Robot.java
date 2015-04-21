@@ -41,7 +41,7 @@ public class Robot extends IterativeRobot {
 	
 	public static OI oi;
 
-	public static final VisionSubsystem   visionSubsystem   = new VisionSubsystem();
+//	public static final VisionSubsystem   visionSubsystem   = new VisionSubsystem();
 	public static final PowerSubsystem    powerSubsystem    = new PowerSubsystem();
 	public static final ChassisSubsystem  chassisSubsystem  = new ChassisSubsystem();
 	public static final ToteIntakeSubsystem  toteIntakeSubsystem  = new ToteIntakeSubsystem();
@@ -57,7 +57,7 @@ public class Robot extends IterativeRobot {
     // Default constructor.
     
     public Robot () {
-    	subsystemLs.add(visionSubsystem);
+//    	subsystemLs.add(visionSubsystem);
     	subsystemLs.add(powerSubsystem);
     	subsystemLs.add(chassisSubsystem);
     	subsystemLs.add(sensorSubsystem); 

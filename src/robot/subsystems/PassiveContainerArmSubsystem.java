@@ -1,5 +1,6 @@
 package robot.subsystems;
 
+import robot.PolarCoordinate;
 import robot.Robot;
 import robot.RobotMap;
 import robot.Timer;
@@ -22,6 +23,7 @@ public class PassiveContainerArmSubsystem extends RunnymedeSubsystem {
 	Timer pulseTimer = new Timer(0.4);
 	
 	Timer lightSensorTimer = new Timer(0.25);
+	Timer containerDropTimer = new Timer(0.75);
 	
 	int numTotes = 0;
 	
@@ -43,7 +45,15 @@ public class PassiveContainerArmSubsystem extends RunnymedeSubsystem {
 			SmartDashboard.putNumber("number of totes", numTotes);
 			SmartDashboard.putBoolean("puse timer isExpired", pulseTimer.isExpired());
 			
-			if(pulseTimer.isExpired() && !(Robot.toteElevatorSubsystem.getLevel() == ToteElevatorLevel.FLOOR && !Robot.toteElevatorSubsystem.isMoving())) {
+			PolarCoordinate p = Robot.oi.getDriverPolarCoordinate();
+			double direction = p.getTheta();
+			double r = p.getR();
+			
+			if((Robot.toteElevatorSubsystem.getLevel() == ToteElevatorLevel.FLOOR && !Robot.toteElevatorSubsystem.isMoving() && (direction > 135 && direction < 225))) {// && r > 0.1))) {
+				armSolenoid.set(false);
+				containerDropTimer.disable();
+				containerDropTimer.start();
+			} else if(pulseTimer.isExpired() && containerDropTimer.isExpired()) {
 				armSolenoid.set(Robot.toteIntakeSubsystem.getPassiveContainerSaftey() || (!pickupContainer && actuateArm));
 			} else {
 				armSolenoid.set(false);
@@ -86,6 +96,7 @@ public class PassiveContainerArmSubsystem extends RunnymedeSubsystem {
 
 	@Override
 	public void initSubsystem() {
+		containerDropTimer.start();
 		pulseTimer.start();
 	}
 

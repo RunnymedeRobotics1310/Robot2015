@@ -39,7 +39,7 @@ public class DriveToSensorCommand extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return Robot.sensorSubsystem.getDistanceSensor();
+		return Robot.sensorSubsystem.getDistanceSensor() || Robot.sensorSubsystem.getToteSensor();
 	}
 
 	@Override

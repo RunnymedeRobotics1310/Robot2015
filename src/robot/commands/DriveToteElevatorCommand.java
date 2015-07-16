@@ -5,12 +5,14 @@ import robot.subsystems.ToteElevatorSubsystem.ElevatorMode;
 import robot.subsystems.ToteElevatorSubsystem.ToteElevatorLevel;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
 
 public class DriveToteElevatorCommand extends Command {
 	
 	ToteElevatorLevel level;
 	boolean actuateEyebrows;
-	boolean requenstPulse = false;
+	boolean requestPulse = false;
+	boolean autoExpired = false;
 	
 	public DriveToteElevatorCommand(ToteElevatorLevel level, boolean actuateEyebrows) {
 		requires(Robot.toteElevatorSubsystem);
@@ -24,7 +26,11 @@ public class DriveToteElevatorCommand extends Command {
 		requires(Robot.toteIntakeSubsystem);
 		this.level = level;
 		this.actuateEyebrows = actuateEyebrows;
-		this.requenstPulse = requestPulse;
+		this.requestPulse = requestPulse;
+	}
+	
+	public void autoExpired() {
+		autoExpired = true;
 	}
 	
 	@Override
@@ -34,11 +40,7 @@ public class DriveToteElevatorCommand extends Command {
 		}
 		Robot.toteIntakeSubsystem.driveIntakeMotors(0.0, false);
 		Robot.toteIntakeSubsystem.actuateEyebrows(actuateEyebrows);
-		if(Robot.oi.getOperatorPOV() != -1 && level == ToteElevatorLevel.ONE) {
-			Robot.toteElevatorSubsystem.initDriveToLevel(ToteElevatorLevel.FIVE);
-		} else {
-			Robot.toteElevatorSubsystem.initDriveToLevel(level);
-		}
+		Robot.toteElevatorSubsystem.initDriveToLevel(level);
 	}
 
 	@Override
@@ -56,8 +58,8 @@ public class DriveToteElevatorCommand extends Command {
 
 	@Override
 	protected void end() {
-		if(requenstPulse) {
-			Robot.passiveContainerArmSubsystem.requestPulse();
+		if(requestPulse) {
+			Robot.passiveContainerArmSubsystem.requestPulse();	
 		}
 		Robot.toteElevatorSubsystem.disableSubsystem();
 	}

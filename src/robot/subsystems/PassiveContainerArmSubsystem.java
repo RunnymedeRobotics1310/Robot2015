@@ -50,13 +50,13 @@ public class PassiveContainerArmSubsystem extends RunnymedeSubsystem {
 			double r = p.getR();
 			
 			if((Robot.toteElevatorSubsystem.getLevel() == ToteElevatorLevel.FLOOR && !Robot.toteElevatorSubsystem.isMoving() && (direction > 135 && direction < 225))) {// && r > 0.1))) {
-				armSolenoid.set(false);
+				armSolenoid.set(true);
 				containerDropTimer.disable();
 				containerDropTimer.start();
 			} else if(pulseTimer.isExpired() && containerDropTimer.isExpired()) {
-				armSolenoid.set(Robot.toteIntakeSubsystem.getPassiveContainerSaftey() || (!pickupContainer && actuateArm));
+				armSolenoid.set(!(Robot.toteIntakeSubsystem.getPassiveContainerSaftey() || (!pickupContainer && actuateArm)));
 			} else {
-				armSolenoid.set(false);
+				armSolenoid.set(true);
 			}
 			
 		}
@@ -65,7 +65,7 @@ public class PassiveContainerArmSubsystem extends RunnymedeSubsystem {
 	public void requestPulse() {
 		if(numTotes < 2) {
 			numTotes++;
-			armSolenoid.set(false);
+			armSolenoid.set(true);
 			pulseTimer.disable();
 			pulseTimer.start();
 		}

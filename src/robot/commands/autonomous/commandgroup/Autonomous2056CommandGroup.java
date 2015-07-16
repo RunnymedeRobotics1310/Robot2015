@@ -10,7 +10,7 @@ import robot.commands.autonomous.ActuateContainerArmCommand;
 import robot.commands.autonomous.ActuateElevatorArmCommand;
 import robot.commands.autonomous.AutonomousContainerDragCommand;
 import robot.commands.autonomous.AutonomousDelayCommand;
-import robot.commands.autonomous.AutonomousHoldCommand;
+import robot.commands.autonomous.ActuateHolderCommand;
 import robot.commands.autonomous.AutonomousPickupToteCommand;
 import robot.commands.autonomous.PassiveIntakeCommand;
 import robot.subsystems.ChassisSubsystem.DriveMode;
@@ -55,7 +55,7 @@ public class Autonomous2056CommandGroup extends CommandGroup {
 
 		{
 			addParallel(new DriveToteElevatorCommand(ToteElevatorLevel.FIVE, false));
-			addParallel(new AutonomousHoldCommand(true));
+			addParallel(new ActuateHolderCommand(true));
 
 			//addParallel(new AutonomousPickupEyebrowsCommand(true));
 			addSequential(new DriveToAngleCommand(305, 0.5, DriveMode.FIELD_RELATIVE));

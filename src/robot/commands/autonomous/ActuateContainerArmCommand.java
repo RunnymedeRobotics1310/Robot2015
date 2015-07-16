@@ -15,7 +15,7 @@ public class ActuateContainerArmCommand extends Command {
 	
 	@Override
 	protected void initialize() {
-		Robot.passiveContainerArmSubsystem.actuateArmSolenoid(state);
+		Robot.passiveContainerArmSubsystem.actuateArmSolenoid(!state);
 	}
 
 	@Override

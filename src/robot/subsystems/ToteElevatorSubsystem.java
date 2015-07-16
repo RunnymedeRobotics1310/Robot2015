@@ -28,15 +28,16 @@ public class ToteElevatorSubsystem extends RunnymedeSubsystem {
 				+ (2 * -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL)), 
 		FOUR  ( -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_AT_FIRST_LEVEL
 				+ 3 * -RobotMap.TOTE_ELEVATOR_ENCODER_COUNTS_PER_ELEVATOR_LEVEL),
-		FIVE  ( -2750);
+		FIVE  ( -2825);
 
 		public double encoderSetpoint;
 
 		ToteElevatorLevel(double encoderSetpoint) {
 			this.encoderSetpoint = encoderSetpoint;
 		}
-
 	}
+	
+	
 	
 	int direction = -1;
 	double driveSpeed = 0;

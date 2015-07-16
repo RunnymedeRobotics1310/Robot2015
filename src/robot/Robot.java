@@ -5,12 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import robot.commands.RightContainerCommandGroup;
+import robot.commands.autonomous.commandgroup.AutoStartWithContainer;
 import robot.commands.autonomous.commandgroup.AutoWithoutContainer;
-import robot.commands.autonomous.commandgroup.Autonomous2056CommandGroup;
-import robot.commands.autonomous.commandgroup.AutonomousThreeToteStackCommandGroup;
-import robot.commands.autonomous.commandgroup.AutonomousThreeToteThreeContainerCommandGroup;
-import robot.commands.autonomous.commandgroup.AutonomousThreeToteTwoContainerCommandGroup;
-import robot.commands.autonomous.commandgroup.AutonomousThreeToteWithContainerGone;
+import robot.commands.autonomous.commandgroup.AutonomousDriveForwardCommandGroup;
 import robot.commands.autonomous.commandgroup.SingleContainerCommandGroup;
 import robot.subsystems.ChassisSubsystem;
 import robot.subsystems.PassiveContainerArmSubsystem;
@@ -19,7 +16,6 @@ import robot.subsystems.RunnymedeSubsystem;
 import robot.subsystems.SensorSubsystem;
 import robot.subsystems.ToteElevatorSubsystem;
 import robot.subsystems.ToteIntakeSubsystem;
-import robot.subsystems.VisionSubsystem;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -119,17 +115,22 @@ public class Robot extends IterativeRobot {
 		autonomousChooser = new SendableChooser();
 		
 		autonomousChooser.addObject("test", new RightContainerCommandGroup());
-//		
+		
+		autonomousChooser.addObject("Drive Forward", new AutonomousDriveForwardCommandGroup());
+
 //		autonomousChooser.addObject("Three Tote Three Container",
 //				new AutonomousThreeToteThreeContainerCommandGroup());
 //		
-		autonomousChooser.addObject("Three Tote Without Containers",
+		autonomousChooser.addDefault("Three Tote Without Containers",
 				new AutoWithoutContainer());
-
+		
+		autonomousChooser.addDefault("Three Tote Starting With Container",
+				new AutoStartWithContainer());
+		
 //		autonomousChooser.addObject("2056",
 //				new Autonomous2056CommandGroup());
 		
-		autonomousChooser.addDefault("Single Container",
+		autonomousChooser.addObject("Single Container",
 				new SingleContainerCommandGroup());
 		
 //		autonomousChooser.addObject("Three Tote Two Container",
